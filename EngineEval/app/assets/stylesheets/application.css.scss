@@ -1,0 +1,25 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+
+ */
+
+
+$body-background:  #C6D9B4;
+$black-square: #518C7C;
+$white-square:#EDF2C4;
+$dark-background: #011C26;
+$boardedge: #A6986D;
+$highlight-row: blue;
+
+@import "bootstrap.css.scss";
+@import "bootstrap-theme.css.scss";
+@import "chessboard.css.scss";

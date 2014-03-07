@@ -1,0 +1,24 @@
+
+
+    
+	
+	<thead>
+	<tr>
+		<th class="text-center">Rank</th>
+		<th class="text-center">Engine</th>
+		<th class="text-center">Nodes</th>
+		<th class="text-center">Evaluation</th>
+	</tr>
+	<thead>
+	<tbody>
+	<%evaluations.each(function(item){%>
+		<tr class="text-center">
+			<td><%=item.get("id")%></td>
+			<td><%=item.get("engine")%></td>
+			<td><%=item.get("nodes")%></td>
+			<td><%=item.get("evaluation")%></td>	
+		</tr>
+		<%})%>
+	
+	</tbody>
+

@@ -1,0 +1,319 @@
+
+        <script src='//localhost:8080/socket.io/socket.io.js'></script>
+      
+<%=javascript_tag do %>
+$(document).ready(function(){
+keynavigate("show");
+
+var engineStatus=false
+var stockfish=""
+var evaluationId=""
+$("#boardedge").height($("#boardedge").width())
+	setup(chess.fen());
+  $("#browser_engine_button").click(function(){
+      if(engineStatus===true){
+      engineStatus=false
+      stockfish.terminate()
+      $("#browser_engine_button").removeClass("btn-danger")
+      $("#browser_engine_button").addClass("btn-success")
+      $("#browser_engine_button").text("Start Stockfish")
+      }
+    else{
+      stockfish = new Worker('stockfish.js');
+      jQuery.ajax({
+      type:"POST",
+      url:"/api/evaluations",
+      data:{fen:chess.fen()},
+      async:false,
+      success:function(data){
+      alert("success")
+        evaluationId=data.id
+      },
+      error:function(data){
+      alert("There was an error uploading analysis.  Please refresh the page and try again.")
+      }
+      })
+      stockfish.postMessage("uci")
+      $("#browser_engine_button").removeClass("btn-success")
+      $("#browser_engine_button").addClass("btn-danger")
+      $("#browser_engine_button").text("Stop Stockfish")
+      engineStatus=true
+      stockfish.postMessage("position fen "+chess.fen())
+      stockfish.postMessage("go infinite")
+      stockfish.onmessage = function(event) {
+        if(event.data.split(" ")[3]=="seldepth")
+          {
+          if( event.data.split(" ")[9].match(/[0-9]+/))
+          {
+          var depth=event.data.split(" ")[2]
+          var seldepth=event.data.split(" ")[4]
+          var evaluation=event.data.split(" ")[7]/100
+          $("#browser_engine_nodes").text(nodes);
+          $("#browser_engine_depth").text(depth);
+          $("#browser_engine_seldepth").text(seldepth);
+          $("#browser_engine_evaluation").text(evaluation);
+          }
+          else{var nodes=event.data.split(" ")[10]
+          var depth=event.data.split(" ")[2]
+          var seldepth=event.data.split(" ")[4]
+          var evaluation=event.data.split(" ")[7]/100
+          $("#browser_engine_nodes").text(nodes);
+          $("#browser_engine_depth").text(depth);
+          $("#browser_engine_seldepth").text(seldepth);
+          $("#browser_engine_evaluation").text(evaluation);
+
+          }
+          
+            };}
+
+    }
+
+  })
+  
+   
+  
+  
+
+
+    addpieces();
+
+    movegen();
+
+
+    
+
+   drag();
+
+
+
+    drop();
+
+  EngineEval.initialize();
+ connectionId=Math.floor(Math.random()*1000000000)
+  $("#connectionId").append(connectionId)
+
+   chat = io.connect("http://localhost:8080")
+   chat.emit('subscribe',{room:connectionId})
+   chat.on("receive_evaluation",function(data){
+   $("#my_engine_evaluation").html(data.evaluation)
+ })
+             
+$("#fen-container").val(chess.fen())
+
+})
+
+<%end%>
+
+<div class="row">
+  <h1 class="text-center col-lg-12 col-md-12">Chess Analysis</h1></div>
+  <br><br>
+<div class="row">
+	  <div class="boardenv   col-md-6  col-lg-6   col-md-offset-1 col-lg-offset-1">
+        <div id="boardedge" class="  col-md-10  col-lg-10   col-md-offset-1 col-lg-offset-1">
+          <div class="leftnotcolumn">
+          <div class="leftnot">
+            8
+          </div>
+          <div class="leftnot">
+            7
+          </div>
+          <div class="leftnot">
+            6
+          </div>
+          <div class="leftnot">
+            5
+          </div>
+          <div class="leftnot">
+            4
+          </div>
+          <div class="leftnot">
+            3
+          </div>
+          <div class="leftnot">
+            2
+          </div>
+          <div class="leftnot">
+            1
+          </div>
+        </div>
+             <div id="board">
+    <%list=["a","b","c","d","e","f","g","h"]%>
+    <%numlist=[8,7,6,5,4,3,2,1]%>
+    <% 8.times do |x|%>
+    
+
+      <%8.times do |y|%>
+      <%if (y%2==0)&&(x%2==0)%>
+        <div class="square whitesquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
+      <%elsif (x%2!=0)&&(y%2!=0)%>
+        <div class="square whitesquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
+      <%else%>
+        <div class="square blacksquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
+      <%end%>
+      <%end%>
+   
+    <%end%>
+  </div>
+   <div class="rightnotrow">
+    <div class="rightnot">
+            a
+          </div>
+            <div class="rightnot">
+            b
+          </div>
+            <div class="rightnot">
+            c
+          </div>
+            <div class="rightnot">
+            d
+          </div>
+            <div class="rightnot">
+            e
+          </div>
+            <div class="rightnot">
+            f
+          </div>
+            <div class="rightnot">
+            g
+          </div>
+            <div class="rightnot">
+            h
+          </div>
+          <br>
+
+          </div>
+
+
+	</div>
+	<div class="  col-md-1  col-lg-1"></div>
+
+
+
+  </div>
+
+  <div class="col-md-4 col-lg-4 well" id="evaluations_table">
+    
+
+
+	
+  
+		
+
+
+  </div>
+  <div class="col-md-1 col-lg-1">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6  col-lg-6  form-horizontal col-md-offset-1 col-lg-offset-1">
+
+    <div class="form-group">
+      <label class="control-label col-md-4 col-lg-4">Connection Id: </label>
+      <div class="col-md-6 col-lg-6"><div id="connectionId" class="form-control"></div></div>
+      <div class="col-md-2 col-lg-2"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-md-4 col-lg-4">Fen:</label>
+      <div class="col-md-6 col-lg-6"><input class="form-control" id="fen-container"></input></div>
+      <div class="col-md-2 col-lg-2"></div>
+    </div>
+    </div>
+    <div class="col-md-5 col-lg-5"></div>
+  </div>
+
+  <div class="row">
+    <div class="well col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
+      <h2 class="text-center">My Engines</h2>
+        <br>
+      <table class="table">
+        <thead>
+          <tr >
+            <th class="text-center">Engine</th>
+            <th class="text-center">Nodes</th>
+            <th class="text-center">Depth</th>
+            <th class="text-center">Seldepth</th>
+            <th class="text-center">Evaluation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center">
+            <td id="browser_engine">Browser Stockfish</td>
+             <td id="browser_engine_nodes"></td>
+              <td id="browser_engine_depth"></td>
+               <td id="browser_engine_seldepth"></td>
+                <td id="browser_engine_evaluation"></td>
+          </tr>
+          <tr class="text-center">
+            <td id="my_engine"></td>
+             <td id="my_engine_nodes"></td>
+              <td id="my_engine_depth"></td>
+               <td id="my_engine_seldepth"></td>
+                <td id="my_engine_evaluation"></td>
+          </tr>
+         
+        </tbody>
+      </table>
+      <div class="text-center"><div class="btn btn-success" id="browser_engine_button">Start Stockfish</div></div>
+    </div>
+  </div>
+  <br>
+
+
+
+
+
+
+
+<div class="modal fade" id="promotionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong>Choose a Piece:</strong></h4>
+      </div>
+      <div class="modal-body">
+           
+          <div id="whitepopup">
+          <p>Please Select a Piece:</p>
+          <br>     
+              <img src="/assets/whitequeen.png" id="q"  >  
+            <img src="/assets/whitebishop.png" id="b" >  
+            <img src="/assets/whiteknight.png" id="n" >           
+            <img src="/assets/whiterook.png" id="r"  >
+        
+        </div>
+
+
+        <div id="blackpopup">
+          <p>Please Select a Piece:</p>
+         
+          <div id="bqueenpop">
+            <img src="/assets/blackqueen.png" id="q">
+          </div>
+          <div id="bbishoppop">
+            <img src="/assets/blackbishop.png" id="b">
+          </div>
+          <div id="bknightpop">
+            <img src="/assets/blackknight.png"  id="n">
+          </div>
+          <div id="brookpop">
+            <img src="/assets/blackrook.png" id="r" >
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+
+  <div id="next-move-select" class="text-center well">
+    <p>Please Select a Move:</p>
+    <div id="scroll-container">
+    
+      </div>
+      <br>
+      <div id="scroll-move-select" class="btn btn-primary">Select</div>
+      <div id="scroll-cancel" class="btn btn-primary">Cancel</div>
+  </div>

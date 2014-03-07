@@ -1,0 +1,1326 @@
+var numofrows=10;
+var rclickmove="";
+var currentPage="";
+var problempage=false;
+var replaypage=false;
+var problemanswer="";
+var typeofcreate="new";
+var fileId="";
+var children={};
+var showCustomMenu="";
+var repertoireSearch="false";
+var boardcolor="white";
+var sortedMoves=[];
+var navigationType="Move tree";
+var currentHighlighted=$();
+var update_move_tree=function(){};
+var file_actions={1:["add"]}
+var action_groups=1
+var currentUser="";
+var savedStatus=true
+
+
+var generatePosition=function(hmv,hm){
+  if (hm===0||hm===-1)
+    {return startpositionfen}
+  else{
+  var positionGen=new Chess();
+  for(var move=0;move<hm;move++)
+    {positionGen.move(moves[hmv][move])}
+  return positionGen.fen();
+
+}}
+
+
+// attach the .compare method to Array's prototype to call it on any array
+Array.prototype.compare = function (array) {
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
+
+    // compare lengths - can save a lot of time
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0; i < this.length; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].compare(array[i]))
+                return false;
+        }
+        else if (this[i] != array[i]) {
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;
+        }
+    }
+    return true;
+}
+var randomstuff="hi";
+var whitepromotion="";
+var blackpromotion="";
+
+
+
+var updateFenShown=function(){
+  if(repertoireSearch==="true")
+    {
+      $("#repertoire-search-fen-container input").val(chess.fen());
+    }
+}
+
+var nextmovechoose=function(count,length,nextmovelist){
+
+  if(count===dropcount)
+    {  $("#scroll-cancel").click(function(){
+      $("#scroll-move-select").unbind("click");
+        $("#scroll-cancel").unbind("click");
+          $("#next-move-select").css("display","none");
+          $("#scroll-container").empty();
+          $("#modal").css("display","none");
+          $("html").css("overflow","auto");
+          popup=false;
+  });
+  $("#scroll-move-select").click(function(){
+  
+    $("#scroll-move-select").unbind("click");
+    $("#scroll-cancel").unbind("click");
+    popup=false;
+    atStart=false;
+    $("#next-move-select").css("display","none");
+    $("#scroll-container").empty();
+    $("#modal").css("display","none");
+    $("html").css("overflow","auto");
+    hmv=nextmovelist[highlight-1][1];
+    hm=nextmovelist[highlight-1][2]+1;
+    chess.load(generatePosition(hmv,hm));
+    setup(chess.fen());
+        
+      
+       addpieces(); 
+       movegen();
+      drag();
+       drop(); 
+        evaluations.trigger("piece:drop")
+        chat.emit("position",{fen:chess.fen(),room:connectionId})
+ $("#fen-container").val(chess.fen())
+       if(navigationType==="Next Moves"){
+       var fen_param=""
+      if(hm===0)
+      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
+      else{
+        fen_param=generatePosition(hmv,hm)
+      }
+
+           jQuery.ajax({
+
+        data: {fen:fen_param,file:fileId},
+        dataType: 'script',
+        type: 'get',
+        url: "/next_moves"
+        });
+        return
+      }
+       if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
+        {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
+       $("#comment-input").val(movescomment[hmv][hm]);
+     currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
+    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
+
+      $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
+
+   $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);
+
+
+  });
+      $(".move-row").click(function(){
+     
+      $(".move-row").css("background-color","white");
+      $(this).css("background-color","#518C7C");
+      highlight=parseInt($(this).attr("id").slice(7,$(this).attr("id").length))+1
+     scroll=(highlight-1)*25
+    });
+
+      var scroll=0;
+      $("html").css("overflow","hidden");
+      var highlight=1;
+      $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
+      $(document).keydown(function(event){
+
+        if(event.which===40){
+          
+          $(".move-row").css("background-color","white");
+          if(highlight===length)
+            {
+            $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
+            
+            }
+            else
+            {highlight+=1;
+            $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
+            scroll=scroll+25;
+            $("#scroll-container").scrollTop(scroll);
+          }
+        }
+
+           if(event.which===38){
+          $(".move-row").css("background-color","white");
+          if(highlight===1)
+            {
+            $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");}
+            else
+            {highlight-=1;
+            $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
+            scroll-=25
+            $("#scroll-container").scrollTop(scroll);}
+        }
+
+        if(event.which===13)
+          {$("#scroll-move-select").unbind("click");
+        $("#scroll-cancel").unbind("click");
+             popup=false;
+            atStart=false;
+  $("#next-move-select").css("display","none");
+$("#scroll-container").empty();
+          $("#modal").css("display","none");
+          $("html").css("overflow","auto");
+          hmv=nextmovelist[highlight-1][1];
+          hm=nextmovelist[highlight-1][2]+1;
+          chess.load(generatePosition(hmv,hm));
+        setup(chess.fen());
+        
+      
+       addpieces(); 
+       movegen();
+      drag();
+       drop();
+        evaluations.trigger("piece:drop") 
+        chat.emit("position",{fen:chess.fen(),room:connectionId})
+ $("#fen-container").val(chess.fen())
+       if(navigationType==="Next Moves"){
+       var fen_param=""
+      if(hm===0)
+      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
+      else{
+        fen_param=generatePosition(hmv,hm)
+      }
+
+           jQuery.ajax({
+
+        data: {fen:fen_param,file:fileId},
+        dataType: 'script',
+        type: 'get',
+        url: "/next_moves"
+        });
+        return
+      }
+       if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
+        {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
+       $("#comment-input").val(movescomment[hmv][hm]);
+     currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
+    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
+  
+    $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
+   $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);
+        }
+
+      });
+      }
+
+};
+var promotionclick=function(from,to,count){
+  $("#whitepopup img").click(function(){
+    if (count===dropcount)
+    {$("#promotionModal").modal("hide");
+    
+    whitepromotion=$(this).attr("id");
+    
+   
+    $("#whitepopup").css("display","none");
+    chess.move({from: from,to:to,promotion:whitepromotion});
+               <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
+          if(atStart)
+          {
+           
+        atStart=false;
+         var startcondition=true; 
+         
+         for (var i=0;i<mainvariations.length;i++)
+         {if (moves[mainvariations[i]][0]===_.last(chess.history()))
+          {startcondition=false;
+             var writestatus="none";
+            hmv=mainvariations[i];
+            hm+=1;
+           
+
+            break;}
+        else
+          {}
+        }
+        
+        if(startcondition===true) 
+            {var writestatus="new";
+              numvariations+=1
+                  mainvariations.push(numvariations-1);
+            $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
+          hm=0;
+          children[numvariations-1]=[];
+          moves[numvariations-1]=[];
+          
+          if(movescomment[numvariations-1])
+          {}
+        else
+          {movescomment[numvariations-1]=[""];}
+          parents[numvariations-1]=[-1,-1];
+          hmv=numvariations-1
+         
+          moves[hmv].push(_.last(chess.history()));
+   
+         
+         
+          hm+=1;
+        }
+        }
+          else  
+          {
+            if (hm===moves[hmv].length)
+          {moves[hmv].push(_.last(chess.history()));
+         var writestatus="newmove"
+          
+          hm+=1;
+          movescomment[hmv][hm]="";
+        }
+          else if(newVariationSearch(_.last(chess.history()),hm,hmv)&&_.last(chess.history())!==moves[hmv][hm])
+          {
+          
+          <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
+          numvariations+=1
+          var writestatus="new";
+          $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
+           children[numvariations-1]=[];
+          children[hmv].push([numvariations-1,hm]);
+          moves[numvariations-1]=[];
+         
+          movescomment[numvariations-1]=[];
+          for(var i=0;i<hm;i++){
+          moves[numvariations-1][i]=moves[hmv][i]
+          
+          movescomment[numvariations-1][i]="";
+          }
+          
+          parents[numvariations-1]=[hmv,hm];
+
+          hmv=numvariations-1
+         
+          moves[hmv].push(_.last(chess.history()));
+   
+       
+         
+          hm+=1;
+          movescomment[hmv][hm]="";
+          var writestatus="none";
+          
+          }
+          else
+            {hm+=1
+            var writestatus="none";}
+          }
+
+          
+
+ 
+
+<!-- now we get ready for the next drop-->
+              setup(chess.fen());
+
+
+
+    addpieces();
+
+    movegen();
+
+
+    
+
+   drag();
+  
+
+   if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
+     {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm)); }   
+
+          for(var y=0;y<64;y++){
+            dropstring=""
+            for(z=0;z<squaremoves[squares[y]].length;z++)
+              {
+              if(z!==squaremoves[squares[y]].length-1)
+                {dropstring+=(squaremoves[squares[y]][z]+",")}
+              else
+                {dropstring+=squaremoves[squares[y]][z]
+                }
+              };
+            $( squares[y] ).droppable( "option", "accept", dropstring);
+          };
+
+       dropcount=dropcount+1;
+      
+       $("#comment-input").val(movescomment[hmv][hm]);
+              if(problempage===true)
+        {problemattemptdrop();
+ $(".square").droppable("disable");
+        }
+        if(replaypage===true)
+        {problemattemptdrop();}
+            currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
+    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
+         $("#table-container-moves").scrollLeft((hm-1)*78);
+   $("#table-container-top-labels").scrollLeft((hm-1)*78);
+   $("#table-container-moves").scrollTop((hmv)*53);
+   $("#table-container-left-labels").scrollTop((hmv)*53);
+   updateFenShown();
+    update_move_tree();
+ if(currentPage==="file_show"){ 
+     if(writestatus==="new")
+    {addEarlierInserts()}
+    file_actions[action_groups].push([hmv,hm,moves[hmv][hm-1],chess.fen(),generatePosition(hmv,hm-1)||startpositionfen,_.initial(moves[hmv],moves[hmv].length-hm)])
+  savedStatus=false
+ }
+  evaluations.trigger("piece:drop")
+  chat.emit("position",{fen:chess.fen(),room:connectionId})
+ $("#fen-container").val(chess.fen())
+     }
+     
+      
+    });
+$("#blackpopup img").click(function(){
+    if (count===dropcount)
+    {$("#promotionModal").modal("hide");
+    
+    blackpromotion=$(this).attr("id");
+    
+   
+    $("#blackpopup").css("display","none");
+    chess.move({from: from,to:to,promotion:blackpromotion});
+              <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
+          if(atStart)
+          {
+           
+        atStart=false;
+         var startcondition=true; 
+         
+         for (var i=0;i<mainvariations.length;i++)
+         {if (moves[mainvariations[i]][0]===_.last(chess.history()))
+          {startcondition=false;
+             var writestatus="none";
+            hmv=mainvariations[i];
+            hm+=1;
+           
+
+            break;}
+        else
+          {}
+        }
+        
+        if(startcondition===true) 
+            {var writestatus="new";
+              numvariations+=1
+                  mainvariations.push(numvariations-1);
+            $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
+          hm=0;
+          children[numvariations-1]=[];
+          moves[numvariations-1]=[];
+          
+          if(movescomment[numvariations-1])
+          {}
+        else
+          {movescomment[numvariations-1]=[""];}
+          parents[numvariations-1]=[-1,-1];
+          hmv=numvariations-1
+         
+          moves[hmv].push(_.last(chess.history()));
+   
+         
+         
+          hm+=1;
+        }
+        }
+          else  
+          {
+            if (hm===moves[hmv].length)
+          {moves[hmv].push(_.last(chess.history()));
+        var writestatus="newmove"
+          
+          hm+=1;
+          movescomment[hmv][hm]="";
+        }
+          else if(newVariationSearch(_.last(chess.history()),hm,hmv)&&_.last(chess.history())!==moves[hmv][hm])
+          {
+          
+          <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
+          numvariations+=1
+          var writestatus="new";
+          $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
+           children[numvariations-1]=[];
+          children[hmv].push([numvariations-1,hm]);
+          moves[numvariations-1]=[];
+          
+          movescomment[numvariations-1]=[];
+          for(var i=0;i<hm;i++){
+          moves[numvariations-1][i]=moves[hmv][i]
+    
+          movescomment[numvariations-1][i]="";
+          }
+          
+          parents[numvariations-1]=[hmv,hm];
+          hmv=numvariations-1
+         
+          moves[hmv].push(_.last(chess.history()));
+   
+       
+         
+          hm+=1;
+          movescomment[hmv][hm]="";
+          var writestatus="none";
+          
+          }
+          else
+            {hm+=1
+            var writestatus="none";}
+          }
+
+          
+
+ 
+
+<!-- now we get ready for the next drop-->
+              setup(chess.fen());
+
+
+
+    addpieces();
+
+    movegen();
+
+
+    
+
+   drag();
+ 
+   if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
+     {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}    
+
+          for(var y=0;y<64;y++){
+            dropstring=""
+            for(z=0;z<squaremoves[squares[y]].length;z++)
+              {
+              if(z!==squaremoves[squares[y]].length-1)
+                {dropstring+=(squaremoves[squares[y]][z]+",")}
+              else
+                {dropstring+=squaremoves[squares[y]][z]
+                }
+              };
+            $( squares[y] ).droppable( "option", "accept", dropstring);
+          };
+
+       dropcount=dropcount+1;
+    
+       $("#comment-input").val(movescomment[hmv][hm]);
+              if(problempage===true)
+        {problemattemptdrop();
+ $(".square").droppable("disable");
+        }
+        if(replaypage===true)
+        {problemattemptdrop();}
+            currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
+    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
+         $("#table-container-moves").scrollLeft((hm-1)*78);
+   $("#table-container-top-labels").scrollLeft((hm-1)*78);
+   $("#table-container-moves").scrollTop((hmv)*53);
+   $("#table-container-left-labels").scrollTop((hmv)*53);
+   updateFenShown();
+    update_move_tree();
+ if(currentPage==="file_show"){
+     if(writestatus==="new")
+    {addEarlierInserts()}
+    file_actions[action_groups].push([hmv,hm,moves[hmv][hm-1],chess.fen(),generatePosition(hmv,hm-1)||startpositionfen,_.initial(moves[hmv],moves[hmv].length-hm)])
+  savedStatus=false
+ 
+ }
+  evaluations.trigger("piece:drop")
+  chat.emit("position",{fen:chess.fen(),room:connectionId})
+ $("#fen-container").val(chess.fen())
+     }
+     
+      
+    });
+  };
+
+
+
+  var $blackking=$('<img src="/assets/blackking.png" class="piece" id="k">');
+
+    var $blackrook1=$('<img src="/assets/blackrook.png" class="piece" id="r1" >');
+    var $blackrook2=$('<img src="/assets/blackrook.png" class="piece" id="r2" >');
+    var $blackrook3=$('<img src="/assets/blackrook.png" class="piece" id="r3" >');
+    var $blackrook4=$('<img src="/assets/blackrook.png" class="piece" id="r4" >');
+    var $blackrook5=$('<img src="/assets/blackrook.png" class="piece" id="r5" >');
+    var $blackrook6=$('<img src="/assets/blackrook.png" class="piece" id="r6" >');
+    var $blackrook7=$('<img src="/assets/blackrook.png" class="piece" id="r7" >');
+    var $blackrook8=$('<img src="/assets/blackrook.png" class="piece" id="r8" >');
+
+
+    var $blackbishop1=$('<img src="/assets/blackbishop.png" class="piece" id="b1" >');
+    var $blackbishop2=$('<img src="/assets/blackbishop.png" class="piece" id="b2" >');
+    var $blackbishop3=$('<img src="/assets/blackbishop.png" class="piece" id="b3" >');
+    var $blackbishop4=$('<img src="/assets/blackbishop.png" class="piece" id="b4" >');
+    var $blackbishop5=$('<img src="/assets/blackbishop.png" class="piece" id="b5" >');
+    var $blackbishop6=$('<img src="/assets/blackbishop.png" class="piece" id="b6" >');
+    var $blackbishop7=$('<img src="/assets/blackbishop.png" class="piece" id="b7" >');
+    var $blackbishop8=$('<img src="/assets/blackbishop.png" class="piece" id="b8" >');
+
+    var $blackknight1=$('<img src="/assets/blackknight.png" class="piece"  id="n1" >');
+    var $blackknight2=$('<img src="/assets/blackknight.png" class="piece"  id="n2" >');
+    var $blackknight3=$('<img src="/assets/blackknight.png" class="piece"  id="n3" >');
+    var $blackknight4=$('<img src="/assets/blackknight.png" class="piece"  id="n4" >');
+    var $blackknight5=$('<img src="/assets/blackknight.png" class="piece"  id="n5" >');
+    var $blackknight6=$('<img src="/assets/blackknight.png" class="piece"  id="n6" >');
+    var $blackknight7=$('<img src="/assets/blackknight.png" class="piece"  id="n7" >');
+    var $blackknight8=$('<img src="/assets/blackknight.png" class="piece"  id="n8" >');
+
+
+    var $blackpawn1=$('<img src="/assets/blackpawn.png" class="piece" id="p1" >');
+    var $blackpawn2=$('<img src="/assets/blackpawn.png" class="piece"  id="p2" >');
+    var $blackpawn3=$('<img src="/assets/blackpawn.png" class="piece"  id="p3" >');
+    var $blackpawn4=$('<img src="/assets/blackpawn.png" class="piece"  id="p4" >');
+    var $blackpawn5=$('<img src="/assets/blackpawn.png" class="piece"  id="p5" >');
+    var $blackpawn6=$('<img src="/assets/blackpawn.png" class="piece" id="p6" >');
+    var $blackpawn7=$('<img src="/assets/blackpawn.png" class="piece"  id="p7" >');
+    var $blackpawn8=$('<img src="/assets/blackpawn.png" class="piece" id="p8" >');
+
+    var $blackqueen=$('<img src="/assets/blackqueen.png" class="piece"  id="q" >');
+     var $blackqueen2=$('<img src="/assets/blackqueen.png" class="piece"  id="q2" >');
+     var $blackqueen3=$('<img src="/assets/blackqueen.png" class="piece"  id="q3" >');
+     var $blackqueen4=$('<img src="/assets/blackqueen.png" class="piece"  id="q4" >');
+     var $blackqueen5=$('<img src="/assets/blackqueen.png" class="piece"  id="q5" >');
+     var $blackqueen6=$('<img src="/assets/blackqueen.png" class="piece"  id="q6" >');
+     var $blackqueen7=$('<img src="/assets/blackqueen.png" class="piece"  id="q7" >');
+     var $blackqueen8=$('<img src="/assets/blackqueen.png" class="piece"  id="q8" >');
+
+    var $whiteking=$('<img src="/assets/whiteking.png" class="piece"  id="K" >');
+
+    var $whitequeen=$('<img src="/assets/whitequeen.png" class="piece" id="Q" >');
+    var $whitequeen2=$('<img src="/assets/whitequeen.png" class="piece" id="Q2" >');
+      var $whitequeen3=$('<img src="/assets/whitequeen.png" class="piece" id="Q3" >');
+    var $whitequeen4=$('<img src="/assets/whitequeen.png" class="piece" id="Q4" >');
+      var $whitequeen5=$('<img src="/assets/whitequeen.png" class="piece" id="Q5" >');
+    var $whitequeen6=$('<img src="/assets/whitequeen.png" class="piece" id="Q6" >');
+      var $whitequeen7=$('<img src="/assets/whitequeen.png" class="piece" id="Q7" >');
+    var $whitequeen8=$('<img src="/assets/whitequeen.png" class="piece" id="Q8" >');
+
+    var $whiterook1=$('<img src="/assets/whiterook.png"  class="piece"  id="R1" >');
+    var $whiterook2=$('<img src="/assets/whiterook.png"  class="piece"  id="R2" >');
+    var $whiterook3=$('<img src="/assets/whiterook.png"  class="piece"  id="R3" >');
+    var $whiterook4=$('<img src="/assets/whiterook.png"  class="piece"  id="R4" >');
+    var $whiterook5=$('<img src="/assets/whiterook.png"  class="piece"  id="R5" >');
+    var $whiterook6=$('<img src="/assets/whiterook.png"  class="piece"  id="R6" >');
+    var $whiterook7=$('<img src="/assets/whiterook.png"  class="piece"  id="R7" >');
+    var $whiterook8=$('<img src="/assets/whiterook.png"  class="piece"  id="R8" >');
+
+    var $whitebishop1=$('<img src="/assets/whitebishop.png" class="piece"  id="B1" >');
+    var $whitebishop2=$('<img src="/assets/whitebishop.png" class="piece"  id="B2" >');
+    var $whitebishop3=$('<img src="/assets/whitebishop.png" class="piece"  id="B3" >');
+    var $whitebishop4=$('<img src="/assets/whitebishop.png" class="piece"  id="B4" >');
+    var $whitebishop5=$('<img src="/assets/whitebishop.png" class="piece"  id="B5" >');
+    var $whitebishop6=$('<img src="/assets/whitebishop.png" class="piece"  id="B6" >');
+    var $whitebishop7=$('<img src="/assets/whitebishop.png" class="piece"  id="B7" >');
+    var $whitebishop8=$('<img src="/assets/whitebishop.png" class="piece"  id="B8" >');
+
+
+    var $whiteknight1=$('<img src="/assets/whiteknight.png" class="piece"  id="N1" >');
+    var $whiteknight2=$('<img src="/assets/whiteknight.png" class="piece" id="N2" >');
+    var $whiteknight3=$('<img src="/assets/whiteknight.png" class="piece" id="N3" >');
+    var $whiteknight4=$('<img src="/assets/whiteknight.png" class="piece"  id="N4" >');
+    var $whiteknight5=$('<img src="/assets/whiteknight.png" class="piece" id="N5" >');
+    var $whiteknight6=$('<img src="/assets/whiteknight.png" class="piece" id="N6" >');
+    var $whiteknight7=$('<img src="/assets/whiteknight.png" class="piece"  id="N7" >');
+    var $whiteknight8=$('<img src="/assets/whiteknight.png" class="piece" id="N8" >');
+
+
+    var $whitepawn1=$('<img src="/assets/whitepawn.png" class="piece" id="P1" >');
+    var $whitepawn2=$('<img src="/assets/whitepawn.png" class="piece" id="P2" >');
+    var $whitepawn3=$('<img src="/assets/whitepawn.png" class="piece" id="P3" >');
+    var $whitepawn4=$('<img src="/assets/whitepawn.png" class="piece" id="P4" >');
+    var $whitepawn5=$('<img src="/assets/whitepawn.png" class="piece" id="P5" >');
+    var $whitepawn6=$('<img src="/assets/whitepawn.png" class="piece" id="P6" >');
+    var $whitepawn7=$('<img src="/assets/whitepawn.png" class="piece" id="P7" >');
+    var $whitepawn8=$('<img src="/assets/whitepawn.png" class="piece" id="P8" >');
+    var piecesfunction=function(){
+    	 var assetpieces=[$blackking,$blackqueen,$blackqueen2,$blackqueen3,$blackqueen4,$blackqueen5,$blackqueen6,$blackqueen7,$blackqueen8,$whiteking,$whitequeen,$whitequeen2,$whitequeen3,$whitequeen4,$whitequeen5,$whitequeen6,$whitequeen7,$whitequeen8,$blackrook1,$blackrook2,$blackrook3,$blackrook4,$blackrook5,$blackrook6,$blackrook7,$blackrook8,$whiterook1,$whiterook2,$whiterook3,$whiterook4,$whiterook5,$whiterook6,$whiterook7,$whiterook8,$blackbishop1,$blackbishop2,$blackbishop3,$blackbishop4,$blackbishop5,$blackbishop6,$blackbishop7,$blackbishop8,$whitebishop1,$whitebishop2,$whitebishop3,$whitebishop4,$whitebishop5,$whitebishop6,$whitebishop7,$whitebishop8,$blackknight1,$blackknight2,$blackknight3,$blackknight4,$blackknight5,$blackknight6,$blackknight7,$blackknight8,$whiteknight1,$whiteknight2,$whiteknight3,$whiteknight4,$whiteknight5,$whiteknight6,$whiteknight7,$whiteknight8,$whitepawn8,$whitepawn1,$whitepawn2,$whitepawn3,$whitepawn4,$whitepawn5,$whitepawn6,$whitepawn7,$blackpawn1,$blackpawn2,$blackpawn3,$blackpawn4,$blackpawn5,$blackpawn6,$blackpawn7,$blackpawn8];
+    	 return assetpieces;
+    }
+
+var pieces=piecesfunction();
+ var squares=["#a1s", "#a2s", "#a3s", "#a4s", "#a5s", "#a6s", "#a7s", "#a8s", "#b1s", "#b2s", "#b3s", "#b4s", "#b5s", "#b6s", "#b7s", "#b8s", "#c1s", "#c2s", "#c3s", "#c4s", "#c5s", "#c6s", "#c7s", "#c8s", "#d1s", "#d2s", "#d3s", "#d4s", "#d5s", "#d6s", "#d7s", "#d8s", "#e1s", "#e2s", "#e3s", "#e4s", "#e5s", "#e6s", "#e7s", "#e8s", "#f1s", "#f2s", "#f3s", "#f4s", "#f5s", "#f6s", "#f7s", "#f8s", "#g1s", "#g2s", "#g3s", "#g4s", "#g5s", "#g6s", "#g7s", "#g8s", "#h1s", "#h2s", "#h3s", "#h4s", "#h5s", "#h6s", "#h7s", "#h8s"];
+  var avail={"k":["k"],"q":["q","q2","q3","q4","q5","q6","q7","q8"],"K":["K"],"Q":["Q","Q2","Q3","Q4","Q5","Q6","Q7","Q8"],"r":["r1","r2","r3","r4","r5","r6","r7","r8"],"R":["R1","R2","R3","R4","R5","R6","R7","R8"],"b":["b1","b2","b3","b4","b5","b6","b7","b8"],"B":["B1","B2","B3"],"n":["n1","n2","n3","n4","n5","n6","n7","n8"],"N":["N1","N2","N3","N4","N5","N6","N7","N8"],"p":["p1","p2","p3","p4","p5","p6","p7","p8"],"P":["P1","P2","P3","P4","P5","P6","P7","P8"]};
+
+    var filelist=["a","b","c","d","e","f","g","h"];
+
+    var rowlist=["8","7","6","5","4","3","2","1"];
+
+    var ploc={};
+
+      var getKey = function(value){
+      for(var key in ploc){
+        if(ploc[key] == value){
+        return key;
+        }
+      }   
+      return null;
+    };
+
+  var chess= new Chess();
+  
+
+var popup=false;
+var mainvariations=[];
+var dropcount=0;
+  var atStart=true;
+    var moves=[];  
+
+
+    var movescomment=[[""]]; 
+
+    var hmv=0;
+    var parents=[];
+    var numvariations=0;
+    var hm=0;
+
+ var sortlist=[];
+  
+    
+    var pieces=piecesfunction();
+ 
+    var squaremoves=[];
+
+    var startpositionfen= new Chess();
+    startpositionfen=startpositionfen.fen();
+
+    var squarelocations={};
+
+    var dropstring="";
+
+ 
+    
+
+
+
+//this function takes a fen and adds the correct square for each piece to the "ploc" hash based on the fen
+    var setup=function(fen){
+      
+       var avail={"k":["k"],"q":["q","q2","q3","q4","q5","q6","q7","q8"],"K":["K"],"Q":["Q","Q2","Q3","Q4","Q5","Q6","Q7","Q8"],"r":["r1","r2","r3","r4","r5","r6","r7","r8"],"R":["R1","R2","R3","R4","R5","R6","R7","R8"],"b":["b1","b2","b3","b4","b5","b6","b7","b8"],"B":["B1","B2","B3"],"n":["n1","n2","n3","n4","n5","n6","n7","n8"],"N":["N1","N2","N3","N4","N5","N6","N7","N8"],"p":["p1","p2","p3","p4","p5","p6","p7","p8"],"P":["P1","P2","P3","P4","P5","P6","P7","P8"]};
+      $(".piece[style]").removeAttr('style');
+      ploc={};
+      fen=fen.split(" ");
+      fen[0]=fen[0].split("/");
+      fen=[].concat.apply([],fen);
+     
+      for(var x=0;x<8;x++)
+        {var count=0;
+        var upper=8
+        var filespot=0
+        while (count<upper)
+          {if (Math.floor(fen[x][count]))
+            {upper-=(Math.floor(fen[x][count])-1);
+            filespot+=Math.floor(fen[x][count]);
+            count+=1}
+          else
+            {ploc[avail[fen[x][count]][0]]="#"+filelist[filespot]+rowlist[x]+"s";
+            avail[fen[x][count]].splice(0,1);
+            count+=1;
+            filespot+=1;}
+          }
+        };
+        //avail={"k":["k"],"q":["q"],"K":["K"],"Q":["Q","Q2"],"r":["r1","r2"],"R":["R1","R2"],"b":["b1","b2"],"B":["B1","B2"],"n":["n1","n2"],"N":["N1","N2"],"p":["p1","p2","p3","p4","p5","p6","p7","p8"],"P":["P1","P2","P3","P4","P5","P6","P7","P8"]};
+      };
+
+
+//this function calculates the absolute offset of the upper left-hand corner of each square; this will be important later for getting the ui.draggable and droppable to work
+
+
+//square moves hold an array of moves on the square, for each square;this function resets that hash
+    var resetsquaremoves=function(){
+     
+      for(var i=0;i<squares.length;i++){
+        squaremoves[squares[i]]=[]
+      };
+    };
+
+
+//this function actually fills up the squaremoves hash
+    var movegen=function(){
+     
+      resetsquaremoves();
+      var mgen=chess.moves({verbose:true});
+      for(var m=0;m<mgen.length;m++){
+        squaremoves["#"+mgen[m]["to"]+"s"].push("#"+getKey("#"+mgen[m]["from"]+"s"));
+      }
+    };
+
+
+// this function writes the move just input by the user into the movelist box;  hmv stands for half-move-variation and represents which of the possibly many variations in the movelist to write the move to;
+    //halfmove is simply the halfmove of the move input(the game starts at half-move of 1)
+    
+
+ 
+//this function actually appends the pieces to squares based on the ploc hash
+    var addpieces=function(){
+    
+      $(".piece").remove();
+   
+
+      for(var i=0;i<pieces.length;i++){$(ploc[((pieces)[i].attr('id'))]).append(pieces[i])}
+    };
+
+     
+      
+
+
+
+     var drag=function(){$('.piece').draggable({
+      zIndex:100,
+      revert:"invalid"
+     
+    });
+   };
+
+
+   var drop=function(){ 
+ 
+
+   for(var i=0;i<64;i++){
+  
+   <!-- dropstring hold as string of comma separated ids of pieces that can be dropped on each square-->
+      dropstring=""
+
+      for(z=0;z<squaremoves[squares[i]].length;z++)
+        {
+        if(z!==squaremoves[squares[i]].length-1)
+          {dropstring+=(squaremoves[squares[i]][z]+",")}
+        else
+          {dropstring+=squaremoves[squares[i]][z]
+          }
+        };
+      $(squares[i]).droppable({
+          accept: dropstring || false})
+    }
+
+          $(".square").droppable({
+          drop: function(event,ui){ 
+
+
+        var from=ploc[(ui.draggable).attr('id')].slice(1,3);
+        var to=$(this).attr('id').slice(0,2);
+
+         
+     
+          
+          //this section checks if move is a promotion and if so generates a promotion dialogue box-->
+          if(($(this).attr("id")[1]===String(8))&&((ui.draggable).attr("id")[0]==="P"))
+            {$("#whitepopup").css("display","inline-block");
+         
+      
+            $("#promotionModal").modal({keyboard:"false",backdrop:"static"});
+      
+
+      
+        promotionclick(from,to,dropcount);
+       
+  
+            
+
+
+              }
+          
+          else if(($(this).attr("id")[1]===String(1))&&((ui.draggable).attr("id")[0]==="p"))
+            {$("#blackpopup").css("display","inline-block");
+          $("#promotionModal").modal({keyboard:"false",backdrop:"static"});
+
+      
+        promotionclick(from,to,dropcount);
+              }
+          else
+          {chess.move({from: ploc[(ui.draggable).attr('id')].slice(1,3),to:$(this).attr('id').slice(0,2)});
+         
+
+
+          <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
+          if(atStart)
+          {
+          
+        atStart=false;
+         var startcondition=true; 
+         
+         for (var i=0;i<mainvariations.length;i++)
+         {if (moves[mainvariations[i]][0]===_.last(chess.history()))
+          {startcondition=false;
+            var writestatus="none";
+            hmv=mainvariations[i];
+            hm+=1;
+           
+
+            break;}
+        else
+          {}
+        }
+        
+        if(startcondition===true) 
+            {var writestatus="new";
+              numvariations+=1
+                  mainvariations.push(numvariations-1);
+            $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
+          hm=0;
+          children[numvariations-1]=[];
+          
+          moves[numvariations-1]=[];
+     
+          if(movescomment[numvariations-1])
+          {}
+        else
+          {movescomment[numvariations-1]=[""];}
+          parents[numvariations-1]=[-1,-1];
+          hmv=numvariations-1
+         
+          moves[hmv].push(_.last(chess.history()));
+   
+         
+         
+          hm+=1;
+        }
+        }
+          else  
+          {
+            
+            if (hm===moves[hmv].length)
+          {moves[hmv].push(_.last(chess.history()));
+        
+         var writestatus="newmove"
+          hm+=1;
+          movescomment[hmv][hm]="";
+        }
+          else if(newVariationSearch(_.last(chess.history()),hm,hmv)===true&&_.last(chess.history())!==moves[hmv][hm])
+          {
+        
+        
+
+        
+          
+          <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
+          numvariations+=1
+        var writestatus="new";
+          $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
+          children[numvariations-1]=[];
+
+          children[hmv].push([numvariations-1,hm]);
+          moves[numvariations-1]=[];
+          
+          movescomment[numvariations-1]=[];
+          for(var i=0;i<hm;i++){
+          moves[numvariations-1][i]=moves[hmv][i]
+        
+          movescomment[numvariations-1][i]="";
+          }
+          
+          parents[numvariations-1]=[hmv,hm];
+          hmv=numvariations-1
+         
+          moves[hmv].push(_.last(chess.history()));
+   
+         
+          hm+=1;
+          movescomment[hmv][hm]="";
+      
+          
+          }
+          else if(newVariationSearch(_.last(chess.history()),hm,hmv)!==true) 
+          {hmv=newVariationSearch(_.last(chess.history()),hm,hmv)
+            hm+=1
+            var writestatus="none";
+          }
+        else
+            {hm+=1;
+              var writestatus="none";
+             }
+          }
+       
+          
+
+ 
+
+<!-- now we get ready for the next drop-->
+              setup(chess.fen());
+
+
+
+    addpieces();
+
+    movegen();
+
+
+    
+
+   drag();
+  
+
+
+
+   if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
+    {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
+
+
+          for(var y=0;y<64;y++){
+            dropstring=""
+            for(z=0;z<squaremoves[squares[y]].length;z++)
+              {
+              if(z!==squaremoves[squares[y]].length-1)
+                {dropstring+=(squaremoves[squares[y]][z]+",")}
+              else
+                {dropstring+=squaremoves[squares[y]][z]
+                }
+              };
+            $( squares[y] ).droppable( "option", "accept", dropstring);
+          };
+
+       dropcount=dropcount+1;
+
+
+     
+
+       
+
+       $("#comment-input").val(movescomment[hmv][hm]);  
+       if(problempage===true)
+        {problemattemptdrop();
+        $(".square").droppable("disable");
+        }
+        if(replaypage===true)
+        {problemattemptdrop();}
+
+      currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
+    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
+     //$("#table-container-moves").scrollLeft((hm-1)*78);
+   //$("#table-container-top-labels").scrollLeft((hm-1)*78);
+   //$("#table-container-moves").scrollTop((hmv)*53);
+   //$("#table-container-left-labels").scrollTop((hmv)*53);
+   updateFenShown();
+ update_move_tree();
+
+ if(currentPage==="file_show"){
+    if(writestatus==="new")
+    {addEarlierInserts()}
+
+    file_actions[action_groups].push([hmv,hm,moves[hmv][hm-1],chess.fen(),generatePosition(hmv,hm-1)||startpositionfen,_.initial(moves[hmv],moves[hmv].length-hm)])
+  savedStatus=false
+ 
+ }
+ evaluations.trigger("piece:drop")
+ chat.emit("position",{fen:chess.fen(),room:connectionId})
+ $("#fen-container").val(chess.fen())
+
+         }
+
+        }
+
+        });
+      
+
+     
+
+    };
+
+
+     var highlight=function(){$('.piece').hover(function(){
+        $(this).toggleClass("hover");
+      });}
+
+
+var newVariationSearch=function(history,hm,hmv){
+  var truth=true
+
+  _.each(children[hmv],function(element,index){
+
+    if(element[1]===hm&&moves[element[0]][hm]===history)
+      {
+       truth=element[0]}
+  })
+
+    if(truth===true)
+      {var parent=parents[hmv];
+        if(parent[0]===-1)
+            {var found="true";
+        }
+            else{
+            var found="false"}
+        
+        var searchvariation=_.initial(moves[hmv],moves[hmv].length-hm)
+        searchvariation.push(_.last(chess.history()))
+
+        
+        while(found==="false")
+        {_.each(children[parent[0]],function(element,index){
+
+          if(searchvariation.compare(_.initial(moves[element[0]],moves[element[0]].length-hm-1))&&found==="false")
+          {truth=element[0]
+            found="true"
+            }
+          })
+          if(found==="false"){
+            if(searchvariation.compare(_.initial(moves[parent[0]],moves[parent[0]].length-hm-1)))
+              {truth=parent[0]
+               
+            found="true"
+           
+            }
+          }
+          
+          if(parent[1]<=hm+1||parent[0]===-1)
+            {found="true"}
+          else
+            {parent=parents[parent[0]]}
+          
+        }
+      }
+
+  return truth
+};
+
+
+
+
+
+var keynavigate=function(location){
+  
+$(document).keydown(function(event){
+if(!($("#fen-container").is(":focus"))){
+movescomment[hmv][hm]=$("#comment-input").val();
+var scrollar=new Array(33,34,35,36,37,38,39,40);
+var key = event.which;
+      
+      if($.inArray(key,scrollar) > -1) {
+          event.preventDefault();
+          
+      }
+    
+  if(event.which===37)
+  {
+  if(popup===false)
+  {
+  if(hm>=2)
+{if(parents[hmv][1]===hm-1)
+  {hmv=parents[hmv][0]}
+  hm=hm-1;
+
+chess.load(generatePosition(hmv,hm));
+
+      
+        setup(chess.fen());
+      
+       addpieces(); 
+       movegen();
+      drag();
+       drop();
+        evaluations.trigger("piece:drop")
+        chat.emit("position",{fen:chess.fen(),room:connectionId})
+    $("#fen-container").val(chess.fen())
+
+       if(navigationType==="Next Moves"){
+       var fen_param=""
+      if(hm===0)
+      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
+      else{
+        fen_param=generatePosition(hmv,hm)
+      }
+
+           jQuery.ajax({
+
+        data: {fen:fen_param,file:fileId},
+        dataType: 'script',
+        type: 'get',
+        url: "/next_moves"
+        });
+        return
+      }
+       if(navigationType==="Opening Explorer")
+       {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
+       $("#comment-input").val(movescomment[hmv][hm]);}
+
+       else
+       {
+
+       atStart=true;
+       hm=0;
+       chess.load(startpositionfen);
+       setup(startpositionfen);
+      addpieces(); 
+       movegen();
+      drag();
+       drop(); 
+        evaluations.trigger("piece:drop")
+        chat.emit("position",{fen:chess.fen(),room:connectionId})
+ $("#fen-container").val(chess.fen())
+       if(navigationType==="Next Moves"){
+       var fen_param=""
+      if(hm===0)
+      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
+      else{
+        fen_param=generatePosition(hmv,hm)
+      }
+
+           jQuery.ajax({
+
+        data: {fen:fen_param,file:fileId},
+        dataType: 'script',
+        type: 'get',
+        url: "/next_moves"
+        });
+        return
+      }
+      if(navigationType==="Opening Explorer")
+       {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
+       $("#comment-input").val(movescomment[hmv][0]);
+      
+
+     }
+
+            $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()-78);
+        $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()-78);
+   }
+}
+  else if(event.which===39)
+  {
+  if(moves[hmv]&&(popup===false))
+  {var nextmovelist=[[moves[hmv][hm],hmv,hm]];
+
+   for (var i=0;i<moves.length;i++)
+          {if (parents[i][0]===hmv&&parents[i][1]===hm)
+          {nextmovelist.push([moves[i][hm],i,hm]);
+        }
+        }
+        if(hm===0)
+        {for (var i=0;i<mainvariations.length;i++)
+        {if (mainvariations[i]!==hmv)
+        {nextmovelist.push([moves[mainvariations[i]][hm],mainvariations[i],hm])}}
+      }
+  
+          if (nextmovelist.length===1&&moves[hmv].length>hm)
+          {
+          atStart=false;
+
+          hm=hm+1;
+        
+       
+        
+        chess.load(generatePosition(hmv,hm));
+
+      
+        setup(chess.fen());
+      
+       addpieces(); 
+       movegen();
+      drag();
+       drop();
+      evaluations.trigger("piece:drop")
+      chat.emit("position",{fen:chess.fen(),room:connectionId})
+ $("#fen-container").val(chess.fen())
+       if(navigationType==="Next Moves"){
+       var fen_param=""
+      if(hm===0)
+      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
+      else{
+        fen_param=generatePosition(hmv,hm)
+      }
+
+           jQuery.ajax({
+
+        data: {fen:fen_param,file:fileId},
+        dataType: 'script',
+        type: 'get',
+        url: "/next_moves"
+        });
+        return
+      }
+      if(navigationType==="Opening Explorer")
+       {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));} 
+       $("#comment-input").val(movescomment[hmv][hm]);
+       $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
+        $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);}
+else if(moves[hmv].length>hm)
+{popup=true;
+
+  $("#next-move-select").css("display","inline-block");
+
+          $("#modal").css("display","block");
+          $("#modal").css("width",$(document).width());
+          $("#modal").css("height",$(document).height());
+          $("#next-move-select").css("position","absolute");
+          $("#next-move-select").css("top",($(window).height()/2)-75-51);
+          $("#next-move-select").css("left",($(window).width()/2)-100);
+          $("#next-move-select").css("z-index",1200);
+          
+         
+          
+         
+          for (var i=0;i<nextmovelist.length;i++)
+          {$("#scroll-container").append("<div class=move-row id=moverow"+i+">"+nextmovelist[i][0]+"</div>")
+
+
+
+        }
+        nextmovechoose(dropcount,nextmovelist.length,nextmovelist);
+        }
+        }
+     
+      }
+            currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
+    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
+    if(location==="improved_fen")
+      {update_move_tree()}
+
+  }
+});
+
+
+}
+
+
+
+
+
+
+var add_spinner=function(elementId){
+  var opts = {
+  lines: 13, // The number of lines to draw
+  length: 20, // The length of each line
+  width: 10, // The line thickness
+  radius: 30, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 0, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb or array of colors
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: 'auto' // Left position relative to parent in px
+};  
+
+var target = $("#spin"+elementId)
+var spinner = new Spinner(opts).spin(target);
+}
