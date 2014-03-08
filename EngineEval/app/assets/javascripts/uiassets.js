@@ -1,3 +1,7 @@
+var chessAnalysis={};
+chessAnalysis.engines=[];
+chessAnalysis.engineStatus=false;
+chessAnalysis.engineId=""
 var numofrows=10;
 var rclickmove="";
 var currentPage="";
@@ -101,9 +105,10 @@ var nextmovechoose=function(count,length,nextmovelist){
        movegen();
       drag();
        drop(); 
-        evaluations.trigger("piece:drop")
-        chat.emit("position",{fen:chess.fen(),room:connectionId})
+       evaluations.trigger("piece:drop")
+       // chat.emit("position",{fen:chess.fen(),room:connectionId})
  $("#fen-container").val(chess.fen())
+ changeEngingePosition();
        if(navigationType==="Next Moves"){
        var fen_param=""
       if(hm===0)
@@ -196,8 +201,9 @@ $("#scroll-container").empty();
       drag();
        drop();
         evaluations.trigger("piece:drop") 
-        chat.emit("position",{fen:chess.fen(),room:connectionId})
+       // chat.emit("position",{fen:chess.fen(),room:connectionId})
  $("#fen-container").val(chess.fen())
+ changeEngingePosition();
        if(navigationType==="Next Moves"){
        var fen_param=""
       if(hm===0)
@@ -387,9 +393,10 @@ var promotionclick=function(from,to,count){
     file_actions[action_groups].push([hmv,hm,moves[hmv][hm-1],chess.fen(),generatePosition(hmv,hm-1)||startpositionfen,_.initial(moves[hmv],moves[hmv].length-hm)])
   savedStatus=false
  }
-  evaluations.trigger("piece:drop")
-  chat.emit("position",{fen:chess.fen(),room:connectionId})
+ evaluations.trigger("piece:drop")
+  //chat.emit("position",{fen:chess.fen(),room:connectionId})
  $("#fen-container").val(chess.fen())
+ changeEngingePosition();
      }
      
       
@@ -549,9 +556,10 @@ $("#blackpopup img").click(function(){
   savedStatus=false
  
  }
-  evaluations.trigger("piece:drop")
-  chat.emit("position",{fen:chess.fen(),room:connectionId})
+ evaluations.trigger("piece:drop")
+  //chat.emit("position",{fen:chess.fen(),room:connectionId})
  $("#fen-container").val(chess.fen())
+ changeEngingePosition();
      }
      
       
@@ -1026,9 +1034,11 @@ var dropcount=0;
   savedStatus=false
  
  }
- evaluations.trigger("piece:drop")
- chat.emit("position",{fen:chess.fen(),room:connectionId})
+evaluations.trigger("piece:drop")
+ //chat.emit("position",{fen:chess.fen(),room:connectionId})
  $("#fen-container").val(chess.fen())
+ changeEngingePosition();
+
 
          }
 
@@ -1133,8 +1143,9 @@ chess.load(generatePosition(hmv,hm));
       drag();
        drop();
         evaluations.trigger("piece:drop")
-        chat.emit("position",{fen:chess.fen(),room:connectionId})
+        //chat.emit("position",{fen:chess.fen(),room:connectionId})
     $("#fen-container").val(chess.fen())
+    changeEngingePosition();
 
        if(navigationType==="Next Moves"){
        var fen_param=""
@@ -1169,8 +1180,9 @@ chess.load(generatePosition(hmv,hm));
       drag();
        drop(); 
         evaluations.trigger("piece:drop")
-        chat.emit("position",{fen:chess.fen(),room:connectionId})
+        //chat.emit("position",{fen:chess.fen(),room:connectionId})
  $("#fen-container").val(chess.fen())
+ changeEngingePosition();
        if(navigationType==="Next Moves"){
        var fen_param=""
       if(hm===0)
@@ -1233,8 +1245,9 @@ chess.load(generatePosition(hmv,hm));
       drag();
        drop();
       evaluations.trigger("piece:drop")
-      chat.emit("position",{fen:chess.fen(),room:connectionId})
+      //chat.emit("position",{fen:chess.fen(),room:connectionId})
  $("#fen-container").val(chess.fen())
+ changeEngingePosition();
        if(navigationType==="Next Moves"){
        var fen_param=""
       if(hm===0)
@@ -1323,4 +1336,85 @@ var add_spinner=function(elementId){
 
 var target = $("#spin"+elementId)
 var spinner = new Spinner(opts).spin(target);
+}
+
+
+
+
+var changeEngingePosition=function(){
+ 
+    if(chessAnalysis.engineStatus===true){
+      chessAnalysis.engines[0].terminate();
+      chessAnalysis.engines[0] = new Worker('stockfish.js');
+      chessAnalysis.engines[0].postMessage("uci")
+      chessAnalysis.engines[0].postMessage("position fen "+chess.fen())
+      chessAnalysis.engines[0].postMessage("go infinite")
+      jQuery.ajax({
+        type:"POST",
+        url:"/api/evaluations",
+        data:{fen:chess.fen()},
+        async:false,
+        success:function(data){
+        evaluationId=data.id
+       
+        },
+        error:function(data){
+        alert("There was an error uploading analysis.  Please refresh the page and try again.")
+        }
+      })
+      
+      
+      chessAnalysis.engines[0].onmessage = function(event) {
+        if(event.data.split(" ")[3]=="seldepth")
+          {
+          if( event.data.split(" ")[9].match(/[0-9]+/))
+            {var nodes=event.data.split(" ")[9]
+            var depth=event.data.split(" ")[2]
+            var seldepth=event.data.split(" ")[4]
+            var evaluation=event.data.split(" ")[7]/100
+            $("#browser_engine_nodes").text(nodes);
+            $("#browser_engine_depth").text(depth);
+            $("#browser_engine_seldepth").text(seldepth);
+             jQuery.ajax({
+                type:"PUT",
+                url:"/api/evaluations/"+evaluationId,
+                data:{nodes:nodes,seldepth:seldepth,depth:depth,evaluation:evaluation,engine:"stockfish_browser"},
+                error:function(data){
+                alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                }
+                })
+            if(chess.turn()==='b')
+              {$("#browser_engine_evaluation").text(evaluation*-1);}
+            else
+              {$("#browser_engine_evaluation").text(evaluation);}
+             
+            }
+
+          else
+            {var nodes=event.data.split(" ")[10]
+            var depth=event.data.split(" ")[2]
+            var seldepth=event.data.split(" ")[4]
+            var evaluation=event.data.split(" ")[7]/100
+            $("#browser_engine_nodes").text(nodes);
+            $("#browser_engine_depth").text(depth);
+            $("#browser_engine_seldepth").text(seldepth);
+            jQuery.ajax({
+              type:"PUT",
+              url:"/api/evaluations/"+evaluationId,
+              data:{nodes:nodes,seldepth:seldepth,depth:depth,evaluation:evaluation,engine:"stockfish_browser"},
+              error:function(data){
+              alert("There was an error uploading analysis.  Please refresh the page and try again.")
+              }
+            })
+            if(chess.turn()==='b')
+              {$("#browser_engine_evaluation").text(evaluation*-1);}
+            else
+              {$("#browser_engine_evaluation").text(evaluation);}
+            
+
+            }
+          
+          }
+        }
+}
 }

@@ -5,89 +5,99 @@
 $(document).ready(function(){
 keynavigate("show");
 
-var engineStatus=false
-var stockfish=""
-var evaluationId=""
+
 $("#boardedge").height($("#boardedge").width())
 	setup(chess.fen());
   $("#browser_engine_button").click(function(){
-      if(engineStatus===true){
-      engineStatus=false
-      stockfish.terminate()
+      if(chessAnalysis.engineStatus===true){
+      chessAnalysis.engineStatus=false
+      chessAnalysis.engines[0].terminate()
       $("#browser_engine_button").removeClass("btn-danger")
       $("#browser_engine_button").addClass("btn-success")
-      $("#browser_engine_button").text("Start Stockfish")
+      $("#browser_engine_button").text("Start chessAnalysis.engines[0]")
       }
     else{
-      stockfish = new Worker('stockfish.js');
+      chessAnalysis.engineStatus=true
+      chessAnalysis.engines[0] = new Worker('stockfish.js');
+      chessAnalysis.engines[0].postMessage("uci")
+      chessAnalysis.engines[0].postMessage("position fen "+chess.fen())
       jQuery.ajax({
-      type:"POST",
-      url:"/api/evaluations",
-      data:{fen:chess.fen()},
-      async:false,
-      success:function(data){
-      alert("success")
-        evaluationId=data.id
-      },
-      error:function(data){
-      alert("There was an error uploading analysis.  Please refresh the page and try again.")
-      }
+        type:"POST",
+        url:"/api/evaluations",
+        data:{fen:chess.fen()},
+        async:false,
+        success:function(data){
+        chessAnalysis.evaluationId=data.id
+        
+        },
+        error:function(data){
+        alert("There was an error uploading analysis.  Please refresh the page and try again.")
+        }
       })
-      stockfish.postMessage("uci")
       $("#browser_engine_button").removeClass("btn-success")
       $("#browser_engine_button").addClass("btn-danger")
       $("#browser_engine_button").text("Stop Stockfish")
-      engineStatus=true
-      stockfish.postMessage("position fen "+chess.fen())
-      stockfish.postMessage("go infinite")
-      stockfish.onmessage = function(event) {
+      chessAnalysis.engines[0].postMessage("go infinite")
+      chessAnalysis.engines[0].onmessage = function(event) {
         if(event.data.split(" ")[3]=="seldepth")
           {
           if( event.data.split(" ")[9].match(/[0-9]+/))
-          {
-          var depth=event.data.split(" ")[2]
-          var seldepth=event.data.split(" ")[4]
-          var evaluation=event.data.split(" ")[7]/100
-          $("#browser_engine_nodes").text(nodes);
-          $("#browser_engine_depth").text(depth);
-          $("#browser_engine_seldepth").text(seldepth);
-          $("#browser_engine_evaluation").text(evaluation);
-          }
-          else{var nodes=event.data.split(" ")[10]
-          var depth=event.data.split(" ")[2]
-          var seldepth=event.data.split(" ")[4]
-          var evaluation=event.data.split(" ")[7]/100
-          $("#browser_engine_nodes").text(nodes);
-          $("#browser_engine_depth").text(depth);
-          $("#browser_engine_seldepth").text(seldepth);
-          $("#browser_engine_evaluation").text(evaluation);
+            {var nodes=event.data.split(" ")[9]
+            var depth=event.data.split(" ")[2]
+            var seldepth=event.data.split(" ")[4]
+            var evaluation=event.data.split(" ")[7]/100
+            $("#browser_engine_nodes").text(nodes);
+            $("#browser_engine_depth").text(depth);
+            $("#browser_engine_seldepth").text(seldepth);
+             jQuery.ajax({
+                type:"PUT",
+                url:"/api/evaluations/"+chessAnalysis.evaluationId,
+                data:{nodes:nodes,seldepth:seldepth,depth:depth,evaluation:evaluation,engine:"stockfish_browser"},
+                error:function(data){
+                alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                }
+                })
+            if(chess.turn()==='b')
+              {$("#browser_engine_evaluation").text(evaluation*-1);}
+            else
+              {$("#browser_engine_evaluation").text(evaluation);}
+             
+            }
 
-          }
+          else
+            {var nodes=event.data.split(" ")[10]
+            var depth=event.data.split(" ")[2]
+            var seldepth=event.data.split(" ")[4]
+            var evaluation=event.data.split(" ")[7]/100
+            $("#browser_engine_nodes").text(nodes);
+            $("#browser_engine_depth").text(depth);
+            $("#browser_engine_seldepth").text(seldepth);
+            jQuery.ajax({
+              type:"PUT",
+              url:"/api/evaluations/"+chessAnalysis.evaluationId,
+              data:{nodes:nodes,seldepth:seldepth,depth:depth,evaluation:evaluation,engine:"stockfish_browser"},
+              error:function(data){
+              alert("There was an error uploading analysis.  Please refresh the page and try again.")
+              }
+            })
+            if(chess.turn()==='b')
+              {$("#browser_engine_evaluation").text(evaluation*-1);}
+            else
+              {$("#browser_engine_evaluation").text(evaluation);}
+            
+
+            }
           
             };}
 
     }
 
   })
-  
-   
-  
-  
-
-
     addpieces();
-
-    movegen();
-
-
-    
-
+    movegen();   
    drag();
-
-
-
     drop();
-
+$("#fen-container").val(chess.fen())
   EngineEval.initialize();
  connectionId=Math.floor(Math.random()*1000000000)
   $("#connectionId").append(connectionId)
@@ -98,18 +108,18 @@ $("#boardedge").height($("#boardedge").width())
    $("#my_engine_evaluation").html(data.evaluation)
  })
              
-$("#fen-container").val(chess.fen())
+
 
 })
 
 <%end%>
 
 <div class="row">
-  <h1 class="text-center col-lg-12 col-md-12">Chess Analysis</h1></div>
-  <br><br>
+  <h1 class="text-center col-lg-12 col-md-12"><b>Chess Analysis</b></h1></div>
+  <br>
 <div class="row">
-	  <div class="boardenv   col-md-6  col-lg-6   col-md-offset-1 col-lg-offset-1">
-        <div id="boardedge" class="  col-md-10  col-lg-10   col-md-offset-1 col-lg-offset-1">
+	  <div class="boardenv   col-md-6  col-lg-6   ">
+        <div id="boardedge" class="  col-md-12  col-lg-12">
           <div class="leftnotcolumn">
           <div class="leftnot">
             8
@@ -185,13 +195,13 @@ $("#fen-container").val(chess.fen())
 
 
 	</div>
-	<div class="  col-md-1  col-lg-1"></div>
+
 
 
 
   </div>
 
-  <div class="col-md-4 col-lg-4 well" id="evaluations_table">
+  <div class="col-md-6 col-lg-6" id="evaluations_table">
     
 
 
@@ -201,18 +211,17 @@ $("#fen-container").val(chess.fen())
 
 
   </div>
-  <div class="col-md-1 col-lg-1">
-  </div>
+ 
 </div>
 
 <div class="row">
-  <div class="col-md-6  col-lg-6  form-horizontal col-md-offset-1 col-lg-offset-1">
+  <div class="col-md-6  col-lg-6  form-horizontal ">
 
-    <div class="form-group">
+    <!--<div class="form-group">
       <label class="control-label col-md-4 col-lg-4">Connection Id: </label>
       <div class="col-md-6 col-lg-6"><div id="connectionId" class="form-control"></div></div>
       <div class="col-md-2 col-lg-2"></div>
-    </div>
+    </div>-->
 
     <div class="form-group">
       <label class="control-label col-md-4 col-lg-4">Fen:</label>
@@ -225,10 +234,11 @@ $("#fen-container").val(chess.fen())
 
   <div class="row">
     <div class="well col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
-      <h2 class="text-center">My Engines</h2>
-        <br>
+      
+       
       <table class="table">
         <thead>
+          <tr ><th colspan=5 class="text-center"><h3 ><b>My Engines</b></h3></th></tr>
           <tr >
             <th class="text-center">Engine</th>
             <th class="text-center">Nodes</th>

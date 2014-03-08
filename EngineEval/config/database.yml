@@ -5,10 +5,10 @@
 #   gem 'sqlite3'
 development:
   adapter: postgresql
-  database: engine_eval_development
-  username: postgres
+  database: chess_analysis
+  username: chess_analysis
   host: localhost
-  password: Lew61Lew71
+  password: chess_analysis
   encoding: unicode 
   pool: 5
   timeout: 5000

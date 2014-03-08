@@ -2,21 +2,30 @@
 
     
 	
+
+	
 	<thead>
+	<tr><th colspan=4 class="text-center"><h3><b>Deepest Analysis</b></h2></th></tr>
+
 	<tr>
 		<th class="text-center">Rank</th>
 		<th class="text-center">Engine</th>
 		<th class="text-center">Nodes</th>
 		<th class="text-center">Evaluation</th>
 	</tr>
-	<thead>
+	</thead>
 	<tbody>
-	<%evaluations.each(function(item){%>
+	<%evaluations.each(function(item,index){%>
 		<tr class="text-center">
-			<td><%=item.get("id")%></td>
+			<td><%=index+1%></td>
 			<td><%=item.get("engine")%></td>
 			<td><%=item.get("nodes")%></td>
-			<td><%=item.get("evaluation")%></td>	
+			<%if(chess.turn()==='w'){%>
+			<td><%=item.get("evaluation")%></td>
+			<%}%>
+			<%if(chess.turn()==='b'){%>
+			<td><%=item.get("evaluation")*-1%></td>
+			<%}%>
 		</tr>
 		<%})%>
 	

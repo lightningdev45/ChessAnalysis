@@ -6,7 +6,7 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 	end
 
 	def index
-		@evaluations=Evaluation.where("fen=?",params[:fen]).order("nodes DESC, created_at DESC").limit(10)
+		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",params[:fen]).order("nodes DESC, created_at DESC").limit(10)
 		respond_to do |format|
 			format.json{render :json=>@evaluations}
 		end

@@ -62,9 +62,8 @@ html{
 
 body{
 	
-background:url("background-black.jpg");
-background:url("greenbackground.jpg");
-background: $body-background;
+background: url("cartographer_@2X.png");
+background: url("shattered.png");
 font-family: 'Varela Round', sans-serif;
 	padding-top: 51px;
 	color:$dark-background;
@@ -632,7 +631,7 @@ color:$dark-background;
 }
 
 .well{
-	/*background: $white-square;*/
+	background: $white-square;
 
 }
 
