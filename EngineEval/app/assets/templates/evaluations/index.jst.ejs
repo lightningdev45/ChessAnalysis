@@ -15,15 +15,15 @@
 	</tr>
 	</thead>
 	<tbody>
-	<%evaluations.each(function(item,index){%>
+	<%evaluations.each(function(item,indicator){%>
 		<tr class="text-center">
-			<td><%=index+1%></td>
+			<td><%=indicator+1%></td>
 			<td><%=item.get("engine")%></td>
 			<td><%=item.get("nodes")%></td>
-			<%if(chess.turn()==='w'){%>
+			<%if(chessAnalysis.chess[index].turn()==='w'){%>
 			<td><%=item.get("evaluation")%></td>
 			<%}%>
-			<%if(chess.turn()==='b'){%>
+			<%if(chessAnalysis.chess[index].turn()==='b'){%>
 			<td><%=item.get("evaluation")*-1%></td>
 			<%}%>
 		</tr>

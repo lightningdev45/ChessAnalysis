@@ -2,263 +2,209 @@ var chessAnalysis={};
 chessAnalysis.engines=[];
 chessAnalysis.engineStatus=false;
 chessAnalysis.engineId=""
-var numofrows=10;
-var rclickmove="";
-var currentPage="";
-var problempage=false;
-var replaypage=false;
-var problemanswer="";
-var typeofcreate="new";
-var fileId="";
-var children={};
-var showCustomMenu="";
-var repertoireSearch="false";
-var boardcolor="white";
-var sortedMoves=[];
-var navigationType="Move tree";
-var currentHighlighted=$();
-var update_move_tree=function(){};
-var file_actions={1:["add"]}
-var action_groups=1
-var currentUser="";
-var savedStatus=true
+chessAnalysis.mode="engine_analysis_mode"
+chessAnalysis.chess=[new Chess(),new Chess()]
+chessAnalysis.moves=[[],[]];
+chessAnalysis.hm=[0,0]
+chessAnalysis.hmv=[0,0];
+chessAnalysis.parents=[[],[]]
+chessAnalysis.children=[{},{}]
+chessAnalysis.currentHighlighted=$();
+chessAnalysis.rclickmove=["",""]
+chessAnalysis.showCustomMenu="";
+chessAnalysis.boardcolor="white";
+chessAnalysis.sortedMoves=[];
+chessAnalysis.update_move_tree=function(){};
+chessAnalysis.file_actions={1:["add"]}
+chessAnalysis.action_groups=1
+chessAnalysis.currentUser="";
+chessAnalysis.savedStatus=true
+chessAnalysis.numvariations=[0,0];
+chessAnalysis.mainvariations=[[],[]];
+chessAnalysis.movescomment=[[[""]],[[""]]]
+chessAnalysis.sortlist=[[],[]]
+chessAnalysis.atStart=[true,true]
+chessAnalysis.dropcount=[0,0]
+chessAnalysis.startpositionfen=[new Chess().fen(),new Chess().fen()]
+var index=0
 
 
-var generatePosition=function(hmv,hm){
+var generatePosition=function(hmv,hm,startpositionfen){
   if (hm===0||hm===-1)
     {return startpositionfen}
   else{
   var positionGen=new Chess();
+  positionGen.load(startpositionfen)
   for(var move=0;move<hm;move++)
-    {positionGen.move(moves[hmv][move])}
+    {positionGen.move(chessAnalysis.moves[index][hmv][move])}
   return positionGen.fen();
 
 }}
 
-
-// attach the .compare method to Array's prototype to call it on any array
 Array.prototype.compare = function (array) {
-    // if the other array is a falsy value, return
     if (!array)
         return false;
-
-    // compare lengths - can save a lot of time
     if (this.length != array.length)
         return false;
-
     for (var i = 0; i < this.length; i++) {
-        // Check if we have nested arrays
         if (this[i] instanceof Array && array[i] instanceof Array) {
-            // recurse into the nested arrays
             if (!this[i].compare(array[i]))
                 return false;
         }
         else if (this[i] != array[i]) {
-            // Warning - two different object instances will never be equal: {x:20} != {x:20}
             return false;
         }
     }
     return true;
 }
-var randomstuff="hi";
-var whitepromotion="";
-var blackpromotion="";
-
-
-
-var updateFenShown=function(){
-  if(repertoireSearch==="true")
-    {
-      $("#repertoire-search-fen-container input").val(chess.fen());
-    }
-}
 
 var nextmovechoose=function(count,length,nextmovelist){
 
-  if(count===dropcount)
-    {  $("#scroll-cancel").click(function(){
-      $("#scroll-move-select").unbind("click");
+  if(count===chessAnalysis.dropcount[index])
+    {$("#scroll-cancel").click(function(){
+        $("#scroll-move-select").unbind("click");
         $("#scroll-cancel").unbind("click");
-          $("#next-move-select").css("display","none");
-          $("#scroll-container").empty();
-          $("#modal").css("display","none");
-          $("html").css("overflow","auto");
-          popup=false;
-  });
-  $("#scroll-move-select").click(function(){
-  
-    $("#scroll-move-select").unbind("click");
-    $("#scroll-cancel").unbind("click");
-    popup=false;
-    atStart=false;
-    $("#next-move-select").css("display","none");
-    $("#scroll-container").empty();
-    $("#modal").css("display","none");
-    $("html").css("overflow","auto");
-    hmv=nextmovelist[highlight-1][1];
-    hm=nextmovelist[highlight-1][2]+1;
-    chess.load(generatePosition(hmv,hm));
-    setup(chess.fen());
-        
-      
-       addpieces(); 
-       movegen();
-      drag();
-       drop(); 
-       evaluations.trigger("piece:drop")
-       // chat.emit("position",{fen:chess.fen(),room:connectionId})
- $("#fen-container").val(chess.fen())
- changeEngingePosition();
-       if(navigationType==="Next Moves"){
-       var fen_param=""
-      if(hm===0)
-      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
-      else{
-        fen_param=generatePosition(hmv,hm)
-      }
+        $("#next-move-select").css("display","none");
+        $("#scroll-container").empty();
+        $("#modal").css("display","none");
+        $("html").css("overflow","auto");
+        popup=false;
+      });
+     $("#scroll-move-select").click(function(){  
+        $("#scroll-move-select").unbind("click");
+        $("#scroll-cancel").unbind("click");
+        popup=false;
+        chessAnalysis.atStart[index]=false;
+        $("#next-move-select").css("display","none");
+        $("#scroll-container").empty();
+        $("#modal").css("display","none");
+        $("html").css("overflow","auto");
+        chessAnalysis.hmv[index]=nextmovelist[highlight-1][1];
+        chessAnalysis.hm[index]=nextmovelist[highlight-1][2]+1;
+        chessAnalysis.chess[index].load(generatePosition(chessAnalysis.hmv[index],chessAnalysis.hm[index],chessAnalysis.startpositionfen[index]));
+        setup(chessAnalysis.chess[index].fen());    
+        addpieces(); 
+        movegen();
+        drag();
+        drop(); 
+        if(chessAnalysis.mode==="engine_analysis_mode"){
+            evaluations.trigger("piece:drop")
+            changeEngingePosition();
+            //chat.emit("position",{fen:chess.fen(),room:connectionId})
+            $("#fen-container").val(chessAnalysis.chess[index].fen())
+           
+          }
+        else if(chessAnalysis.mode==="your_analysis_mode"){
+            $("#fen-container").val(chessAnalysis.chess[index].fen())      
+          }
 
-           jQuery.ajax({
+        $("#comment-input").val(chessAnalysis.movescomment[index][ chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
+        chessAnalysis.currentHighlighted.css("background-color","white");
+        $("#row"+String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1)).css("background-color","yellow");
+        chessAnalysis.currentHighlighted=$("#row"+String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1));
+        $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
+        $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);
+      });
 
-        data: {fen:fen_param,file:fileId},
-        dataType: 'script',
-        type: 'get',
-        url: "/next_moves"
-        });
-        return
-      }
-       if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
-        {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
-       $("#comment-input").val(movescomment[hmv][hm]);
-     currentHighlighted.css("background-color","white");
-    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
-    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
-
-      $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
-
-   $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);
-
-
-  });
       $(".move-row").click(function(){
-     
-      $(".move-row").css("background-color","white");
-      $(this).css("background-color","#518C7C");
-      highlight=parseInt($(this).attr("id").slice(7,$(this).attr("id").length))+1
-     scroll=(highlight-1)*25
-    });
+        $(".move-row").css("background-color","white");
+        $(this).css("background-color","#518C7C");
+        highlight=parseInt($(this).attr("id").slice(7,$(this).attr("id").length))+1
+        scroll=(highlight-1)*25
+      });
 
       var scroll=0;
       $("html").css("overflow","hidden");
       var highlight=1;
       $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
+      
       $(document).keydown(function(event){
-
-        if(event.which===40){
-          
+        if(event.which===40){  
           $(".move-row").css("background-color","white");
           if(highlight===length)
-            {
-            $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
-            
-            }
-            else
+            {$("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");}
+          else
             {highlight+=1;
             $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
             scroll=scroll+25;
             $("#scroll-container").scrollTop(scroll);
-          }
+            }
         }
 
-           if(event.which===38){
+        if(event.which===38){
           $(".move-row").css("background-color","white");
           if(highlight===1)
-            {
-            $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");}
-            else
+            {$("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");}
+          else
             {highlight-=1;
-            $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
-            scroll-=25
-            $("#scroll-container").scrollTop(scroll);}
-        }
+              $("#scroll-container div:nth-child("+highlight+")").css("background-color","#518C7C");
+              scroll-=25
+              $("#scroll-container").scrollTop(scroll);
+            }
+          }
 
         if(event.which===13)
           {$("#scroll-move-select").unbind("click");
-        $("#scroll-cancel").unbind("click");
-             popup=false;
-            atStart=false;
-  $("#next-move-select").css("display","none");
-$("#scroll-container").empty();
-          $("#modal").css("display","none");
-          $("html").css("overflow","auto");
-          hmv=nextmovelist[highlight-1][1];
-          hm=nextmovelist[highlight-1][2]+1;
-          chess.load(generatePosition(hmv,hm));
-        setup(chess.fen());
-        
-      
-       addpieces(); 
-       movegen();
-      drag();
-       drop();
-        evaluations.trigger("piece:drop") 
-       // chat.emit("position",{fen:chess.fen(),room:connectionId})
- $("#fen-container").val(chess.fen())
- changeEngingePosition();
-       if(navigationType==="Next Moves"){
-       var fen_param=""
-      if(hm===0)
-      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
-      else{
-        fen_param=generatePosition(hmv,hm)
-      }
-
-           jQuery.ajax({
-
-        data: {fen:fen_param,file:fileId},
-        dataType: 'script',
-        type: 'get',
-        url: "/next_moves"
-        });
-        return
-      }
-       if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
-        {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
-       $("#comment-input").val(movescomment[hmv][hm]);
-     currentHighlighted.css("background-color","white");
-    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
-    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
-  
-    $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
-   $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);
-        }
-
+           $("#scroll-cancel").unbind("click");
+            popup=false;
+            chessAnalysis.atStart[index]=false;
+            $("#next-move-select").css("display","none");
+            $("#scroll-container").empty();
+            $("#modal").css("display","none");
+            $("html").css("overflow","auto");
+             chessAnalysis.hmv[index]=nextmovelist[highlight-1][1];
+            chessAnalysis.hm[index]=nextmovelist[highlight-1][2]+1;
+            chessAnalysis.chess[index].load(generatePosition( chessAnalysis.hmv[index],chessAnalysis.hm[index],chessAnalysis.startpositionfen[index]));
+            setup(chessAnalysis.chess[index].fen());
+            addpieces(); 
+            movegen();
+            drag();
+            drop();
+          if (chessAnalysis.mode==="engine_analysis_mode")
+            {evaluations.trigger("piece:drop")
+            changeEngingePosition();
+            //chat.emit("position",{fen:chess.fen(),room:connectionId})
+            $("#fen-container").val(chessAnalysis.chess[index].fen())
+           
+            }
+          else if(chessAnalysis.mode==="your_analysis_mode")
+            {$("#fen-container").val(chessAnalysis.chess[index].fen())
+            }
+             
+            $("#comment-input").val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
+            chessAnalysis.currentHighlighted.css("background-color","white");
+            $("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1)).css("background-color","yellow");
+            chessAnalysis.currentHighlighted=$("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1));
+            $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
+            $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);
+          }
       });
-      }
+    };
+  };
 
-};
 var promotionclick=function(from,to,count){
   $("#whitepopup img").click(function(){
-    if (count===dropcount)
+    if (count===chessAnalysis.dropcount[index])
     {$("#promotionModal").modal("hide");
     
-    whitepromotion=$(this).attr("id");
+    var whitepromotion=$(this).attr("id");
     
    
     $("#whitepopup").css("display","none");
-    chess.move({from: from,to:to,promotion:whitepromotion});
-               <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
-          if(atStart)
+    chessAnalysis.chess[index].move({from: from,to:to,promotion:whitepromotion});
+               
+          if(chessAnalysis.atStart[index])
           {
            
-        atStart=false;
+        chessAnalysis.atStart[index]=false;
          var startcondition=true; 
          
-         for (var i=0;i<mainvariations.length;i++)
-         {if (moves[mainvariations[i]][0]===_.last(chess.history()))
+         for (var i=0;i<chessAnalysis.mainvariations[index].length;i++)
+         {if (chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][0]===_.last(chessAnalysis.chess[index].history()))
           {startcondition=false;
              var writestatus="none";
-            hmv=mainvariations[i];
-            hm+=1;
+            chessAnalysis.hmv[index]=chessAnalysis.mainvariations[index][i];
+            chessAnalysis.hm[index]+=1;
            
 
             break;}
@@ -268,94 +214,77 @@ var promotionclick=function(from,to,count){
         
         if(startcondition===true) 
             {var writestatus="new";
-              numvariations+=1
-                  mainvariations.push(numvariations-1);
-            $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
-          hm=0;
-          children[numvariations-1]=[];
-          moves[numvariations-1]=[];
+              chessAnalysis.numvariations[index]+=1
+                  chessAnalysis.mainvariations[index].push(chessAnalysis.numvariations[index]-1);
+            $("#moves").append("<div class=var"+String(chessAnalysis.numvariations[index]-1)+"></div>")
+          chessAnalysis.hm[index]=0;
+          chessAnalysis.children[index][chessAnalysis.numvariations[index]-1]=[];
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1]=[];
           
-          if(movescomment[numvariations-1])
+          if(chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1])
           {}
         else
-          {movescomment[numvariations-1]=[""];}
-          parents[numvariations-1]=[-1,-1];
-          hmv=numvariations-1
+          {chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1]=[""];}
+          chessAnalysis.parents[index][chessAnalysis.numvariations[index]-1]=[-1,-1];
+          chessAnalysis.hmv[index]=chessAnalysis.numvariations[index]-1
          
-          moves[hmv].push(_.last(chess.history()));
+          chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
    
          
          
-          hm+=1;
+          chessAnalysis.hm[index]+=1;
         }
         }
           else  
           {
-            if (hm===moves[hmv].length)
-          {moves[hmv].push(_.last(chess.history()));
+            if (chessAnalysis.hm[index]===chessAnalysis.moves[index][chessAnalysis.hmv[index]].length)
+          {chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
          var writestatus="newmove"
           
-          hm+=1;
-          movescomment[hmv][hm]="";
+          chessAnalysis.hm[index]+=1;
+          chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]="";
         }
-          else if(newVariationSearch(_.last(chess.history()),hm,hmv)&&_.last(chess.history())!==moves[hmv][hm])
+          else if(newVariationSearch(_.last(chessAnalysis.chess[index].history()),chessAnalysis.hm[index],chessAnalysis.hmv[index])&&_.last(chessAnalysis.chess[index].history())!==chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]])
           {
           
           <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
-          numvariations+=1
+          chessAnalysis.numvariations[index]+=1
           var writestatus="new";
-          $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
-           children[numvariations-1]=[];
-          children[hmv].push([numvariations-1,hm]);
-          moves[numvariations-1]=[];
+          $("#moves").append("<div class=var"+String(chessAnalysis.numvariations[index]-1)+"></div>")
+           chessAnalysis.children[index][chessAnalysis.numvariations[index]-1]=[];
+          chessAnalysis.children[index][chessAnalysis.hmv[index]].push([chessAnalysis.numvariations[index]-1,chessAnalysis.hm[index]]);
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1]=[];
          
-          movescomment[numvariations-1]=[];
-          for(var i=0;i<hm;i++){
-          moves[numvariations-1][i]=moves[hmv][i]
+          chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1]=[];
+          for(var i=0;i<chessAnalysis.hm[index];i++){
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1][i]=chessAnalysis.moves[index][chessAnalysis.hmv[index]][i]
           
-          movescomment[numvariations-1][i]="";
+          chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1][i]="";
           }
           
-          parents[numvariations-1]=[hmv,hm];
+          chessAnalysis.parents[index][chessAnalysis.numvariations[index]-1]=[chessAnalysis.hmv[index],chessAnalysis.hm[index]];
 
-          hmv=numvariations-1
+          chessAnalysis.hmv[index]=chessAnalysis.numvariations[index]-1
          
-          moves[hmv].push(_.last(chess.history()));
+          chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
    
        
          
-          hm+=1;
-          movescomment[hmv][hm]="";
+          chessAnalysis.hm[index]+=1;
+          chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]="";
           var writestatus="none";
           
           }
           else
-            {hm+=1
+            {chessAnalysis.hm[index]+=1
             var writestatus="none";}
           }
 
-          
-
- 
-
 <!-- now we get ready for the next drop-->
-              setup(chess.fen());
-
-
-
+              setup(chessAnalysis.chess[index].fen());
     addpieces();
-
     movegen();
-
-
-    
-
    drag();
-  
-
-   if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
-     {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm)); }   
-
           for(var y=0;y<64;y++){
             dropstring=""
             for(z=0;z<squaremoves[squares[y]].length;z++)
@@ -369,60 +298,54 @@ var promotionclick=function(from,to,count){
             $( squares[y] ).droppable( "option", "accept", dropstring);
           };
 
-       dropcount=dropcount+1;
+       chessAnalysis.dropcount[index]+=1;
       
-       $("#comment-input").val(movescomment[hmv][hm]);
-              if(problempage===true)
-        {problemattemptdrop();
- $(".square").droppable("disable");
-        }
-        if(replaypage===true)
-        {problemattemptdrop();}
-            currentHighlighted.css("background-color","white");
-    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
-    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
-         $("#table-container-moves").scrollLeft((hm-1)*78);
-   $("#table-container-top-labels").scrollLeft((hm-1)*78);
-   $("#table-container-moves").scrollTop((hmv)*53);
-   $("#table-container-left-labels").scrollTop((hmv)*53);
-   updateFenShown();
-    update_move_tree();
- if(currentPage==="file_show"){ 
-     if(writestatus==="new")
-    {addEarlierInserts()}
-    file_actions[action_groups].push([hmv,hm,moves[hmv][hm-1],chess.fen(),generatePosition(hmv,hm-1)||startpositionfen,_.initial(moves[hmv],moves[hmv].length-hm)])
-  savedStatus=false
- }
- evaluations.trigger("piece:drop")
-  //chat.emit("position",{fen:chess.fen(),room:connectionId})
- $("#fen-container").val(chess.fen())
- changeEngingePosition();
-     }
+       $("#comment-input").val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
+
      
+            chessAnalysis.currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1)).css("background-color","yellow");
+    chessAnalysis.currentHighlighted=$("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1));
+         $("#table-container-moves").scrollLeft((chessAnalysis.hm[index]-1)*78);
+   $("#table-container-top-labels").scrollLeft((chessAnalysis.hm[index]-1)*78);
+   $("#table-container-moves").scrollTop((chessAnalysis.hmv[index])*53);
+   $("#table-container-left-labels").scrollTop((chessAnalysis.hmv[index])*53);
+    chessAnalysis.update_move_tree();
+
+ if (chessAnalysis.mode==="engine_analysis_mode"){
+        evaluations.trigger("piece:drop")
+         changeEngingePosition();
+        //chat.emit("position",{fen:chess.fen(),room:connectionId})
+        $("#fen-container").val(chessAnalysis.chess[index].fen())
+        }
+        else if(chessAnalysis.mode==="your_analysis_mode"){
+          $("#fen-container").val(chessAnalysis.chess[index].fen())
+         
+        }
       
+     }         
     });
 $("#blackpopup img").click(function(){
-    if (count===dropcount)
+    if (count===chessAnalysis.dropcount[index])
     {$("#promotionModal").modal("hide");
     
-    blackpromotion=$(this).attr("id");
-    
-   
+    var blackpromotion=$(this).attr("id");
+      
     $("#blackpopup").css("display","none");
-    chess.move({from: from,to:to,promotion:blackpromotion});
+    chessAnalysis.chess[index].move({from: from,to:to,promotion:blackpromotion});
               <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
-          if(atStart)
+          if(chessAnalysis.atStart[index])
           {
            
-        atStart=false;
+        chessAnalysis.atStart[index]=false;
          var startcondition=true; 
          
-         for (var i=0;i<mainvariations.length;i++)
-         {if (moves[mainvariations[i]][0]===_.last(chess.history()))
+         for (var i=0;i<chessAnalysis.mainvariations[index].length;i++)
+         {if (chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][0]===_.last(chessAnalysis.chess[index].history()))
           {startcondition=false;
              var writestatus="none";
-            hmv=mainvariations[i];
-            hm+=1;
+            chessAnalysis.hmv[index]=chessAnalysis.mainvariations[index][i];
+            chessAnalysis.hm[index]+=1;
            
 
             break;}
@@ -432,92 +355,79 @@ $("#blackpopup img").click(function(){
         
         if(startcondition===true) 
             {var writestatus="new";
-              numvariations+=1
-                  mainvariations.push(numvariations-1);
-            $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
-          hm=0;
-          children[numvariations-1]=[];
-          moves[numvariations-1]=[];
+              chessAnalysis.numvariations[index]+=1
+                  chessAnalysis.mainvariations[index].push(chessAnalysis.numvariations[index]-1);
+            $("#moves").append("<div class=var"+String(chessAnalysis.numvariations[index]-1)+"></div>")
+          chessAnalysis.hm[index]=0;
+          chessAnalysis.children[index][chessAnalysis.numvariations[index]-1]=[];
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1]=[];
           
-          if(movescomment[numvariations-1])
+          if(chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1])
           {}
         else
-          {movescomment[numvariations-1]=[""];}
-          parents[numvariations-1]=[-1,-1];
-          hmv=numvariations-1
+          {chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1]=[""];}
+          chessAnalysis.parents[index][chessAnalysis.numvariations[index]-1]=[-1,-1];
+          chessAnalysis.hmv[index]=chessAnalysis.numvariations[index]-1
          
-          moves[hmv].push(_.last(chess.history()));
+          chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
    
          
          
-          hm+=1;
+          chessAnalysis.hm[index]+=1;
         }
         }
           else  
           {
-            if (hm===moves[hmv].length)
-          {moves[hmv].push(_.last(chess.history()));
+            if (chessAnalysis.hm[index]===chessAnalysis.moves[index][chessAnalysis.hmv[index]].length)
+          {chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
         var writestatus="newmove"
           
-          hm+=1;
-          movescomment[hmv][hm]="";
+          chessAnalysis.hm[index]+=1;
+          chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]="";
         }
-          else if(newVariationSearch(_.last(chess.history()),hm,hmv)&&_.last(chess.history())!==moves[hmv][hm])
+          else if(newVariationSearch(_.last(chessAnalysis.chess[index].history()),chessAnalysis.hm[index],chessAnalysis.hmv[index])&&_.last(chessAnalysis.chess[index].history())!==chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]])
           {
           
           <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
-          numvariations+=1
+          chessAnalysis.numvariations[index]+=1
           var writestatus="new";
-          $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
-           children[numvariations-1]=[];
-          children[hmv].push([numvariations-1,hm]);
-          moves[numvariations-1]=[];
+          $("#moves").append("<div class=var"+String(chessAnalysis.numvariations[index]-1)+"></div>")
+           chessAnalysis.children[index][chessAnalysis.numvariations[index]-1]=[];
+          chessAnalysis.children[index][chessAnalysis.hmv[index]].push([chessAnalysis.numvariations[index]-1,chessAnalysis.hm[index]]);
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1]=[];
           
-          movescomment[numvariations-1]=[];
-          for(var i=0;i<hm;i++){
-          moves[numvariations-1][i]=moves[hmv][i]
+          chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1]=[];
+          for(var i=0;i<chessAnalysis.hm[index];i++){
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1][i]=chessAnalysis.moves[index][chessAnalysis.hmv[index]][i]
     
-          movescomment[numvariations-1][i]="";
+          chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1][i]="";
           }
           
-          parents[numvariations-1]=[hmv,hm];
-          hmv=numvariations-1
+          chessAnalysis.parents[index][chessAnalysis.numvariations[index]-1]=[chessAnalysis.hmv[index],chessAnalysis.hm[index]];
+          chessAnalysis.hmv[index]=chessAnalysis.numvariations[index]-1
          
-          moves[hmv].push(_.last(chess.history()));
+          chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
    
        
          
-          hm+=1;
-          movescomment[hmv][hm]="";
+          chessAnalysis.hm[index]+=1;
+          chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]="";
           var writestatus="none";
           
           }
           else
-            {hm+=1
+            {chessAnalysis.hm[index]+=1
             var writestatus="none";}
           }
 
-          
-
- 
-
 <!-- now we get ready for the next drop-->
-              setup(chess.fen());
-
-
+              setup(chessAnalysis.chess[index].fen());
 
     addpieces();
 
     movegen();
-
-
-    
-
    drag();
- 
-   if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
-     {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}    
-
+   
           for(var y=0;y<64;y++){
             dropstring=""
             for(z=0;z<squaremoves[squares[y]].length;z++)
@@ -531,45 +441,35 @@ $("#blackpopup img").click(function(){
             $( squares[y] ).droppable( "option", "accept", dropstring);
           };
 
-       dropcount=dropcount+1;
+       chessAnalysis.dropcount[index]=chessAnalysis.dropcount[index]+1;
     
-       $("#comment-input").val(movescomment[hmv][hm]);
-              if(problempage===true)
-        {problemattemptdrop();
- $(".square").droppable("disable");
+       $("#comment-input").val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
+
+
+            chessAnalysis.currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1)).css("background-color","yellow");
+   chessAnalysis.currentHighlighted=$("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1));
+         $("#table-container-moves").scrollLeft((chessAnalysis.hm[index]-1)*78);
+   $("#table-container-top-labels").scrollLeft((chessAnalysis.hm[index]-1)*78);
+   $("#table-container-moves").scrollTop((chessAnalysis.hmv[index])*53);
+   $("#table-container-left-labels").scrollTop((chessAnalysis.hmv[index])*53);
+      chessAnalysis.update_move_tree();
+
+ if (chessAnalysis.mode==="engine_analysis_mode"){
+        evaluations.trigger("piece:drop")
+         changeEngingePosition();
+        //chat.emit("position",{fen:chess.fen(),room:connectionId})
+        $("#fen-container").val(chessAnalysis.chess[index].fen())
+    }
+        else if(chessAnalysis.mode==="your_analysis_mode"){
+          $("#fen-container").val(chessAnalysis.chess[index].fen())
+        
         }
-        if(replaypage===true)
-        {problemattemptdrop();}
-            currentHighlighted.css("background-color","white");
-    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
-    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
-         $("#table-container-moves").scrollLeft((hm-1)*78);
-   $("#table-container-top-labels").scrollLeft((hm-1)*78);
-   $("#table-container-moves").scrollTop((hmv)*53);
-   $("#table-container-left-labels").scrollTop((hmv)*53);
-   updateFenShown();
-    update_move_tree();
- if(currentPage==="file_show"){
-     if(writestatus==="new")
-    {addEarlierInserts()}
-    file_actions[action_groups].push([hmv,hm,moves[hmv][hm-1],chess.fen(),generatePosition(hmv,hm-1)||startpositionfen,_.initial(moves[hmv],moves[hmv].length-hm)])
-  savedStatus=false
- 
- }
- evaluations.trigger("piece:drop")
-  //chat.emit("position",{fen:chess.fen(),room:connectionId})
- $("#fen-container").val(chess.fen())
- changeEngingePosition();
-     }
-     
-      
+     }     
     });
   };
 
-
-
   var $blackking=$('<img src="/assets/blackking.png" class="piece" id="k">');
-
     var $blackrook1=$('<img src="/assets/blackrook.png" class="piece" id="r1" >');
     var $blackrook2=$('<img src="/assets/blackrook.png" class="piece" id="r2" >');
     var $blackrook3=$('<img src="/assets/blackrook.png" class="piece" id="r3" >');
@@ -689,32 +589,11 @@ var pieces=piecesfunction();
       return null;
     };
 
-  var chess= new Chess();
-  
-
-var popup=false;
-var mainvariations=[];
-var dropcount=0;
-  var atStart=true;
-    var moves=[];  
-
-
-    var movescomment=[[""]]; 
-
-    var hmv=0;
-    var parents=[];
-    var numvariations=0;
-    var hm=0;
-
- var sortlist=[];
-  
-    
+var popup=false;    
     var pieces=piecesfunction();
  
     var squaremoves=[];
 
-    var startpositionfen= new Chess();
-    startpositionfen=startpositionfen.fen();
 
     var squarelocations={};
 
@@ -771,7 +650,7 @@ var dropcount=0;
     var movegen=function(){
      
       resetsquaremoves();
-      var mgen=chess.moves({verbose:true});
+      var mgen=chessAnalysis.chess[index].moves({verbose:true});
       for(var m=0;m<mgen.length;m++){
         squaremoves["#"+mgen[m]["to"]+"s"].push("#"+getKey("#"+mgen[m]["from"]+"s"));
       }
@@ -844,7 +723,7 @@ var dropcount=0;
       
 
       
-        promotionclick(from,to,dropcount);
+        promotionclick(from,to,chessAnalysis.dropcount[index]);
        
   
             
@@ -857,26 +736,26 @@ var dropcount=0;
           $("#promotionModal").modal({keyboard:"false",backdrop:"static"});
 
       
-        promotionclick(from,to,dropcount);
+        promotionclick(from,to,chessAnalysis.dropcount[index]);
               }
           else
-          {chess.move({from: ploc[(ui.draggable).attr('id')].slice(1,3),to:$(this).attr('id').slice(0,2)});
+          {chessAnalysis.chess[index].move({from: ploc[(ui.draggable).attr('id')].slice(1,3),to:$(this).attr('id').slice(0,2)});
          
 
 
           <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
-          if(atStart)
+          if(chessAnalysis.atStart[index])
           {
           
-        atStart=false;
+        chessAnalysis.atStart[index]=false;
          var startcondition=true; 
          
-         for (var i=0;i<mainvariations.length;i++)
-         {if (moves[mainvariations[i]][0]===_.last(chess.history()))
+         for (var i=0;i<chessAnalysis.mainvariations[index].length;i++)
+         {if (chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][0]===_.last(chessAnalysis.chess[index].history()))
           {startcondition=false;
             var writestatus="none";
-            hmv=mainvariations[i];
-            hm+=1;
+            chessAnalysis.hmv[index]=chessAnalysis.mainvariations[index][i];
+            chessAnalysis.hm[index]+=1;
            
 
             break;}
@@ -886,39 +765,39 @@ var dropcount=0;
         
         if(startcondition===true) 
             {var writestatus="new";
-              numvariations+=1
-                  mainvariations.push(numvariations-1);
-            $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
-          hm=0;
-          children[numvariations-1]=[];
+              chessAnalysis.numvariations[index]+=1
+                  chessAnalysis.mainvariations[index].push(chessAnalysis.numvariations[index]-1);
+            $("#moves").append("<div class=var"+String(chessAnalysis.numvariations[index]-1)+"></div>")
+          chessAnalysis.hm[index]=0;
+          chessAnalysis.children[index][chessAnalysis.numvariations[index]-1]=[];
           
-          moves[numvariations-1]=[];
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1]=[];
      
-          if(movescomment[numvariations-1])
+          if(chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1])
           {}
         else
-          {movescomment[numvariations-1]=[""];}
-          parents[numvariations-1]=[-1,-1];
-          hmv=numvariations-1
+          {chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1]=[""];}
+          chessAnalysis.parents[index][chessAnalysis.numvariations[index]-1]=[-1,-1];
+          chessAnalysis.hmv[index]=chessAnalysis.numvariations[index]-1
          
-          moves[hmv].push(_.last(chess.history()));
+          chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
    
          
          
-          hm+=1;
+          chessAnalysis.hm[index]+=1;
         }
         }
           else  
           {
             
-            if (hm===moves[hmv].length)
-          {moves[hmv].push(_.last(chess.history()));
+            if (chessAnalysis.hm[index]===chessAnalysis.moves[index][chessAnalysis.hmv[index]].length)
+          {chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
         
          var writestatus="newmove"
-          hm+=1;
-          movescomment[hmv][hm]="";
+          chessAnalysis.hm[index]+=1;
+          chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]="";
         }
-          else if(newVariationSearch(_.last(chess.history()),hm,hmv)===true&&_.last(chess.history())!==moves[hmv][hm])
+          else if(newVariationSearch(_.last(chessAnalysis.chess[index].history()),chessAnalysis.hm[index],chessAnalysis.hmv[index])===true&&_.last(chessAnalysis.chess[index].history())!==chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]])
           {
         
         
@@ -926,39 +805,39 @@ var dropcount=0;
         
           
           <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
-          numvariations+=1
+          chessAnalysis.numvariations[index]+=1
         var writestatus="new";
-          $("#moves").append("<div class=var"+String(numvariations-1)+"></div>")
-          children[numvariations-1]=[];
+          $("#moves").append("<div class=var"+String(chessAnalysis.numvariations[index]-1)+"></div>")
+          chessAnalysis.children[index][chessAnalysis.numvariations[index]-1]=[];
 
-          children[hmv].push([numvariations-1,hm]);
-          moves[numvariations-1]=[];
+          chessAnalysis.children[index][chessAnalysis.hmv[index]].push([chessAnalysis.numvariations[index]-1,chessAnalysis.hm[index]]);
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1]=[];
           
-          movescomment[numvariations-1]=[];
-          for(var i=0;i<hm;i++){
-          moves[numvariations-1][i]=moves[hmv][i]
+          chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1]=[];
+          for(var i=0;i<chessAnalysis.hm[index];i++){
+          chessAnalysis.moves[index][chessAnalysis.numvariations[index]-1][i]=chessAnalysis.moves[index][chessAnalysis.hmv[index]][i]
         
-          movescomment[numvariations-1][i]="";
+          chessAnalysis.movescomment[index][chessAnalysis.numvariations[index]-1][i]="";
           }
           
-          parents[numvariations-1]=[hmv,hm];
-          hmv=numvariations-1
+          chessAnalysis.parents[index][chessAnalysis.numvariations[index]-1]=[chessAnalysis.hmv[index],chessAnalysis.hm[index]];
+          chessAnalysis.hmv[index]=chessAnalysis.numvariations[index]-1
          
-          moves[hmv].push(_.last(chess.history()));
+          chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
    
          
-          hm+=1;
-          movescomment[hmv][hm]="";
+          chessAnalysis.hm[index]+=1;
+          chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]="";
       
           
           }
-          else if(newVariationSearch(_.last(chess.history()),hm,hmv)!==true) 
-          {hmv=newVariationSearch(_.last(chess.history()),hm,hmv)
-            hm+=1
+          else if(newVariationSearch(_.last(chessAnalysis.chess[index].history()),chessAnalysis.hm[index],chessAnalysis.hmv[index])!==true) 
+          {chessAnalysis.hmv[index]=newVariationSearch(_.last(chessAnalysis.chess[index].history()),chessAnalysis.hm[index],chessAnalysis.hmv[index])
+            chessAnalysis.hm[index]+=1
             var writestatus="none";
           }
         else
-            {hm+=1;
+            {chessAnalysis.hm[index]+=1;
               var writestatus="none";
              }
           }
@@ -968,7 +847,7 @@ var dropcount=0;
  
 
 <!-- now we get ready for the next drop-->
-              setup(chess.fen());
+              setup(chessAnalysis.chess[index].fen());
 
 
 
@@ -984,8 +863,7 @@ var dropcount=0;
 
 
 
-   if(problempage===false&&replaypage===false&&navigationType==="Opening Explorer")
-    {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
+ 
 
 
           for(var y=0;y<64;y++){
@@ -1001,43 +879,39 @@ var dropcount=0;
             $( squares[y] ).droppable( "option", "accept", dropstring);
           };
 
-       dropcount=dropcount+1;
+       chessAnalysis.dropcount[index]+=1;
 
 
      
 
        
 
-       $("#comment-input").val(movescomment[hmv][hm]);  
-       if(problempage===true)
-        {problemattemptdrop();
-        $(".square").droppable("disable");
+       $("#comment-input").val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);  
+
+
+      chessAnalysis.currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1)).css("background-color","yellow");
+    chessAnalysis.currentHighlighted=$("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1));
+   chessAnalysis.update_move_tree();
+
+
+
+ if (chessAnalysis.mode==="engine_analysis_mode"){
+        evaluations.trigger("piece:drop")
+         changeEngingePosition();
+        //chat.emit("position",{fen:chess.fen(),room:connectionId})
+        $("#fen-container").val(chessAnalysis.chess[index].fen())
+      }
+        else if(chessAnalysis.mode==="your_analysis_mode"){
+          $("#fen-container").val(chessAnalysis.chess[index].fen())
+          $("#annotation_moves").html(writeAnnotation(0,chessAnalysis.hm[index-1],0))
+          $(".ann_move").click(function(){
+            clickNavigate($(this).attr("id"))
+          })
+          $(".ann_move").hover(function(){annIn($(this).attr("id"))},function(){annOut()});
+
         }
-        if(replaypage===true)
-        {problemattemptdrop();}
-
-      currentHighlighted.css("background-color","white");
-    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
-    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
-     //$("#table-container-moves").scrollLeft((hm-1)*78);
-   //$("#table-container-top-labels").scrollLeft((hm-1)*78);
-   //$("#table-container-moves").scrollTop((hmv)*53);
-   //$("#table-container-left-labels").scrollTop((hmv)*53);
-   updateFenShown();
- update_move_tree();
-
- if(currentPage==="file_show"){
-    if(writestatus==="new")
-    {addEarlierInserts()}
-
-    file_actions[action_groups].push([hmv,hm,moves[hmv][hm-1],chess.fen(),generatePosition(hmv,hm-1)||startpositionfen,_.initial(moves[hmv],moves[hmv].length-hm)])
-  savedStatus=false
- 
- }
-evaluations.trigger("piece:drop")
- //chat.emit("position",{fen:chess.fen(),room:connectionId})
- $("#fen-container").val(chess.fen())
- changeEngingePosition();
+    
 
 
          }
@@ -1060,35 +934,35 @@ evaluations.trigger("piece:drop")
 var newVariationSearch=function(history,hm,hmv){
   var truth=true
 
-  _.each(children[hmv],function(element,index){
+  _.each(chessAnalysis.children[index][chessAnalysis.hmv[index]],function(element,indicator){
 
-    if(element[1]===hm&&moves[element[0]][hm]===history)
+    if(element[1]===chessAnalysis.hm[index]&&chessAnalysis.moves[index][element[0]][chessAnalysis.hm[index]]===history)
       {
        truth=element[0]}
   })
 
     if(truth===true)
-      {var parent=parents[hmv];
+      {var parent=chessAnalysis.parents[index][chessAnalysis.hmv[index]];
         if(parent[0]===-1)
             {var found="true";
         }
             else{
             var found="false"}
         
-        var searchvariation=_.initial(moves[hmv],moves[hmv].length-hm)
-        searchvariation.push(_.last(chess.history()))
+        var searchvariation=_.initial(chessAnalysis.moves[index][chessAnalysis.hmv[index]],chessAnalysis.moves[index][chessAnalysis.hmv[index]].length-chessAnalysis.hm[index])
+        searchvariation.push(_.last(chessAnalysis.chess[index].history()))
 
         
         while(found==="false")
-        {_.each(children[parent[0]],function(element,index){
+        {_.each(chessAnalysis.children[index][parent[0]],function(element,indicator){
 
-          if(searchvariation.compare(_.initial(moves[element[0]],moves[element[0]].length-hm-1))&&found==="false")
+          if(searchvariation.compare(_.initial(chessAnalysis.moves[index][element[0]],chessAnalysis.moves[index][element[0]].length-chessAnalysis.hm[index]-1))&&found==="false")
           {truth=element[0]
             found="true"
             }
           })
           if(found==="false"){
-            if(searchvariation.compare(_.initial(moves[parent[0]],moves[parent[0]].length-hm-1)))
+            if(searchvariation.compare(_.initial(chessAnalysis.moves[index][parent[0]],chessAnalysis.moves[index][parent[0]].length-chessAnalysis.hm[index]-1)))
               {truth=parent[0]
                
             found="true"
@@ -1096,10 +970,10 @@ var newVariationSearch=function(history,hm,hmv){
             }
           }
           
-          if(parent[1]<=hm+1||parent[0]===-1)
+          if(parent[1]<=chessAnalysis.hm[index]+1||parent[0]===-1)
             {found="true"}
           else
-            {parent=parents[parent[0]]}
+            {parent=chessAnalysis.parents[index][parent[0]]}
           
         }
       }
@@ -1115,7 +989,7 @@ var keynavigate=function(location){
   
 $(document).keydown(function(event){
 if(!($("#fen-container").is(":focus"))){
-movescomment[hmv][hm]=$("#comment-input").val();
+chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]=$("#comment-input").val();
 var scrollar=new Array(33,34,35,36,37,38,39,40);
 var key = event.which;
       
@@ -1128,81 +1002,57 @@ var key = event.which;
   {
   if(popup===false)
   {
-  if(hm>=2)
-{if(parents[hmv][1]===hm-1)
-  {hmv=parents[hmv][0]}
-  hm=hm-1;
+  if(chessAnalysis.hm[index]>=2)
+{if(chessAnalysis.parents[index][chessAnalysis.hmv[index]][1]===chessAnalysis.hm[index]-1)
+  {chessAnalysis.hmv[index]=chessAnalysis.parents[index][chessAnalysis.hmv[index]][0]}
+  chessAnalysis.hm[index]=chessAnalysis.hm[index]-1;
 
-chess.load(generatePosition(hmv,hm));
+chessAnalysis.chess[index].load(generatePosition(chessAnalysis.hmv[index],chessAnalysis.hm[index],chessAnalysis.startpositionfen[index]));
 
       
-        setup(chess.fen());
+        setup(chessAnalysis.chess[index].fen());
       
        addpieces(); 
        movegen();
       drag();
        drop();
+ if (chessAnalysis.mode==="engine_analysis_mode"){
         evaluations.trigger("piece:drop")
+         changeEngingePosition();
         //chat.emit("position",{fen:chess.fen(),room:connectionId})
-    $("#fen-container").val(chess.fen())
-    changeEngingePosition();
-
-       if(navigationType==="Next Moves"){
-       var fen_param=""
-      if(hm===0)
-      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
-      else{
-        fen_param=generatePosition(hmv,hm)
-      }
-
-           jQuery.ajax({
-
-        data: {fen:fen_param,file:fileId},
-        dataType: 'script',
-        type: 'get',
-        url: "/next_moves"
-        });
-        return
-      }
-       if(navigationType==="Opening Explorer")
-       {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
-       $("#comment-input").val(movescomment[hmv][hm]);}
+        $("#fen-container").val(chessAnalysis.chess[index].fen())
+        }
+        else if(chessAnalysis.mode==="your_analysis_mode"){
+          $("#fen-container").val(chessAnalysis.chess[index].fen())
+         
+        }
+     
+       
+       $("#comment-input").val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);}
 
        else
        {
 
-       atStart=true;
-       hm=0;
-       chess.load(startpositionfen);
-       setup(startpositionfen);
+       chessAnalysis.atStart[index]=true;
+       chessAnalysis.hm[index]=0;
+       chessAnalysis.chess[index].load(chessAnalysis.startpositionfen[index]);
+       setup(chessAnalysis.startpositionfen[index]);
       addpieces(); 
        movegen();
       drag();
        drop(); 
+       if (chessAnalysis.mode==="engine_analysis_mode"){
         evaluations.trigger("piece:drop")
+         changeEngingePosition();
         //chat.emit("position",{fen:chess.fen(),room:connectionId})
- $("#fen-container").val(chess.fen())
- changeEngingePosition();
-       if(navigationType==="Next Moves"){
-       var fen_param=""
-      if(hm===0)
-      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
-      else{
-        fen_param=generatePosition(hmv,hm)
+        $("#fen-container").val(chessAnalysis.chess[index].fen())
       }
-
-           jQuery.ajax({
-
-        data: {fen:fen_param,file:fileId},
-        dataType: 'script',
-        type: 'get',
-        url: "/next_moves"
-        });
-        return
-      }
-      if(navigationType==="Opening Explorer")
-       {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));}
-       $("#comment-input").val(movescomment[hmv][0]);
+        else if(chessAnalysis.mode==="your_analysis_mode"){
+          $("#fen-container").val(chessAnalysis.chess[index].fen())
+         
+        }
+     
+       $("#comment-input").val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][0]);
       
 
      }
@@ -1213,64 +1063,52 @@ chess.load(generatePosition(hmv,hm));
 }
   else if(event.which===39)
   {
-  if(moves[hmv]&&(popup===false))
-  {var nextmovelist=[[moves[hmv][hm],hmv,hm]];
+  if(chessAnalysis.moves[index][chessAnalysis.hmv[index]]&&(popup===false))
+  {var nextmovelist=[[chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]],chessAnalysis.hmv[index],chessAnalysis.hm[index]]];
 
-   for (var i=0;i<moves.length;i++)
-          {if (parents[i][0]===hmv&&parents[i][1]===hm)
-          {nextmovelist.push([moves[i][hm],i,hm]);
+   for (var i=0;i<chessAnalysis.moves[index].length;i++)
+          {if (chessAnalysis.parents[index][i][0]===chessAnalysis.hmv[index]&&chessAnalysis.parents[index][i][1]===chessAnalysis.hm[index])
+          {nextmovelist.push([chessAnalysis.moves[index][i][chessAnalysis.hm[index]],i,chessAnalysis.hm[index]]);
         }
         }
-        if(hm===0)
-        {for (var i=0;i<mainvariations.length;i++)
-        {if (mainvariations[i]!==hmv)
-        {nextmovelist.push([moves[mainvariations[i]][hm],mainvariations[i],hm])}}
+        if(chessAnalysis.hm[index]===0)
+        {for (var i=0;i<chessAnalysis.mainvariations[index].length;i++)
+        {if (chessAnalysis.mainvariations[index][i]!==chessAnalysis.hmv[index])
+        {nextmovelist.push([chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][chessAnalysis.hm[index]],chessAnalysis.mainvariations[index][i],chessAnalysis.hm[index]])}}
       }
   
-          if (nextmovelist.length===1&&moves[hmv].length>hm)
+          if (nextmovelist.length===1&&chessAnalysis.moves[index][chessAnalysis.hmv[index]].length>chessAnalysis.hm[index])
           {
-          atStart=false;
+          chessAnalysis.atStart[index]=false;
 
-          hm=hm+1;
+          chessAnalysis.hm[index]=chessAnalysis.hm[index]+1;
         
        
         
-        chess.load(generatePosition(hmv,hm));
+        chessAnalysis.chess[index].load(generatePosition(chessAnalysis.hmv[index],chessAnalysis.hm[index],chessAnalysis.startpositionfen[index]));
 
       
-        setup(chess.fen());
+        setup(chessAnalysis.chess[index].fen());
       
        addpieces(); 
        movegen();
       drag();
        drop();
-      evaluations.trigger("piece:drop")
-      //chat.emit("position",{fen:chess.fen(),room:connectionId})
- $("#fen-container").val(chess.fen())
- changeEngingePosition();
-       if(navigationType==="Next Moves"){
-       var fen_param=""
-      if(hm===0)
-      {fen_param="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"}
-      else{
-        fen_param=generatePosition(hmv,hm)
-      }
-
-           jQuery.ajax({
-
-        data: {fen:fen_param,file:fileId},
-        dataType: 'script',
-        type: 'get',
-        url: "/next_moves"
-        });
-        return
-      }
-      if(navigationType==="Opening Explorer")
-       {document.getElementById('analysis-iframe').contentWindow.sync(generatePosition(hmv,hm));} 
-       $("#comment-input").val(movescomment[hmv][hm]);
+ if (chessAnalysis.mode==="engine_analysis_mode"){
+        evaluations.trigger("piece:drop")
+         changeEngingePosition();
+        //chat.emit("position",{fen:chess.fen(),room:connectionId})
+        $("#fen-container").val(chessAnalysis.chess[index].fen())
+        }
+        else if(chessAnalysis.mode==="your_analysis_mode"){
+          $("#fen-container").val(chessAnalysis.chess[index].fen())
+        
+        }
+     
+       $("#comment-input").val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
        $("#table-container-moves").scrollLeft($("#table-container-moves").scrollLeft()+78);
         $("#table-container-top-labels").scrollLeft($("#table-container-moves").scrollLeft()+78);}
-else if(moves[hmv].length>hm)
+else if(chessAnalysis.moves[index][chessAnalysis.hmv[index]].length>chessAnalysis.hm[index])
 {popup=true;
 
   $("#next-move-select").css("display","inline-block");
@@ -1292,16 +1130,16 @@ else if(moves[hmv].length>hm)
 
 
         }
-        nextmovechoose(dropcount,nextmovelist.length,nextmovelist);
+        nextmovechoose(chessAnalysis.dropcount[index],nextmovelist.length,nextmovelist);
         }
         }
      
       }
-            currentHighlighted.css("background-color","white");
-    $("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1)).css("background-color","yellow");
-    currentHighlighted=$("#row"+String(_.indexOf(sortlist,hmv))+"col"+(hm-1));
+            chessAnalysis.currentHighlighted.css("background-color","white");
+    $("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1)).css("background-color","yellow");
+    chessAnalysis.currentHighlighted=$("#row"+String(_.indexOf(chessAnalysis.sortlist[index],chessAnalysis.hmv[index]))+"col"+(chessAnalysis.hm[index]-1));
     if(location==="improved_fen")
-      {update_move_tree()}
+      {chessAnalysis.update_move_tree()}
 
   }
 });
@@ -1347,12 +1185,12 @@ var changeEngingePosition=function(){
       chessAnalysis.engines[0].terminate();
       chessAnalysis.engines[0] = new Worker('stockfish.js');
       chessAnalysis.engines[0].postMessage("uci")
-      chessAnalysis.engines[0].postMessage("position fen "+chess.fen())
+      chessAnalysis.engines[0].postMessage("position fen "+chessAnalysis.chess[index].fen())
       chessAnalysis.engines[0].postMessage("go infinite")
       jQuery.ajax({
         type:"POST",
         url:"/api/evaluations",
-        data:{fen:chess.fen()},
+        data:{fen:chessAnalysis.chess[index].fen()},
         async:false,
         success:function(data){
         evaluationId=data.id
@@ -1383,7 +1221,7 @@ var changeEngingePosition=function(){
                 alert("There was an error uploading analysis.  Please refresh the page and try again.")
                 }
                 })
-            if(chess.turn()==='b')
+            if(chessAnalysis.chess[index].turn()==='b')
               {$("#browser_engine_evaluation").text(evaluation*-1);}
             else
               {$("#browser_engine_evaluation").text(evaluation);}
@@ -1406,7 +1244,7 @@ var changeEngingePosition=function(){
               alert("There was an error uploading analysis.  Please refresh the page and try again.")
               }
             })
-            if(chess.turn()==='b')
+            if(chessAnalysis.chess[index].turn()==='b')
               {$("#browser_engine_evaluation").text(evaluation*-1);}
             else
               {$("#browser_engine_evaluation").text(evaluation);}
@@ -1417,4 +1255,59 @@ var changeEngingePosition=function(){
           }
         }
 }
+}
+
+
+var writeAnnotation=function(hmv,hm,spotAdjustment){
+  var fragment="";
+  var spot=0+spotAdjustment;
+
+  var sortedChildren=_.sortBy(chessAnalysis.children[index][hmv],function(array){return array[1]})
+  if(sortedChildren.length>0)
+    {_.each(sortedChildren,function(element,indicator){
+      if(element[1]>spot){
+        while(spot<=element[1])
+        {if((spot-spotAdjustment+hm)%2===0)
+          {fragment+="<span class='ann_move' id='var"+hmv+"move"+spot+"'>"+" "+((spot-spotAdjustment+hm)/2+1)+". "+chessAnalysis.moves[index][hmv][spot]+"</span>"}
+         else
+          {fragment+="<span class='ann_move' id='var"+hmv+"move"+spot+"'>"+" "+chessAnalysis.moves[index][hmv][spot]+"</span>"}       
+        spot+=1;}
+        fragment+=(" ("+writeAnnotation(element[0],element[1]+chessAnalysis.hm[index-1],element[1])+")")
+      }
+      else{
+        fragment+=(" ("+writeAnnotation(element[0],element[1]+chessAnalysis.hm[index-1],element[1])+")")
+      }
+    })
+    while(spot<chessAnalysis.moves[index][hmv].length){
+
+      if((spot-spotAdjustment+hm)%2===0)
+          {fragment+="<span class='ann_move' id='var"+hmv+"move"+spot+"'>"+" "+((spot-spotAdjustment+hm)/2+1)+". "+chessAnalysis.moves[index][hmv][spot]+"</span>"}
+         else
+          {fragment+="<span class='ann_move' id='var"+hmv+"move"+spot+"'>"+" "+chessAnalysis.moves[index][hmv][spot]+"</span>"}
+      spot+=1;
+    }
+  }
+  else{
+
+    _.each(_.rest(chessAnalysis.moves[index][hmv],spot),function(move,indicator){
+      if((spot-spotAdjustment+hm)%2===0)
+          {fragment+="<span class='ann_move' id='var"+hmv+"move"+spot+"'>"+" "+((spot-spotAdjustment+hm)/2+1)+". "+chessAnalysis.moves[index][hmv][spot]+"</span>"}
+         else
+          {fragment+="<span class='ann_move' id='var"+hmv+"move"+spot+"'>"+" "+chessAnalysis.moves[index][hmv][spot]+"</span>"}
+        spot+=1;
+    })
+  }
+
+ return(fragment)
+}
+
+var clickNavigate=function(id_string){
+  chessAnalysis.hmv[index]=parseInt(id_string.split("var")[1].split("move")[0])
+  chessAnalysis.hm[index]=parseInt(id_string.split("move")[1])+1;
+  chessAnalysis.chess[index].load(generatePosition(chessAnalysis.hmv[index],chessAnalysis.hm[index],chessAnalysis.startpositionfen[index]))
+  setup(chessAnalysis.chess[index].fen());  
+  addpieces(); 
+  movegen();
+  drag();
+  drop(); 
 }

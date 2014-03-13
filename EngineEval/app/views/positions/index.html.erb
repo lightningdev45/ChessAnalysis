@@ -1,30 +1,31 @@
-
-        <script src='//localhost:8080/socket.io/socket.io.js'></script>
-      
+<!--<script src='//localhost:8080/socket.io/socket.io.js'></script> -->    
 <%=javascript_tag do %>
 $(document).ready(function(){
 keynavigate("show");
 
-
+$(".ann_move").on("hover",function(){
+ alert("hi")})
 $("#boardedge").height($("#boardedge").width())
-	setup(chess.fen());
+
+	setup(chessAnalysis.chess[index].fen());
   $("#browser_engine_button").click(function(){
+
       if(chessAnalysis.engineStatus===true){
       chessAnalysis.engineStatus=false
       chessAnalysis.engines[0].terminate()
       $("#browser_engine_button").removeClass("btn-danger")
       $("#browser_engine_button").addClass("btn-success")
-      $("#browser_engine_button").text("Start chessAnalysis.engines[0]")
+      $("#browser_engine_button").text("Start stockfish")
       }
     else{
       chessAnalysis.engineStatus=true
       chessAnalysis.engines[0] = new Worker('stockfish.js');
       chessAnalysis.engines[0].postMessage("uci")
-      chessAnalysis.engines[0].postMessage("position fen "+chess.fen())
+      chessAnalysis.engines[0].postMessage("position fen "+chessAnalysis.chess[index].fen())
       jQuery.ajax({
         type:"POST",
         url:"/api/evaluations",
-        data:{fen:chess.fen()},
+        data:{fen:chessAnalysis.chess[index].fen()},
         async:false,
         success:function(data){
         chessAnalysis.evaluationId=data.id
@@ -57,7 +58,7 @@ $("#boardedge").height($("#boardedge").width())
                 alert("There was an error uploading analysis.  Please refresh the page and try again.")
                 }
                 })
-            if(chess.turn()==='b')
+            if(chessAnalysis.chess[index].turn()==='b')
               {$("#browser_engine_evaluation").text(evaluation*-1);}
             else
               {$("#browser_engine_evaluation").text(evaluation);}
@@ -80,7 +81,7 @@ $("#boardedge").height($("#boardedge").width())
               alert("There was an error uploading analysis.  Please refresh the page and try again.")
               }
             })
-            if(chess.turn()==='b')
+            if(chessAnalysis.chess[index].turn()==='b')
               {$("#browser_engine_evaluation").text(evaluation*-1);}
             else
               {$("#browser_engine_evaluation").text(evaluation);}
@@ -97,18 +98,55 @@ $("#boardedge").height($("#boardedge").width())
     movegen();   
    drag();
     drop();
-$("#fen-container").val(chess.fen())
+$("#fen-container").val(chessAnalysis.chess[index].fen())
   EngineEval.initialize();
  connectionId=Math.floor(Math.random()*1000000000)
   $("#connectionId").append(connectionId)
 
-   chat = io.connect("http://localhost:8080")
-   chat.emit('subscribe',{room:connectionId})
-   chat.on("receive_evaluation",function(data){
-   $("#my_engine_evaluation").html(data.evaluation)
- })
+   //chat = io.connect("http://localhost:8080")
+   //chat.emit('subscribe',{room:connectionId})
+   //chat.on("receive_evaluation",function(data){
+   //$("#my_engine_evaluation").html(data.evaluation)
+ //})
              
+$(".change-mode").click(function(){
+  if(chessAnalysis.mode!==$(this).attr("id"))
+  {chessAnalysis.mode=$(this).attr("id") 
+    if(chessAnalysis.mode==="your_analysis_mode"){
+      index=1;
+      $("#annotation_moves").empty();
+      chessAnalysis.hm[index]=chessAnalysis.hm[index-1];
+      chessAnalysis.hmv[index]=chessAnalysis.hmv[index-1];
+      chessAnalysis.children[index]={};
+      chessAnalysis.parents[index]=[];
+      chessAnalysis.moves[index]=[];
+      chessAnalysis.mainvariations[index]=[]
+      chessAnalysis.movescomment[index]=[[""]]
+      chessAnalysis.numvariations[index]=[0]
+      chessAnalysis.dropcount[index]=0
+      chessAnalysis.atStart[index]=true
+      chessAnalysis.chess[index].load(chessAnalysis.chess[index-1].fen())
+      chessAnalysis.startpositionfen[index]=chessAnalysis.chess[index-1].fen();
+      }
+       
+    else if(chessAnalysis.mode==="engine_analysis_mode"){
+      index=0
+      setup(chessAnalysis.chess[index].fen());  
+      addpieces(); 
+      movegen();
+      drag();
+      drop(); 
+    }
+  } 
+})
 
+$("#rmenu-cancel").click(function(){
+  $("#rmenu").css("display","none");
+  $("#delete-remaining").unbind("click"); 
+  $("#delete-variation").unbind("click");
+  $("#replay-variation").unbind("click");
+  $("#make-critical").unbind("click");
+});
 
 })
 
@@ -200,18 +238,22 @@ $("#fen-container").val(chess.fen())
 
 
   </div>
+<ul class="nav nav-tabs col-md-7 col-lg-7">
+  <li class="active change-mode" id="engine_analysis_mode"><a href="#evaluations_table" data-toggle="tab">Engine Analysis</a></li>
+  <li class="change-mode" id="your_analysis_mode"><a href="#your_analysis" data-toggle="tab">Your Analysis</a></li>
 
-  <div class="col-md-7 col-lg-7" id="evaluations_table">
-    
+</ul>
 
-
-	
-  
-		
-
+<div class="tab-content col-md-7 col-lg-7">
+  <div class="tab-pane active" id="evaluations_table">
 
   </div>
- 
+  <div class="tab-pane" id="your_analysis">
+    <div id="annotation_moves">
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div class="row">
@@ -327,3 +369,11 @@ $("#fen-container").val(chess.fen())
       <div id="scroll-move-select" class="btn btn-primary">Select</div>
       <div id="scroll-cancel" class="btn btn-primary">Cancel</div>
   </div>
+
+
+<div id="rmenu" class="well">
+  <p id="delete-remaining" class="rselect">Delete rest of variation</p>
+  <p id="delete-variation" class="rselect">Delete Variation</p>
+
+  <div class="text-center"><div id="rmenu-cancel" class="btn btn-primary">Cancel</div></div>
+</div>

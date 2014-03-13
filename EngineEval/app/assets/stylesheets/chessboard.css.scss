@@ -1,27 +1,14 @@
 @import url(http://fonts.googleapis.com/css?family=Varela+Round);
 html{
 	overflow:auto;
-	font-size: 14px;
-	
-	
+	font-size: 14px;	
 }
 
 .container{
-}
-
-
-
-.container-full{
-	padding: 0px 15px;
-	width:100%;
+	background:white;
+	border-radius:25px;
 
 }
-.opencontainer{
-
-	z-index:10;
-}
-
-
 #board{
 	
 	margin-top: 5%;
@@ -29,7 +16,6 @@ html{
 	width:90%;
 	float:left;	
 }
-
 .navbar-inverse{
 	background: $dark-background;
 }
@@ -76,10 +62,7 @@ font-family: 'Varela Round', sans-serif;
 	
 
 }
-.jumbotron{
 
-background: none;
-}
 
 .btn{
 	
@@ -335,14 +318,6 @@ display:none;
 			color:$dark-background;
 			font-weight: bold;
 }
-#scroll-container{
-	overflow: auto;
-	height:75px;
-	border:2px solid $dark-background;
-	background-color: white;
-	border-radius:4px;
-
-}
 
 .move-row{
 	height:25px;
@@ -583,48 +558,20 @@ border:2px solid black;
 		text-align: center;
 		margin-top:15px;
 	}
-.file-board-container{
-	text-align: center;
-}
 
-.opening-file .nav li a{
-	background-color:$black-square;
-	color:white;
-}
 
-.opening-file .nav li a:hover{
-	color:$dark-background;
-	background: $white-square;
-}
-#white-files-container .opening-file .nav li a:hover{
-background: $white-square;}
 
- .opening-file .nav > li > a{
-	padding:2% 3%;
-	text-align: center;
-
-}
 
 .ofile-show-btn-wrapper{
 	text-align: center;
 }
 
-.nav-tabs{
-	border-bottom: 0px;
-	
-}
-ul.nav-tabs{
-	padding-bottom: 0px;
 
-}
 
-.nav-tabs li a:hover{
-color:$dark-background;
-}
 
-.nav-tabs li.active a{
-	background: $white-square;
-}
+
+
+
 
 .list-group{
 	margin-bottom: 0px;
@@ -655,9 +602,6 @@ a:hover{
 	padding:0px;
 }
 
-.tab-content{
-	background: $white-square;
-}
 
 .centered-user-interface{
 	
@@ -788,72 +732,6 @@ input[type="checkbox"]{
 	display:inline-block;
 
 }
-
-.move-container{
-	table-layout: fixed;
-	max-height:415px;
-}
-
-.opening-list{
-	text-align:center;
-	overflow:auto;
-}
-
-.black-overlay{
-	position:absolute;
-	width:100%;
-	height:100%;
-	
-	background-color:$dark-background;
-	top:0px;
-	left:0px;
-	text-align:center;
-	border-radius:10px;
-	z-index:10;
-	display:block;
-	opacity:0.8;
-	color:white;
-	
-	
-}
-
-.loader-container h4{
-	font-weight:bold;
-}
-.loader-container{
-
-position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: auto;
-    height: 30%;
-    margin: auto;
-
-
-}
-.loader-container img{
-	height:75%;
-	width:auto;
-
-}
-.white-overlay{
-position:absolute;
-	width:100%;
-	height:100%;
-	display:block;
-	background-color:#f5f5f5;
-	top:0px;
-	left:0px;
-	text-align:center;
-	border-radius:10px;
-	z-index:10;
-	opacity:0.8;
-	color:$dark-background;
-	
-}
-
 .remote_failure{
 	color:red;
 	margin-top:none;
@@ -861,13 +739,28 @@ position:absolute;
 }
 
 #evaluations_table{
-	overflow:auto;
-	height:450px;
-	border-collapse:initial;
-	display:block;
-	
+	overflow:auto;	
 	
 }
 #evaluations_table table{
 
+}
+
+.ann_move:hover{
+	color:#428bca;
+	cursor:pointer;
+}
+
+.nav-tabs{
+	padding:0px;
+
+	
+}
+.tab-content{
+	background:white;
+}
+
+#annotation_moves{
+	padding-top:15px;
+	font-weight:bold;
 }

@@ -18,6 +18,7 @@
 //= require uiassets
 //= require backbone
 //= require engine_eval
+//= require customMenu
 //= require_tree ../templates
 //= require_tree ./models
 //= require_tree ./collections
