@@ -35,7 +35,7 @@ end
  gem 'rails_12factor'
 
 gem 'backbone-on-rails'
-
+gem 'devise'
 ruby "2.1.1"
 
 # Use ActiveModel has_secure_password

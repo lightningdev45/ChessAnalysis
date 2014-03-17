@@ -1,4 +1,5 @@
 EngineEval::Application.routes.draw do
+  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -6,12 +7,19 @@ EngineEval::Application.routes.draw do
     collection {get :update_evaluation}
   end
 
+resources :annotations
 
 scope 'api' do
   resources :evaluations do
     
   end
 end
+
+get '/get_annotation_data'=>'annotations#get_annotation_data'
+resources :games
+resources :dpositions
+resources :game_positions
+get 'clean_database'=>'games#clean_database'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

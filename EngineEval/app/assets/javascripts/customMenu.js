@@ -30,6 +30,7 @@ var annOut=function(){
 
 var showCustomMenu=function(event){
 
+
  var x=event.pageX;
  var y=event.pageY;
  $("#rmenu").css("display","inline-block");
@@ -39,15 +40,20 @@ var showCustomMenu=function(event){
 
 
 $("#delete-variation").click(function(){
-
-deleteVariation();
-
+  deleteVariation();
 });
 
 
 $("#delete-remaining").click(function(){
-deleteRemaining();
+  deleteRemaining();
+});
 
+$("#add-comment-after").click(function(){
+  addCommentAfter();
+});
+
+$("#add-comment-before").click(function(){
+  addCommentBefore();
 });
 
 

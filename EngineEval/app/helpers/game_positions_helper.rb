@@ -1,0 +1,2 @@
+module GamePositionsHelper
+end

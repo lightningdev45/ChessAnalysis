@@ -1,154 +1,270 @@
 <!--<script src='//localhost:8080/socket.io/socket.io.js'></script> -->    
 <%=javascript_tag do %>
-$(document).ready(function(){
-keynavigate("show");
-
-$(".ann_move").on("hover",function(){
- alert("hi")})
-$("#boardedge").height($("#boardedge").width())
-
-	setup(chessAnalysis.chess[index].fen());
-  $("#browser_engine_button").click(function(){
-
-      if(chessAnalysis.engineStatus===true){
-      chessAnalysis.engineStatus=false
-      chessAnalysis.engines[0].terminate()
-      $("#browser_engine_button").removeClass("btn-danger")
-      $("#browser_engine_button").addClass("btn-success")
-      $("#browser_engine_button").text("Start stockfish")
-      }
-    else{
-      chessAnalysis.engineStatus=true
-      chessAnalysis.engines[0] = new Worker('stockfish.js');
-      chessAnalysis.engines[0].postMessage("uci")
-      chessAnalysis.engines[0].postMessage("position fen "+chessAnalysis.chess[index].fen())
-      jQuery.ajax({
-        type:"POST",
-        url:"/api/evaluations",
-        data:{fen:chessAnalysis.chess[index].fen()},
-        async:false,
-        success:function(data){
-        chessAnalysis.evaluationId=data.id
-        
-        },
-        error:function(data){
-        alert("There was an error uploading analysis.  Please refresh the page and try again.")
-        }
-      })
-      $("#browser_engine_button").removeClass("btn-success")
-      $("#browser_engine_button").addClass("btn-danger")
-      $("#browser_engine_button").text("Stop Stockfish")
-      chessAnalysis.engines[0].postMessage("go infinite")
-      chessAnalysis.engines[0].onmessage = function(event) {
-        if(event.data.split(" ")[3]=="seldepth")
-          {
-          if( event.data.split(" ")[9].match(/[0-9]+/))
-            {var nodes=event.data.split(" ")[9]
-            var depth=event.data.split(" ")[2]
-            var seldepth=event.data.split(" ")[4]
-            var evaluation=event.data.split(" ")[7]/100
-            $("#browser_engine_nodes").text(nodes);
-            $("#browser_engine_depth").text(depth);
-            $("#browser_engine_seldepth").text(seldepth);
-             jQuery.ajax({
-                type:"PUT",
-                url:"/api/evaluations/"+chessAnalysis.evaluationId,
-                data:{nodes:nodes,seldepth:seldepth,depth:depth,evaluation:evaluation,engine:"stockfish_browser"},
-                error:function(data){
-                alert("There was an error uploading analysis.  Please refresh the page and try again.")
+$(document)
+    .ready(function () {
+        keynavigate("show");
+        $("#boardedge")
+            .height($("#boardedge")
+                .width())
+        setup(chessAnalysis.chess[index].fen());
+        $("#browser_engine_button")
+            .click(function () {
+                if (chessAnalysis.engineStatus === true) {
+                    chessAnalysis.engineStatus = false
+                    chessAnalysis.engines[0].terminate()
+                    $("#browser_engine_button")
+                        .removeClass("btn-danger")
+                    $("#browser_engine_button")
+                        .addClass("btn-success")
+                    $("#browser_engine_button")
+                        .text("Start stockfish")
                 }
-                })
-            if(chessAnalysis.chess[index].turn()==='b')
-              {$("#browser_engine_evaluation").text(evaluation*-1);}
-            else
-              {$("#browser_engine_evaluation").text(evaluation);}
-             
-            }
-
-          else
-            {var nodes=event.data.split(" ")[10]
-            var depth=event.data.split(" ")[2]
-            var seldepth=event.data.split(" ")[4]
-            var evaluation=event.data.split(" ")[7]/100
-            $("#browser_engine_nodes").text(nodes);
-            $("#browser_engine_depth").text(depth);
-            $("#browser_engine_seldepth").text(seldepth);
-            jQuery.ajax({
-              type:"PUT",
-              url:"/api/evaluations/"+chessAnalysis.evaluationId,
-              data:{nodes:nodes,seldepth:seldepth,depth:depth,evaluation:evaluation,engine:"stockfish_browser"},
-              error:function(data){
-              alert("There was an error uploading analysis.  Please refresh the page and try again.")
-              }
+                else {
+                    chessAnalysis.engineStatus = true
+                    chessAnalysis.engines[0] = new Worker('stockfish.js');
+                    chessAnalysis.engines[0].postMessage("uci")
+                    chessAnalysis.engines[0].postMessage("position fen " + chessAnalysis.chess[index].fen())
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "/api/evaluations",
+                        data: {
+                            fen: chessAnalysis.chess[index].fen()
+                        },
+                        async: false,
+                        success: function (data) {
+                            chessAnalysis.evaluationId = data.id
+                        },
+                        error: function (data) {
+                            alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                        }
+                    })
+                    $("#browser_engine_button")
+                        .removeClass("btn-success")
+                    $("#browser_engine_button")
+                        .addClass("btn-danger")
+                    $("#browser_engine_button")
+                        .text("Stop Stockfish")
+                    chessAnalysis.engines[0].postMessage("go infinite")
+                    chessAnalysis.engines[0].onmessage = function (event) {
+                        if (event.data.split(" ")[3] == "seldepth") {
+                            if (event.data.split(" ")[9].match(/[0-9]+/)) {
+                                var nodes = event.data.split(" ")[9]
+                                var depth = event.data.split(" ")[2]
+                                var seldepth = event.data.split(" ")[4]
+                                var evaluation = event.data.split(" ")[7] / 100
+                                $("#browser_engine_nodes")
+                                    .text(nodes);
+                                $("#browser_engine_depth")
+                                    .text(depth);
+                                $("#browser_engine_seldepth")
+                                    .text(seldepth);
+                                jQuery.ajax({
+                                    type: "PUT",
+                                    url: "/api/evaluations/" + chessAnalysis.evaluationId,
+                                    data: {
+                                        nodes: nodes,
+                                        seldepth: seldepth,
+                                        depth: depth,
+                                        evaluation: evaluation,
+                                        engine: "stockfish_browser"
+                                    },
+                                    error: function (data) {
+                                        alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                                    }
+                                })
+                                if (chessAnalysis.chess[index].turn() === 'b') {
+                                    $("#browser_engine_evaluation")
+                                        .text(evaluation * -1);
+                                }
+                                else {
+                                    $("#browser_engine_evaluation")
+                                        .text(evaluation);
+                                }
+                            }
+                            else {
+                                var nodes = event.data.split(" ")[10]
+                                var depth = event.data.split(" ")[2]
+                                var seldepth = event.data.split(" ")[4]
+                                var evaluation = event.data.split(" ")[7] / 100
+                                $("#browser_engine_nodes")
+                                    .text(nodes);
+                                $("#browser_engine_depth")
+                                    .text(depth);
+                                $("#browser_engine_seldepth")
+                                    .text(seldepth);
+                                jQuery.ajax({
+                                    type: "PUT",
+                                    url: "/api/evaluations/" + chessAnalysis.evaluationId,
+                                    data: {
+                                        nodes: nodes,
+                                        seldepth: seldepth,
+                                        depth: depth,
+                                        evaluation: evaluation,
+                                        engine: "stockfish_browser"
+                                    },
+                                    error: function (data) {
+                                        alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                                    }
+                                })
+                                if (chessAnalysis.chess[index].turn() === 'b') {
+                                    $("#browser_engine_evaluation")
+                                        .text(evaluation * -1);
+                                }
+                                else {
+                                    $("#browser_engine_evaluation")
+                                        .text(evaluation);
+                                }
+                            }
+                        };
+                    }
+                }
             })
-            if(chessAnalysis.chess[index].turn()==='b')
-              {$("#browser_engine_evaluation").text(evaluation*-1);}
-            else
-              {$("#browser_engine_evaluation").text(evaluation);}
-            
-
-            }
-          
-            };}
-
-    }
-
-  })
-    addpieces();
-    movegen();   
-   drag();
-    drop();
-$("#fen-container").val(chessAnalysis.chess[index].fen())
-  EngineEval.initialize();
- connectionId=Math.floor(Math.random()*1000000000)
-  $("#connectionId").append(connectionId)
-
-   //chat = io.connect("http://localhost:8080")
-   //chat.emit('subscribe',{room:connectionId})
-   //chat.on("receive_evaluation",function(data){
-   //$("#my_engine_evaluation").html(data.evaluation)
- //})
-             
-$(".change-mode").click(function(){
-  if(chessAnalysis.mode!==$(this).attr("id"))
-  {chessAnalysis.mode=$(this).attr("id") 
-    if(chessAnalysis.mode==="your_analysis_mode"){
-      index=1;
-      $("#annotation_moves").empty();
-      chessAnalysis.hm[index]=chessAnalysis.hm[index-1];
-      chessAnalysis.hmv[index]=chessAnalysis.hmv[index-1];
-      chessAnalysis.children[index]={};
-      chessAnalysis.parents[index]=[];
-      chessAnalysis.moves[index]=[];
-      chessAnalysis.mainvariations[index]=[]
-      chessAnalysis.movescomment[index]=[[""]]
-      chessAnalysis.numvariations[index]=[0]
-      chessAnalysis.dropcount[index]=0
-      chessAnalysis.atStart[index]=true
-      chessAnalysis.chess[index].load(chessAnalysis.chess[index-1].fen())
-      chessAnalysis.startpositionfen[index]=chessAnalysis.chess[index-1].fen();
-      }
-       
-    else if(chessAnalysis.mode==="engine_analysis_mode"){
-      index=0
-      setup(chessAnalysis.chess[index].fen());  
-      addpieces(); 
-      movegen();
-      drag();
-      drop(); 
-    }
-  } 
-})
-
-$("#rmenu-cancel").click(function(){
-  $("#rmenu").css("display","none");
-  $("#delete-remaining").unbind("click"); 
-  $("#delete-variation").unbind("click");
-  $("#replay-variation").unbind("click");
-  $("#make-critical").unbind("click");
-});
-
-})
+        addpieces();
+        movegen();
+        drag();
+        drop();
+        $("#fen-container")
+            .val(chessAnalysis.chess[index].fen())
+        EngineEval.initialize();
+        connectionId = Math.floor(Math.random() * 1000000000)
+        $("#connectionId")
+            .append(connectionId)
+        //chat = io.connect("http://localhost:8080")
+        //chat.emit('subscribe',{room:connectionId})
+        //chat.on("receive_evaluation",function(data){
+        //$("#my_engine_evaluation").html(data.evaluation)
+        //})
+        $(".change-mode")
+            .click(function () {
+                if (chessAnalysis.mode !== $(this)
+                    .attr("id")) {
+                    if (chessAnalysis.mode === "your_analysis_mode") {
+                        jQuery.ajax({
+                            url: "/annotations",
+                            type: "POST",
+                            data: {
+                                moves: JSON.stringify(chessAnalysis.moves[index]),
+                                comments: JSON.stringify(chessAnalysis.movescomment[index]),
+                                mainvariations: JSON.stringify(chessAnalysis.mainvariations[index]),
+                                numvariations: chessAnalysis.numvariations[index],
+                                parents: JSON.stringify(chessAnalysis.parents[index]),
+                                children: JSON.stringify(chessAnalysis.children[index]),
+                                dropcount: chessAnalysis.dropcount[index],
+                                fen: chessAnalysis.chess[0].fen()
+                            }
+                        })
+                    }
+                    chessAnalysis.mode = $(this)
+                        .attr("id")
+                    if (chessAnalysis.mode === "your_analysis_mode") {
+                        jQuery.ajax({
+                            url: "/get_annotation_data",
+                            type: "GET",
+                            data: {
+                                fen: chessAnalysis.chess[index].fen()
+                            },
+                            dataType:"json",
+                            error:function(data){
+                            alert("error")
+                            },
+                            success: function (data) {
+                                if (data.fen !== "false"&&data.moves[0]) {
+                                    index = 1;
+                                    console.log(data)
+                                    $("#annotation_moves")
+                                        .empty();
+                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
+                                    chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
+                                    chessAnalysis.children[index] = data.children;
+                                    chessAnalysis.parents[index] = data.parents;
+                                    chessAnalysis.moves[index] = data.moves;
+                                    chessAnalysis.mainvariations[index] = data.mainvariations
+                                    chessAnalysis.movescomment[index] = data.comments
+                                    chessAnalysis.numvariations[index] = data.numvariations
+                                    chessAnalysis.dropcount[index] = data.dropcount
+                                    chessAnalysis.atStart[index] = false
+                                    chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                    chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                    $("#fen-container")
+                                        .val(chessAnalysis.chess[index].fen())
+                                    $("#annotation_moves")
+                                        .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
+                                    $(".ann_move")
+                                        .click(function () {
+                                            clickNavigate($(this)
+                                                .attr("id"))
+                                        })
+                                    $(".ann_move")
+                                        .hover(function () {
+                                            annIn($(this)
+                                                .attr("id"))
+                                        }, function () {
+                                            annOut()
+                                        });
+                                    $(".ann_comment")
+                                        .css("max-width", $("#annotation_moves")
+                                            .width())
+                                    $(".ann_comment")
+                                        .each(function () {
+                                            var id = $(this)
+                                                .attr("id")
+                                            var width = getWidthOfInput(document.getElementById(id))
+                                            $(this)
+                                                .width(width);
+                                            $(this)
+                                                .attr('rows', Math.floor(document.getElementById(id)
+                                                    .style.width.slice(0, document.getElementById(id)
+                                                        .style.width.length - 2) / $(this)
+                                                    .css("max-width")
+                                                    .slice(0, $(this)
+                                                        .css("max-width")
+                                                        .length - 2)) + 1)
+                                        })
+                                }
+                                else {
+                                    index = 1;
+                                    $("#annotation_moves")
+                                        .empty();
+                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
+                                    chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
+                                    chessAnalysis.children[index] = {};
+                                    chessAnalysis.parents[index] = [];
+                                    chessAnalysis.moves[index] = [];
+                                    chessAnalysis.mainvariations[index] = []
+                                    chessAnalysis.movescomment[index] = [[""]]
+                                    chessAnalysis.numvariations[index] = 0
+                                    chessAnalysis.dropcount[index] = 0
+                                    chessAnalysis.atStart[index] = true
+                                    chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                    chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                }
+                            }
+                        })
+                    }
+                    else if (chessAnalysis.mode === "engine_analysis_mode") {
+                        index = 0
+                        setup(chessAnalysis.chess[index].fen());
+                        addpieces();
+                        movegen();
+                        drag();
+                        drop();
+                    }
+                }
+            })
+        $("#rmenu-cancel")
+            .click(function () {
+                $("#rmenu")
+                    .css("display", "none");
+                $("#delete-remaining")
+                    .unbind("click");
+                $("#delete-variation")
+                    .unbind("click");
+                $("#replay-variation")
+                    .unbind("click");
+                $("#make-critical")
+                    .unbind("click");
+            });
+    })
 
 <%end%>
 
@@ -374,6 +490,8 @@ $("#rmenu-cancel").click(function(){
 <div id="rmenu" class="well">
   <p id="delete-remaining" class="rselect">Delete rest of variation</p>
   <p id="delete-variation" class="rselect">Delete Variation</p>
+  <p id="add-comment-before" class="rselect">Add Comment Before Move</p>
+  <p id="add-comment-after" class="rselect">Add Comment After Move</p>
 
   <div class="text-center"><div id="rmenu-cancel" class="btn btn-primary">Cancel</div></div>
 </div>

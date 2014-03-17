@@ -4,9 +4,9 @@ html{
 	font-size: 14px;	
 }
 
-.container{
+.main-container{
 	background:white;
-	border-radius:25px;
+	border-radius:0px 0px 25px 25px;
 
 }
 #board{
@@ -16,6 +16,7 @@ html{
 	width:90%;
 	float:left;	
 }
+
 .navbar-inverse{
 	background: $dark-background;
 }
@@ -50,6 +51,7 @@ body{
 	
 background: url("cartographer_@2X.png");
 background: url("shattered.png");
+background:white;
 font-family: 'Varela Round', sans-serif;
 	padding-top: 51px;
 	color:$dark-background;
@@ -58,10 +60,7 @@ font-size:14px;
 h1, h2, h3, h4, h5, h6{
 font-family: 'Varela Round', sans-serif;	
 }
-.navbar{
-	
 
-}
 
 
 .btn{
@@ -115,8 +114,8 @@ font-family: 'Varela Round', sans-serif;
 
 		}
 
-.piece.hover{
-	background-color:yellow;
+.piece:hover{
+	cursor:pointer;
 }
 
 .piece{
@@ -426,10 +425,7 @@ display:none;
 	
 	
 }
-.popup-group{
-	position:relative;
 
-}
 
 .problem-popup input[type="radio"]{
 	display:inline-block;
@@ -578,7 +574,7 @@ border:2px solid black;
 }
 
 .well{
-	background: $white-square;
+	
 
 }
 
@@ -598,9 +594,7 @@ a:hover{
 	height:50px;
 	width:132px;
 }
-.navbar-brand{
-	padding:0px;
-}
+
 
 
 .centered-user-interface{
@@ -614,48 +608,6 @@ a:hover{
 }
 
 
-@media (min-width:400px) {
-	body{
-font-size: 40%;
-	}
-	h5{
-		font-size: 40%;
-	}
-
-	}
-
-@media (min-width:600px) {
-	body{font-size: 60%;
-	}
-	h5{
-		font-size: 60%;
-	}
-	}
-
-@media (min-width:800px) {
-	body{
-font-size: 80%;
-	}
-	h5{
-		font-size: 80%;
-	}
-	}
-
-@media (min-width:1000px) {
-	body{
-font-size: 100%;
-	}
-	h5{
-		font-size: 100%;
-	}
-	}
-
-	.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
-		padding-right:2%;
-		padding-left:2%;
-		padding-bottom: 1%;
-	}
-
 	.updating-status{
 		display:none;
 
@@ -666,9 +618,7 @@ font-size: 100%;
 	position:relative;
 	width:5%;
 	text-align: center;
-	height:5%;
-
-	
+	height:5%;	
 }
 .user-info{
 	float: right;
@@ -747,7 +697,7 @@ input[type="checkbox"]{
 }
 
 .ann_move:hover{
-	color:#428bca;
+	color:$black-square;
 	cursor:pointer;
 }
 
@@ -763,4 +713,21 @@ input[type="checkbox"]{
 #annotation_moves{
 	padding-top:15px;
 	font-weight:bold;
+}
+
+.ann_comment{
+	outline:none;
+	border:none;
+	margin-left:8px;
+	color:#428bca;
+	white-space:pre-line;
+	resize:none;
+	overflow:hidden;
+	padding:0px;
+	margin-top:0px;
+	width:8px;
+}
+
+.javascript-alert{
+	display:none;
 }
