@@ -1,0 +1,9 @@
+
+<%@annotaion.annotation_edits.order(:created_at).reverse.each do |edit|%>
+<tr>
+	<td><%=edit.created_at%></td>
+	<td><%=link_to "View Edit","#",class:"btn btn-primary"%>,%></td>
+	<td><%=link_to "View Annotation","#",class:"btn btn-primary"%></td>
+	<td><%=link_to "Rollback","#",class:"btn btn-primary"%></td>
+</tr>
+<%end%>

@@ -50,6 +50,7 @@ chessAnalysis.startpositionfen = [new Chess()
     .fen(), new Chess()
     .fen()
 ]
+chessAnalysis.editStatus=[false,false]
 
 var index = 0
 var generatePosition = function (hmv, hm, startpositionfen) {
@@ -376,6 +377,7 @@ var promotionclick = function (from, to, count) {
                             .val(chessAnalysis.chess[index].fen())
                         $("#annotation_moves")
                             .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
+                        chessAnalysis.editStatus[index]=true;
                         $(".ann_move")
                             .click(function () {
                                 clickNavigate($(this)
@@ -525,6 +527,7 @@ var promotionclick = function (from, to, count) {
                             .val(chessAnalysis.chess[index].fen())
                         $("#annotation_moves")
                             .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
+                        chessAnalysis.editStatus[index]=true;
                         $(".ann_move")
                             .click(function () {
                                 clickNavigate($(this)
@@ -913,6 +916,7 @@ var drop = function () {
                             .val(chessAnalysis.chess[index].fen())
                         $("#annotation_moves")
                             .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
+                        chessAnalysis.editStatus[index]=true;
                         $(".ann_move")
                             .click(function () {
                                 clickNavigate($(this)

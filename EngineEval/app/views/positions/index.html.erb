@@ -2,6 +2,44 @@
 <%=javascript_tag do %>
 $(document)
     .ready(function () {
+
+        window.addEventListener("beforeunload", 
+  
+  function (e) {
+  if(chessAnalysis.editStatus[index]){
+    return  "You have made changes since the last save."
+  }
+  else{
+
+  return  null
+
+}
+})
+        $("#update-annotation-button-container").click(function(){
+        if(chessAnalysis.editStatus[index]===true)
+         {var continue_update=confirm("Are you sure you would like to save your changes to this annotation?")
+         if(continue_update){
+            jQuery.ajax({
+                            url: "/annotations",
+                            type: "POST",
+                            data: {
+                                moves: JSON.stringify(chessAnalysis.moves[index]),
+                                comments: JSON.stringify(chessAnalysis.movescomment[index]),
+                                mainvariations: JSON.stringify(chessAnalysis.mainvariations[index]),
+                                numvariations: chessAnalysis.numvariations[index],
+                                parents: JSON.stringify(chessAnalysis.parents[index]),
+                                children: JSON.stringify(chessAnalysis.children[index]),
+                                dropcount: chessAnalysis.dropcount[index],
+                                fen: chessAnalysis.chess[0].fen()
+                            }
+                        })
+                        chessAnalysis.editStatus[index]=false;
+                    }
+                }
+                        else{
+                        alert("Please edit the annotation before updating.")
+                    }
+        })
         keynavigate("show");
         $("#boardedge")
             .height($("#boardedge")
@@ -139,20 +177,10 @@ $(document)
                 if (chessAnalysis.mode !== $(this)
                     .attr("id")) {
                     if (chessAnalysis.mode === "your_analysis_mode") {
-                        jQuery.ajax({
-                            url: "/annotations",
-                            type: "POST",
-                            data: {
-                                moves: JSON.stringify(chessAnalysis.moves[index]),
-                                comments: JSON.stringify(chessAnalysis.movescomment[index]),
-                                mainvariations: JSON.stringify(chessAnalysis.mainvariations[index]),
-                                numvariations: chessAnalysis.numvariations[index],
-                                parents: JSON.stringify(chessAnalysis.parents[index]),
-                                children: JSON.stringify(chessAnalysis.children[index]),
-                                dropcount: chessAnalysis.dropcount[index],
-                                fen: chessAnalysis.chess[0].fen()
-                            }
-                        })
+                       
+                        $("#annotation-version-row").hide()
+                        $(".engine-row").show()
+
                     }
                     chessAnalysis.mode = $(this)
                         .attr("id")
@@ -161,85 +189,17 @@ $(document)
                             url: "/get_annotation_data",
                             type: "GET",
                             data: {
-                                fen: chessAnalysis.chess[index].fen()
+                                fen: chessAnalysis.chess[index].fen(),version:1
                             },
-                            dataType:"json",
                             error:function(data){
                             alert("error")
                             },
                             success: function (data) {
-                                if (data.fen !== "false"&&data.moves[0]) {
-                                    index = 1;
-                                    console.log(data)
-                                    $("#annotation_moves")
-                                        .empty();
-                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
-                                    chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
-                                    chessAnalysis.children[index] = data.children;
-                                    chessAnalysis.parents[index] = data.parents;
-                                    chessAnalysis.moves[index] = data.moves;
-                                    chessAnalysis.mainvariations[index] = data.mainvariations
-                                    chessAnalysis.movescomment[index] = data.comments
-                                    chessAnalysis.numvariations[index] = data.numvariations
-                                    chessAnalysis.dropcount[index] = data.dropcount
-                                    chessAnalysis.atStart[index] = false
-                                    chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
-                                    chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
-                                    $("#fen-container")
-                                        .val(chessAnalysis.chess[index].fen())
-                                    $("#annotation_moves")
-                                        .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
-                                    $(".ann_move")
-                                        .click(function () {
-                                            clickNavigate($(this)
-                                                .attr("id"))
-                                        })
-                                    $(".ann_move")
-                                        .hover(function () {
-                                            annIn($(this)
-                                                .attr("id"))
-                                        }, function () {
-                                            annOut()
-                                        });
-                                    $(".ann_comment")
-                                        .css("max-width", $("#annotation_moves")
-                                            .width())
-                                    $(".ann_comment")
-                                        .each(function () {
-                                            var id = $(this)
-                                                .attr("id")
-                                            var width = getWidthOfInput(document.getElementById(id))
-                                            $(this)
-                                                .width(width);
-                                            $(this)
-                                                .attr('rows', Math.floor(document.getElementById(id)
-                                                    .style.width.slice(0, document.getElementById(id)
-                                                        .style.width.length - 2) / $(this)
-                                                    .css("max-width")
-                                                    .slice(0, $(this)
-                                                        .css("max-width")
-                                                        .length - 2)) + 1)
-                                        })
-                                }
-                                else {
-                                    index = 1;
-                                    $("#annotation_moves")
-                                        .empty();
-                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
-                                    chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
-                                    chessAnalysis.children[index] = {};
-                                    chessAnalysis.parents[index] = [];
-                                    chessAnalysis.moves[index] = [];
-                                    chessAnalysis.mainvariations[index] = []
-                                    chessAnalysis.movescomment[index] = [[""]]
-                                    chessAnalysis.numvariations[index] = 0
-                                    chessAnalysis.dropcount[index] = 0
-                                    chessAnalysis.atStart[index] = true
-                                    chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
-                                    chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
-                                }
+                               
                             }
                         })
+                        $(".engine-row").hide();
+                        $("#annotation-version-row").show()
                     }
                     else if (chessAnalysis.mode === "engine_analysis_mode") {
                         index = 0
@@ -249,6 +209,7 @@ $(document)
                         drag();
                         drop();
                     }
+
                 }
             })
         $("#rmenu-cancel")
@@ -367,11 +328,14 @@ $(document)
   <div class="tab-pane" id="your_analysis">
     <div id="annotation_moves">
     </div>
+    <br>
+
+    <div  id="update-annotation-button-container"><%=link_to "<i class=\"glyphicon glyphicon-cloud-upload\"></i> Update".html_safe,annotations_path,method: :post,remote:true,class:"btn btn-primary"%></div>
   </div>
 </div>
 
 </div>
-
+<br>
 <div class="row">
   <div class="col-md-5  col-lg-5  form-horizontal ">
 
@@ -390,11 +354,11 @@ $(document)
     <div class="col-md-7 col-lg-7"></div>
   </div>
 
-  <div class="row">
+  <div class="row engine-row">
     <div class="well col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
       
        
-      <table class="table">
+      <table class="table engine-row">
         <thead>
           <tr ><th colspan=5 class="text-center"><h3 ><b>My Engines</b></h3></th></tr>
           <tr >
@@ -424,6 +388,30 @@ $(document)
         </tbody>
       </table>
       <div class="text-center"><div class="btn btn-success" id="browser_engine_button">Start Stockfish</div></div>
+    </div>
+  </div>
+
+
+   <div class="row" id="annotation-version-row">
+    <div class="well col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
+      
+       
+      <table class="table">
+        <thead>
+          <tr ><th colspan=5 class="text-center"><h3 ><b>Versions</b></h3></th></tr>
+          <tr >
+            <th class="text-center">Id</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Date Superceded</th>
+            <th class="text-center">Rollback</th>
+            <th class="text-center">Editor</th>
+            <th class="text-center">Vote</th>
+          </tr>
+        </thead>
+        <tbody>
+         
+        </tbody>
+      </table>
     </div>
   </div>
   <br>
@@ -494,4 +482,19 @@ $(document)
   <p id="add-comment-after" class="rselect">Add Comment After Move</p>
 
   <div class="text-center"><div id="rmenu-cancel" class="btn btn-primary">Cancel</div></div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong>Edit</strong></h4>
+      </div>
+      <div class="modal-body">
+           
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
 </div>

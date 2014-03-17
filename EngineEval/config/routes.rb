@@ -8,6 +8,7 @@ EngineEval::Application.routes.draw do
   end
 
 resources :annotations
+resources :annotation_edits
 
 scope 'api' do
   resources :evaluations do
@@ -19,6 +20,7 @@ get '/get_annotation_data'=>'annotations#get_annotation_data'
 resources :games
 resources :dpositions
 resources :game_positions
+resources :annotation_quality_votes
 get 'clean_database'=>'games#clean_database'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

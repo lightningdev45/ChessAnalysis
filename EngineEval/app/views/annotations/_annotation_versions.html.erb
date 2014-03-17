@@ -1,0 +1,10 @@
+<%@annotation_versions.each do |version|%>
+<tr class="text-center">
+    <td><%=version.id%></td>
+    <td><%=version_status(version.id)%></td>
+    <td><%=version.date_superceded.strftime("%m/%d/%y")||"NA"%></td>
+    <td><%=link_to "Rollback","#",class:"btn btn-primary"%></td>
+    <td><%=link_to "Editor","#"%></td>
+    <td><%=link_to "<i class=\"glyphicon glyphicon-thumbs-up\"></i>".html_safe,"#"%> <br><%=link_to "<i class=\"glyphicon glyphicon-thumbs-down\"></i>".html_safe,"#"%></td>
+</tr>
+<%end%>

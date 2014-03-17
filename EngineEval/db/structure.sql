@@ -29,6 +29,76 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: annotation_edits; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE annotation_edits (
+    id integer NOT NULL,
+    fen character varying(255),
+    user_id integer,
+    additions text,
+    deletions text,
+    quality integer,
+    position_id integer,
+    annotation_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: annotation_edits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE annotation_edits_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: annotation_edits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE annotation_edits_id_seq OWNED BY annotation_edits.id;
+
+
+--
+-- Name: annotation_quality_votes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE annotation_quality_votes (
+    id integer NOT NULL,
+    user_id integer,
+    annotation_id integer,
+    vote integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: annotation_quality_votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE annotation_quality_votes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: annotation_quality_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE annotation_quality_votes_id_seq OWNED BY annotation_quality_votes.id;
+
+
+--
 -- Name: annotations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -44,7 +114,11 @@ CREATE TABLE annotations (
     mainvariations text,
     position_id integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    version integer,
+    date_superceded timestamp without time zone,
+    user_id integer,
+    quality integer
 );
 
 
@@ -308,6 +382,20 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY annotation_edits ALTER COLUMN id SET DEFAULT nextval('annotation_edits_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotation_quality_votes ALTER COLUMN id SET DEFAULT nextval('annotation_quality_votes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY annotations ALTER COLUMN id SET DEFAULT nextval('annotations_id_seq'::regclass);
 
 
@@ -351,6 +439,22 @@ ALTER TABLE ONLY positions ALTER COLUMN id SET DEFAULT nextval('positions_id_seq
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: annotation_edits_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY annotation_edits
+    ADD CONSTRAINT annotation_edits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: annotation_quality_votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY annotation_quality_votes
+    ADD CONSTRAINT annotation_quality_votes_pkey PRIMARY KEY (id);
 
 
 --
@@ -455,3 +559,13 @@ INSERT INTO schema_migrations (version) VALUES ('20140317022541');
 INSERT INTO schema_migrations (version) VALUES ('20140317022643');
 
 INSERT INTO schema_migrations (version) VALUES ('20140317022652');
+
+INSERT INTO schema_migrations (version) VALUES ('20140317154113');
+
+INSERT INTO schema_migrations (version) VALUES ('20140317155426');
+
+INSERT INTO schema_migrations (version) VALUES ('20140317214909');
+
+INSERT INTO schema_migrations (version) VALUES ('20140317220030');
+
+INSERT INTO schema_migrations (version) VALUES ('20140317222053');

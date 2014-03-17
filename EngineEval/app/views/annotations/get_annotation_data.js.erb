@@ -1,0 +1,73 @@
+    if ("<%=raw @fen%>" !== "false"&&<%=raw @moves%>[0]) {
+                                    index = 1;
+                                    $("#annotation_moves")
+                                        .empty();
+                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
+                                    chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
+                                    chessAnalysis.children[index] =<%=raw @children%>
+                                    chessAnalysis.parents[index] = <%=raw @parents%>
+                                    chessAnalysis.moves[index] = <%=raw @moves%>
+                                    chessAnalysis.mainvariations[index] = <%=raw @mainvariations%>
+                                    chessAnalysis.movescomment[index] = <%=raw @comments%>
+                                    chessAnalysis.numvariations[index] = <%=raw @numvariations%>
+                                    chessAnalysis.dropcount[index] = <%=raw @dropcount%>
+                                    chessAnalysis.atStart[index] = false
+                                    chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                    chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                    chessAnalysis.editStatus[index]=false;
+                                    $("#fen-container")
+                                        .val(chessAnalysis.chess[index].fen())
+                                    $("#annotation_moves")
+                                        .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
+                                    $(".ann_move")
+                                        .click(function () {
+                                            clickNavigate($(this)
+                                                .attr("id"))
+                                        })
+                                    $(".ann_move")
+                                        .hover(function () {
+                                            annIn($(this)
+                                                .attr("id"))
+                                        }, function () {
+                                            annOut()
+                                        });
+                                    $(".ann_comment")
+                                        .css("max-width", $("#annotation_moves")
+                                            .width())
+                                    $(".ann_comment")
+                                        .each(function () {
+                                            var id = $(this)
+                                                .attr("id")
+                                            var width = getWidthOfInput(document.getElementById(id))
+                                            $(this)
+                                                .width(width);
+                                            $(this)
+                                                .attr('rows', Math.floor(document.getElementById(id)
+                                                    .style.width.slice(0, document.getElementById(id)
+                                                        .style.width.length - 2) / $(this)
+                                                    .css("max-width")
+                                                    .slice(0, $(this)
+                                                        .css("max-width")
+                                                        .length - 2)) + 1)
+                                        })
+                                     $("#annotation-version-row tbody").empty()
+                                     $("#annotation-version-row tbody").append('<%=j render('annotation_versions')%>')   
+                                }
+                                else {
+                                    index = 1;
+                                    $("#annotation_moves")
+                                        .empty();
+                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
+                                    chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
+                                    chessAnalysis.children[index] = {};
+                                    chessAnalysis.parents[index] = [];
+                                    chessAnalysis.moves[index] = [];
+                                    chessAnalysis.mainvariations[index] = []
+                                    chessAnalysis.movescomment[index] = [[""]]
+                                    chessAnalysis.numvariations[index] = 0
+                                    chessAnalysis.dropcount[index] = 0
+                                    chessAnalysis.atStart[index] = true
+                                    chessAnalysis.editStatus[index]=false;
+                                    chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                    chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                }
