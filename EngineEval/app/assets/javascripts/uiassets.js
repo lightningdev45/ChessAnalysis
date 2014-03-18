@@ -125,11 +125,10 @@ var nextmovechoose = function (count, length, nextmovelist) {
                 drag();
                 drop();
                 if (chessAnalysis.mode === "engine_analysis_mode") {
-                    evaluations.trigger("piece:drop")
+                    
                     changeEngingePosition();
-                    //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                    $("#fen-container")
-                        .val(chessAnalysis.chess[index].fen())
+                    
+
                 }
                 else if (chessAnalysis.mode === "your_analysis_mode") {
                     $("#fen-container")
@@ -225,11 +224,8 @@ var nextmovechoose = function (count, length, nextmovelist) {
                     drag();
                     drop();
                     if (chessAnalysis.mode === "engine_analysis_mode") {
-                        evaluations.trigger("piece:drop")
+
                         changeEngingePosition();
-                        //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                        $("#fen-container")
-                            .val(chessAnalysis.chess[index].fen())
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -366,11 +362,8 @@ var promotionclick = function (from, to, count) {
                     .scrollTop((chessAnalysis.hmv[index]) * 53);
                 chessAnalysis.update_move_tree();
                  if (chessAnalysis.mode === "engine_analysis_mode") {
-                        evaluations.trigger("piece:drop")
+
                         changeEngingePosition();
-                        //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                        $("#fen-container")
-                            .val(chessAnalysis.chess[index].fen())
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -516,11 +509,8 @@ var promotionclick = function (from, to, count) {
                     .scrollTop((chessAnalysis.hmv[index]) * 53);
                 chessAnalysis.update_move_tree();
                  if (chessAnalysis.mode === "engine_analysis_mode") {
-                        evaluations.trigger("piece:drop")
+
                         changeEngingePosition();
-                        //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                        $("#fen-container")
-                            .val(chessAnalysis.chess[index].fen())
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -905,11 +895,8 @@ var drop = function () {
                     chessAnalysis.currentHighlighted = $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1));
                     chessAnalysis.update_move_tree();
                     if (chessAnalysis.mode === "engine_analysis_mode") {
-                        evaluations.trigger("piece:drop")
+
                         changeEngingePosition();
-                        //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                        $("#fen-container")
-                            .val(chessAnalysis.chess[index].fen())
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -1014,11 +1001,8 @@ var keynavigate = function (location) {
                             drag();
                             drop();
                             if (chessAnalysis.mode === "engine_analysis_mode") {
-                                evaluations.trigger("piece:drop")
+
                                 changeEngingePosition();
-                                //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                                $("#fen-container")
-                                    .val(chessAnalysis.chess[index].fen())
                             }
                             else if (chessAnalysis.mode === "your_analysis_mode") {
                                 $("#fen-container")
@@ -1037,11 +1021,8 @@ var keynavigate = function (location) {
                             drag();
                             drop();
                             if (chessAnalysis.mode === "engine_analysis_mode") {
-                                evaluations.trigger("piece:drop")
+
                                 changeEngingePosition();
-                                //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                                $("#fen-container")
-                                    .val(chessAnalysis.chess[index].fen())
                             }
                             else if (chessAnalysis.mode === "your_analysis_mode") {
                                 $("#fen-container")
@@ -1085,11 +1066,8 @@ var keynavigate = function (location) {
                             drag();
                             drop();
                             if (chessAnalysis.mode === "engine_analysis_mode") {
-                                evaluations.trigger("piece:drop")
+
                                 changeEngingePosition();
-                                //chat.emit("position",{fen:chess.fen(),room:connectionId})
-                                $("#fen-container")
-                                    .val(chessAnalysis.chess[index].fen())
                             }
                             else if (chessAnalysis.mode === "your_analysis_mode") {
                                 $("#fen-container")
@@ -1168,6 +1146,9 @@ var add_spinner = function (elementId) {
         .spin(target);
 }
 var changeEngingePosition = function () {
+    evaluations.trigger("piece:drop")
+    $("#fen-container")
+        .val(chessAnalysis.chess[index].fen())
     if (chessAnalysis.engineStatus === true) {
         chessAnalysis.engines[0].terminate();
         chessAnalysis.engines[0] = new Worker('stockfish.js');
@@ -1261,8 +1242,10 @@ var changeEngingePosition = function () {
             }
         }
     }
+    //chat.emit("position",{fen:chess.fen(),room:connectionId})
 }
 var writeAnnotation = function (hmv, hm, spotAdjustment) {
+
     if(chessAnalysis.moves[index].length===0)
       {$("#annotation_moves").empty()}
     else{var fragment = "";

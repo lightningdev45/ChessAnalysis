@@ -7,4 +7,13 @@ module AnnotationsHelper
 			return "current"
 		end
 	end
-end
+
+	def formatted_date_superceded(id)
+		version=Annotation.find(id)
+		if version.date_superceded
+			return version.date_superceded.strftime("%m/%d/%y")
+		else
+			return "NA"
+		end
+	end
+end	

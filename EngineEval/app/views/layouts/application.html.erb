@@ -25,13 +25,12 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-       <% #if user_signed_in?%>
-       <li><a href="/users?id=<%#current_user.id%>">My Profile</a></li>
-       
-        <li><a href="/theory?id=<%#current_user.id%>">Opening Theory</a></li>
-       <%#end%>
-        <li><a href="/improved_fen">Opening Explorer</a></li>
-        <li><a href="/forums">Forum</a></li>
+       <% if user_signed_in?%>
+       <li><a href="/user?id=<%current_user.id%>">My Profile</a></li>
+       <%end%>
+       <li><a href="/how_to">How To</a></li>
+        <li><a href="/support">Support</a></li>
+        <li><a href="/forum">Forum</a></li>
 
     </ul>
 

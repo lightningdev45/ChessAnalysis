@@ -31,7 +31,7 @@ class DPositionsController < ApplicationController
 			@fens.each_with_index do |fen,index|
 				
 		
-				fen=fen.split(" ")[0..3].join(" ")+" 0 "+fen.split(" ")[5]
+				fen=fen.split(" ")[0..3].join(" ")+" 0 1"
 				
 				if @dpositionhash[fen]
 
@@ -49,8 +49,8 @@ class DPositionsController < ApplicationController
 							
 						else
 							if @fens[index+1].split(" ")[5]&&@fens[index+1].split(" ")[0..3]
-							@dpositionhash[fen][:next_moves][@moves[index]]=[1,@points,game.blackelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 "+@fens[index+1].split(" ")[5]] if index%2==1
-							@dpositionhash[fen][:next_moves][@moves[index]]=[1,@points,game.whiteelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 "+@fens[index+1].split(" ")[5]] if index%2==0
+							@dpositionhash[fen][:next_moves][@moves[index]]=[1,@points,game.blackelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 1"] if index%2==1
+							@dpositionhash[fen][:next_moves][@moves[index]]=[1,@points,game.whiteelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 1"] if index%2==0
 							else
 							@dpositionhash[fen][:next_moves][@moves[index]]=[1,@points,game.blackelo.to_i,@fens[index+1]] if index%2==1
 							@dpositionhash[fen][:next_moves][@moves[index]]=[1,@points,game.whiteelo.to_i,@fens[index+1]] if index%2==0
@@ -68,8 +68,8 @@ class DPositionsController < ApplicationController
 					@dpositionhash[fen][:fen]=fen
 					if index<@fens.length-1
 						if @fens[index+1].split(" ")[5]&&@fens[index+1].split(" ")[0..3]
-						@dpositionhash[fen][:next_moves]={@moves[index]=>[1,@points,game.blackelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 "+@fens[index+1].split(" ")[5]]} if index%2==1
-						@dpositionhash[fen][:next_moves]={@moves[index]=>[1,@points,game.whiteelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 "+@fens[index+1].split(" ")[5]]} if index%2==0
+						@dpositionhash[fen][:next_moves]={@moves[index]=>[1,@points,game.blackelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 1"]} if index%2==1
+						@dpositionhash[fen][:next_moves]={@moves[index]=>[1,@points,game.whiteelo.to_i,@fens[index+1].split(" ")[0..3].join(" ")+" 0 1"]} if index%2==0
 						else
 							@dpositionhash[fen][:next_moves]={@moves[index]=>[1,@points,game.blackelo.to_i,@fens[index+1]]} if index%2==1
 							@dpositionhash[fen][:next_moves]={@moves[index]=>[1,@points,game.whiteelo.to_i,@fens[index+1]]} if index%2==0

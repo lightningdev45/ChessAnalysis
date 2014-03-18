@@ -3,6 +3,13 @@
 $(document)
     .ready(function () {
 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    
+        if(chessAnalysis.mode!==$(this).parent().attr("id")){
+            $(e.relatedTarget).tab('show')
+            
+        }
+    })
         window.addEventListener("beforeunload", 
   
   function (e) {
@@ -176,41 +183,83 @@ $(document)
             .click(function () {
                 if (chessAnalysis.mode !== $(this)
                     .attr("id")) {
-                    if (chessAnalysis.mode === "your_analysis_mode") {
-                       
-                        $("#annotation-version-row").hide()
-                        $(".engine-row").show()
-
-                    }
-                    chessAnalysis.mode = $(this)
-                        .attr("id")
-                    if (chessAnalysis.mode === "your_analysis_mode") {
-                        jQuery.ajax({
-                            url: "/get_annotation_data",
-                            type: "GET",
-                            data: {
-                                fen: chessAnalysis.chess[index].fen(),version:1
-                            },
-                            error:function(data){
-                            alert("error")
-                            },
-                            success: function (data) {
+                    if(chessAnalysis.editStatus[index]){
+                        var confirmChange=confirm("Your have made changes to the annotation.  Are you sure you want to discard those changes?")
+                        if(confirmChange){
+                            if (chessAnalysis.mode === "your_analysis_mode") {
                                
-                            }
-                        })
-                        $(".engine-row").hide();
-                        $("#annotation-version-row").show()
-                    }
-                    else if (chessAnalysis.mode === "engine_analysis_mode") {
-                        index = 0
-                        setup(chessAnalysis.chess[index].fen());
-                        addpieces();
-                        movegen();
-                        drag();
-                        drop();
-                    }
+                                $("#annotation-version-row").hide()
+                                $(".engine-row").show()
 
-                }
+                            }
+                            chessAnalysis.mode = $(this)
+                                .attr("id")
+                            if (chessAnalysis.mode === "your_analysis_mode") {
+                                jQuery.ajax({
+                                    url: "/get_annotation_data",
+                                    type: "GET",
+                                    data: {
+                                        fen: chessAnalysis.chess[index].fen(),version:1
+                                    },
+                                    error:function(data){
+                                    alert("error")
+                                    },
+                                    success: function (data) {
+                                       
+                                    }
+                                })
+                                $(".engine-row").hide();
+                                $("#annotation-version-row").show()
+                            }
+                            else if (chessAnalysis.mode === "engine_analysis_mode") {
+                                index = 0
+                                setup(chessAnalysis.chess[index].fen());
+                                addpieces();
+                                movegen();
+                                drag();
+                                drop();
+                            }
+                        }
+                    }
+                    else{
+                        if (chessAnalysis.mode === "your_analysis_mode") {
+                               
+                                $("#annotation-version-row").hide()
+                                $(".engine-row").show()
+
+                            }
+                            chessAnalysis.mode = $(this)
+                                .attr("id")
+                            if (chessAnalysis.mode === "your_analysis_mode") {
+                                jQuery.ajax({
+                                    url: "/get_annotation_data",
+                                    type: "GET",
+                                    data: {
+                                        fen: chessAnalysis.chess[index].fen(),version:1
+                                    },
+                                    error:function(data){
+                                    alert("error")
+                                    },
+                                    success: function (data) {
+                                       
+                                    }
+                                })
+                                $(".engine-row").hide();
+                                $("#annotation-version-row").show()
+                            }
+                            else if (chessAnalysis.mode === "engine_analysis_mode") {
+                                //$("#your_analysis").empty()
+                                index = 0
+                                setup(chessAnalysis.chess[index].fen());
+                                addpieces();
+                                movegen();
+                                drag();
+                                drop();
+                            }
+                        }
+                    
+                    }
+                
             })
         $("#rmenu-cancel")
             .click(function () {
@@ -330,7 +379,7 @@ $(document)
     </div>
     <br>
 
-    <div  id="update-annotation-button-container"><%=link_to "<i class=\"glyphicon glyphicon-cloud-upload\"></i> Update".html_safe,annotations_path,method: :post,remote:true,class:"btn btn-primary"%></div>
+    <div  id="update-annotation-button-container"><span class="btn btn-primary"><%="<i class=\"glyphicon glyphicon-cloud-upload\"></i> Update".html_safe%></span></div>
   </div>
 </div>
 
@@ -398,7 +447,7 @@ $(document)
        
       <table class="table">
         <thead>
-          <tr ><th colspan=5 class="text-center"><h3 ><b>Versions</b></h3></th></tr>
+          <tr ><th colspan=6 class="text-center"><h3 ><b>Versions</b></h3></th></tr>
           <tr >
             <th class="text-center">Id</th>
             <th class="text-center">Status</th>

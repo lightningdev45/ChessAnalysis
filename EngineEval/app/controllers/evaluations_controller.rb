@@ -6,26 +6,27 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 	end
 
 	def index
-		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",params[:fen]).order("nodes DESC, created_at DESC").limit(10)
+		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
+		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",@fen_param).order("nodes DESC, created_at DESC").limit(10)
 		respond_to do |format|
 			format.json{render :json=>@evaluations}
 		end
 	end
 
 	def create
+		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
 		
-		
-		if @position=Position.find_by(fen:params[:fen])
+		if @position=Position.find_by(fen:@fen_param)
 			@evaluation=Evaluation.new
-			@evaluation.fen=params[:fen]
+			@evaluation.fen=@fen_param
 			@evaluation.position=@position
 			@evaluation.save
 		else
 			@position=Position.new
-			@position.fen=params[:fen]
+			@position.fen=@fen_param
 			if @position.save
 				@evaluation=Evaluation.new
-				@evaluation.fen=params[:fen]
+				@evaluation.fen=@fen_param
 				@evaluation.position=@position
 				@evaluation.save
 			end

@@ -84,7 +84,7 @@ font-family: 'Varela Round', sans-serif;
 	width:300px;
 	overflow:auto;
 	font-weight: bold;
-	background: url('blackwood.jpg');
+	
 	font-family:cursive;
 	border-radius:15px;
 	}
@@ -743,4 +743,8 @@ input[type="checkbox"]{
 
 .glyphicon-thumbs-down{
 	color:red;
+}
+
+#your_analysis{
+	overflow:auto;
 }

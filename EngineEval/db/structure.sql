@@ -118,7 +118,7 @@ CREATE TABLE annotations (
     version integer,
     date_superceded timestamp without time zone,
     user_id integer,
-    quality integer
+    quality integer DEFAULT 0
 );
 
 
@@ -569,3 +569,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140317214909');
 INSERT INTO schema_migrations (version) VALUES ('20140317220030');
 
 INSERT INTO schema_migrations (version) VALUES ('20140317222053');
+
+INSERT INTO schema_migrations (version) VALUES ('20140318014029');

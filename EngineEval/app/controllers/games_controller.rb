@@ -21,9 +21,7 @@ class GamesController < ApplicationController
 
 	def fetch_games
 		if params[:full]
-		@fen=params[:fen]
-		
-		@fen=@fen.split(" ")[0..3].join(" ")+" 0 "+@fen.split(" ")[5]
+		@fen=params[:fen].split(" ")[0..3].join(" ")+"0 1"
 		@position=Position.find_by(fen:@fen)
 		@games_sent={}
 		@games_found=GamePosition.connection.execute("SELECT \"game_positions\".* FROM \"game_positions\" WHERE \"game_positions\".\"position_id\" = #{@position.id} ORDER BY \"game_positions\".\"#{params[:sort]}\"").to_a
@@ -78,8 +76,7 @@ class GamesController < ApplicationController
 	def improved_fen
 		
 			require 'json'
-		@fen=params[:fen]||"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-		@fen=@fen.split(" ")[0..3].join(" ")+" 0 "+@fen.split(" ")[5]
+		@fen=params[:fen].split(" ")[0..3].join(" ")+"0 1"||"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 		@position=Position.find_by(fen:@fen)
 		@next_moves=JSON.parse(@position.next_moves)
 		#@games=GamePosition.connection.execute("SELECT \"game_positions\".* FROM \"game_positions\" WHERE \"game_positions\".\"position_id\" = #{@position.id} ORDER BY \"game_positions\".\"white_name\"").to_a

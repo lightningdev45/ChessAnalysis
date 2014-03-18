@@ -1,8 +1,9 @@
 class AnnotationsController < ApplicationController
 
 	def create
+			@fen=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
 			@annotation=Annotation.new
-			@annotation.fen=params[:fen]
+			@annotation.fen=@fen
 			@annotation.moves=params[:moves]
 			@annotation.parents=params[:parents]
 			@annotation.children=params[:children]
@@ -13,10 +14,12 @@ class AnnotationsController < ApplicationController
 			@annotation.version=0
 
 			if @annotation.save
-				@superceded=Annotation.find_by(fen:params[:fen],version:1)
-				@superceded.date_superceded=DateTime.now
-				@superceded.save
-				Annotation.where(fen:params[:fen]).each do |annotation|
+				if Annotation.where(fen:@fen).count>1
+					@superceded=Annotation.find_by(fen:@fen,version:1)
+					@superceded.date_superceded=DateTime.now
+					@superceded.save
+				end
+				Annotation.where(fen:@fen).each do |annotation|
 					annotation.version+=1;
 					annotation.save
 				end
@@ -27,8 +30,9 @@ class AnnotationsController < ApplicationController
 	end
 
 	def get_annotation_data
-		if @annotation=Annotation.find_by(fen:params[:fen],version:params[:version])
-			@annotation_versions=Annotation.where(fen:params[:fen]).order(:created_at).reverse[0..24]
+		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
+		if @annotation=Annotation.find_by(fen:@fen_param,version:params[:version])
+			@annotation_versions=Annotation.where(fen:@fen_param).order(:created_at).reverse[0..24]
 			@fen=@annotation.fen
 			@moves=@annotation.moves
 			@comments=@annotation.comments
