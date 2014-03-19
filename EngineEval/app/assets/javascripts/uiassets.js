@@ -383,13 +383,26 @@ var promotionclick = function (from, to, count) {
                             }, function () {
                                 annOut()
                             });
-
+                        $(".ann_comment").unbind("input");
+                        $(".ann_comment").on("input",function(){
+                            chessAnalysis.editStatus[index]=true;
+                            var id=$(this).attr("id")
+                            var moves_num=id.split("var")[1].split("comment")
+                            var hm=moves_num[1]
+                            var hmv=moves_num[0]
+                            $(this).width(getWidthOfInput(document.getElementById(id)))
+                            //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+                            //{
+                                $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                            //}
+                            chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
+                        });
                         $(".ann_comment").css("max-width",$("#annotation_moves").width())
                         $(".ann_comment").each(function(){
                             var id=$(this).attr("id")
                             var width=getWidthOfInput(document.getElementById(id))
                             $(this).width(width);
-                            $(this).attr('rows',Math.floor(document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
                         })
                     }
             }
@@ -530,13 +543,26 @@ var promotionclick = function (from, to, count) {
                             }, function () {
                                 annOut()
                             });
-
+                        $(".ann_comment").unbind("input");
+                        $(".ann_comment").on("input",function(){
+                            chessAnalysis.editStatus[index]=true;
+                            var id=$(this).attr("id")
+                            var moves_num=id.split("var")[1].split("comment")
+                            var hm=moves_num[1]
+                            var hmv=moves_num[0]
+                            $(this).width(getWidthOfInput(document.getElementById(id)))
+                            //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+                            //{
+                                $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                            //}
+                            chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
+                        });
                         $(".ann_comment").css("max-width",$("#annotation_moves").width())
                         $(".ann_comment").each(function(){
                             var id=$(this).attr("id")
                             var width=getWidthOfInput(document.getElementById(id))
                             $(this).width(width);
-                            $(this).attr('rows',Math.floor(document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
                         })
                     }
             }
@@ -916,13 +942,26 @@ var drop = function () {
                             }, function () {
                                 annOut()
                             });
-
+                        $(".ann_comment").unbind("input");
+                        $(".ann_comment").on("input",function(){
+                            chessAnalysis.editStatus[index]=true;
+                            var id=$(this).attr("id")
+                            var moves_num=id.split("var")[1].split("comment")
+                            var hm=moves_num[1]
+                            var hmv=moves_num[0]
+                            $(this).width(getWidthOfInput(document.getElementById(id)))
+                            //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+                            //{
+                                $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                            //}
+                            chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
+                        });
                         $(".ann_comment").css("max-width",$("#annotation_moves").width())
                         $(".ann_comment").each(function(){
                             var id=$(this).attr("id")
                             var width=getWidthOfInput(document.getElementById(id))
                             $(this).width(width);
-                            $(this).attr('rows',Math.floor(document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
                         })
                     }
                 }
@@ -989,7 +1028,7 @@ var keynavigate = function (location) {
                 }
                 if (event.which === 37) {
                     if (popup === false) {
-                        if (chessAnalysis.hm[index] >= 2) {
+                        if (chessAnalysis.hm[index] >= 2&&chessAnalysis.chess[index].fen()!==chessAnalysis.startpositionfen[index]) {
                             if (chessAnalysis.parents[index][chessAnalysis.hmv[index]][1] === chessAnalysis.hm[index] - 1) {
                                 chessAnalysis.hmv[index] = chessAnalysis.parents[index][chessAnalysis.hmv[index]][0]
                             }
@@ -1265,6 +1304,7 @@ var writeAnnotation = function (hmv, hm, spotAdjustment) {
                       }
                       else {
                         if(chessAnalysis.movescomment[index][hmv][spot]){
+
                             fragment+= "<textarea class='ann_comment' id='var" + hmv + "comment" + spot + "'>" + " " + chessAnalysis.movescomment[index][hmv][spot] + "</textarea>"  
                         }
                           fragment += "<span class='ann_move' id='var" + hmv + "move" + spot + "'>" + " " + chessAnalysis.moves[index][hmv][spot] + "</span>"
@@ -1301,9 +1341,11 @@ var writeAnnotation = function (hmv, hm, spotAdjustment) {
           }
       }
       else {
+
           _.each(_.rest(chessAnalysis.moves[index][hmv], spot), function (move, indicator) {
               if ((spot - spotAdjustment + hm) % 2 === 0) {
                 if(chessAnalysis.movescomment[index][hmv][spot]){
+
                             fragment+= "<textarea class='ann_comment' id='var" + hmv + "comment" + spot + "'>" + " " + chessAnalysis.movescomment[index][hmv][spot] + "</textarea>"  
                         }
                   fragment += "<span class='ann_move' id='var" + hmv + "move" + spot + "'>" + " " + ((spot - spotAdjustment + hm) / 2 + 1) + ". " + chessAnalysis.moves[index][hmv][spot] + "</span>"
@@ -1315,7 +1357,7 @@ var writeAnnotation = function (hmv, hm, spotAdjustment) {
                   fragment += "<span class='ann_move' id='var" + hmv + "move" + spot + "'>" + " " + chessAnalysis.moves[index][hmv][spot] + "</span>"
               }
               if(spot+1===chessAnalysis.moves[index][hmv].length&&chessAnalysis.movescomment[index][hmv][spot+1]){
-                        fragment+= "<textarea class='ann_comment' id='var" + hmv + "comment" + spot + "'>" + " " + chessAnalysis.movescomment[index][hmv][spot+1] + "</textarea>"
+                        fragment+= "<textarea class='ann_comment' id='var" + hmv + "comment" + (spot+1) + "'>" + " " + chessAnalysis.movescomment[index][hmv][spot+1] + "</textarea>"
                 }
               spot += 1;
           })

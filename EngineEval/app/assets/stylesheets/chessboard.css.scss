@@ -746,5 +746,31 @@ input[type="checkbox"]{
 }
 
 #your_analysis{
-	overflow:auto;
+	
+}
+
+.panel-heading{
+	padding:5px 10px;
+
+}
+
+.panel-primary>.panel-heading{
+	background:$black-square;
+}
+
+.panel-primary{
+	border-color:$black-square;
+}
+
+.dropdown-menu li{
+	cursor:pointer;
+}
+
+.panel-warning>.panel-heading{
+	background:$boardedge;
+	color:white;
+}
+
+.panel-warning{
+	border-color:$boardedge;
 }

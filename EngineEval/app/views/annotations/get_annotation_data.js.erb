@@ -31,6 +31,20 @@
                                         }, function () {
                                             annOut()
                                         });
+                                    $(".ann_comment").unbind("input");
+                                    $(".ann_comment").on("input",function(){
+                                        chessAnalysis.editStatus[index]=true;
+                                        var id=$(this).attr("id")
+                                        var moves_num=id.split("var")[1].split("comment")
+                                        var hm=moves_num[1]
+                                        var hmv=moves_num[0]
+                                        $(this).width(getWidthOfInput(document.getElementById(id)))
+                                        //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+                                        //{
+                                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                                        //}
+                                        chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
+                                    });
                                     $(".ann_comment")
                                         .css("max-width", $("#annotation_moves")
                                             .width())
@@ -41,14 +55,7 @@
                                             var width = getWidthOfInput(document.getElementById(id))
                                             $(this)
                                                 .width(width);
-                                            $(this)
-                                                .attr('rows', Math.floor(document.getElementById(id)
-                                                    .style.width.slice(0, document.getElementById(id)
-                                                        .style.width.length - 2) / $(this)
-                                                    .css("max-width")
-                                                    .slice(0, $(this)
-                                                        .css("max-width")
-                                                        .length - 2)) + 1)
+                                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
                                         })
                                      $("#annotation-version-row tbody").empty()
                                      $("#annotation-version-row tbody").append('<%=j render('annotation_versions')%>')   
