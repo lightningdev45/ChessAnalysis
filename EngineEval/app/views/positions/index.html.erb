@@ -2,7 +2,15 @@
 <%=javascript_tag do %>
 $(document)
     .ready(function () {
-
+    $(".opening-tag-select").on("change",function(){
+        $(".opening-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=opening&tag_value="+encodeURIComponent($(".opening-tag-select").val()))
+    })
+    $(".positional-tag-select").on("change",function(){
+        $(".positional-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=positional&tag_value="+encodeURIComponent($(".positional-tag-select").val()))
+    })
+    $(".tactics-tag-select").on("change",function(){
+        $(".tactics-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=tactics&tag_value="+encodeURIComponent($(".tactics-tag-select").val()))
+    })
     $("#copy-fen").click(function(){       
         var hello=function(text){
           window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
@@ -35,7 +43,8 @@ $(document)
         addpieces();
         movegen();
         drag();
-        drop();      
+        drop();
+        changeEnginePosition();      
         
     })
 
@@ -69,6 +78,7 @@ $(document)
                 drag();
                 drop(); 
                 $("#fen-container").val(chessAnalysis.chess[index].fen())
+                changeEnginePosition();
             }
         }
         else{chessAnalysis.mode="engine_analysis_mode"
@@ -97,6 +107,7 @@ $(document)
                 drag();
                 drop();
                 $("#fen-container").val(chessAnalysis.chess[index].fen())
+                changeEnginePosition();
 
         }
     })
@@ -513,14 +524,59 @@ $(document)
 
 
   <div class="row engine-row">
-    <div class="col-lg-5 col-md-5">
-    <div class="panel panel-warning">
-  <!-- Default panel contents -->
-    <div class="panel-heading text-center"><b><h4>Tags</h4></b></div>
-    Abc
-    Def
+    <div class="col-lg-5 col-md-5" id="tag-container">
+  <div class="panel-group" id="accordion">      
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          Tactical Motifs
+        </a>
+      </h4>
     </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body" id="tactics-panel-body">
+            <%=render(:partial=>'evaluations/tag_tactics',:locals=>{fen_param:"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})%>
+
+
+      </div>
     </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          Positional Motifs
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body" id="positional-panel-body">
+        <%=render(:partial=>'evaluations/tag_positional',:locals=>{fen_param:"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})%>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+          Opening Structure(s)
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body" id="opening-panel-body">
+            <%=render(:partial=>'evaluations/tag_opening',:locals=>{fen_param:"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})%>
+      </div>
+    </div>
+  </div>  
+
+    
+
+
+    
+    </div>
+</div>
     <div class="panel panel-primary col-lg-offset-5 col-md-offset-5">
   <!-- Default panel contents -->
     <div class="panel-heading text-center"><b><h4>My Engines</h4></b></div>

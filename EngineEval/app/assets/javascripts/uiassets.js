@@ -126,7 +126,7 @@ var nextmovechoose = function (count, length, nextmovelist) {
                 drop();
                 if (chessAnalysis.mode === "engine_analysis_mode") {
                     
-                    changeEngingePosition();
+                    changeEnginePosition();
                     
 
                 }
@@ -225,7 +225,7 @@ var nextmovechoose = function (count, length, nextmovelist) {
                     drop();
                     if (chessAnalysis.mode === "engine_analysis_mode") {
 
-                        changeEngingePosition();
+                        changeEnginePosition();
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -363,7 +363,7 @@ var promotionclick = function (from, to, count) {
                 chessAnalysis.update_move_tree();
                  if (chessAnalysis.mode === "engine_analysis_mode") {
 
-                        changeEngingePosition();
+                        changeEnginePosition();
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -523,7 +523,7 @@ var promotionclick = function (from, to, count) {
                 chessAnalysis.update_move_tree();
                  if (chessAnalysis.mode === "engine_analysis_mode") {
 
-                        changeEngingePosition();
+                        changeEnginePosition();
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -922,7 +922,7 @@ var drop = function () {
                     chessAnalysis.update_move_tree();
                     if (chessAnalysis.mode === "engine_analysis_mode") {
 
-                        changeEngingePosition();
+                        changeEnginePosition();
                     }
                     else if (chessAnalysis.mode === "your_analysis_mode") {
                         $("#fen-container")
@@ -1041,7 +1041,7 @@ var keynavigate = function (location) {
                             drop();
                             if (chessAnalysis.mode === "engine_analysis_mode") {
 
-                                changeEngingePosition();
+                                changeEnginePosition();
                             }
                             else if (chessAnalysis.mode === "your_analysis_mode") {
                                 $("#fen-container")
@@ -1061,7 +1061,7 @@ var keynavigate = function (location) {
                             drop();
                             if (chessAnalysis.mode === "engine_analysis_mode") {
 
-                                changeEngingePosition();
+                                changeEnginePosition();
                             }
                             else if (chessAnalysis.mode === "your_analysis_mode") {
                                 $("#fen-container")
@@ -1106,7 +1106,7 @@ var keynavigate = function (location) {
                             drop();
                             if (chessAnalysis.mode === "engine_analysis_mode") {
 
-                                changeEngingePosition();
+                                changeEnginePosition();
                             }
                             else if (chessAnalysis.mode === "your_analysis_mode") {
                                 $("#fen-container")
@@ -1184,8 +1184,8 @@ var add_spinner = function (elementId) {
     var spinner = new Spinner(opts)
         .spin(target);
 }
-var changeEngingePosition = function () {
-    evaluations.trigger("piece:drop")
+var changeEnginePosition = function () {
+    chessAnalysis.evaluation_router.evaluations_collection.trigger("piece:drop")
     $("#fen-container")
         .val(chessAnalysis.chess[index].fen())
     if (chessAnalysis.engineStatus === true) {

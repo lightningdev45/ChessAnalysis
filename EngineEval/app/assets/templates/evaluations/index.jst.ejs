@@ -1,9 +1,4 @@
 
-
-    
-	
-
-	
 	<thead>
 	<tr><th colspan=4 class="text-center"><h3><b>Deepest Analysis</b></h2></th></tr>
 
@@ -15,19 +10,22 @@
 	</tr>
 	</thead>
 	<tbody>
-	<%evaluations.each(function(item,indicator){%>
-		<tr class="text-center">
-			<td><%=indicator+1%></td>
-			<td><%=item.get("engine")%></td>
-			<td><%=item.get("nodes")%></td>
-			<%if(chessAnalysis.chess[index].turn()==='w'){%>
-			<td><%=item.get("evaluation")%></td>
-			<%}%>
-			<%if(chessAnalysis.chess[index].turn()==='b'){%>
-			<td><%=item.get("evaluation")*-1%></td>
-			<%}%>
-		</tr>
-		<%})%>
+	<%evaluations_collection.each(function(item,indicator){%>
+		<%if(indicator!==evaluations_collection.length-1){%>
+			<tr class="text-center">
+				<td><%=indicator+1%></td>
+				<td><%=item.get("engine")%></td>
+				<td><%=item.get("nodes")%></td>
+				<%if(chessAnalysis.chess[index].turn()==='w'){%>
+				<td><%=item.get("evaluation")%></td>
+				<%}%>
+				<%if(chessAnalysis.chess[index].turn()==='b'){%>
+				<td><%=item.get("evaluation")*-1%></td>
+				<%}%>
+			</tr>
+		<%}%>
+	<%})%>
+
 	
 	</tbody>
 

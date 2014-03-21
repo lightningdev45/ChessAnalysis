@@ -26,6 +26,7 @@ get '/how_to'=>"home#how_to"
 get '/support'=>"home#support"
 get '/user'=>"home#users"
 get '/forum'=>"home#forum"
+post '/tag_position'=>"positions#tag_position"
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

@@ -1,0 +1,30 @@
+<%if user_signed_in?%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "Tag",tag_position_path(fen:fen_param,tag_type:"positional"),data:{fen:"true"},class:"btn btn-default positional-tag-button",remote:true,method: :post%>
+          </span>
+  <select class="form-control positional-tag-select tag-select">
+   
+    <option value="Open File">Open File</option>
+    <option value="Isolated Pawn">Isolated Pawn</option>
+    <option value="Exposed King">Exposed King</option>
+
+  </select>
+
+</div><!-- /input-group -->
+
+<%else%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "Tag",user_session_path,class:"btn btn-default",data:{fen:"false"}%>
+          </span>
+  <select class="form-control">
+   
+    <option value="Open File">Open File</option>
+    <option value="Isolated Pawn">Isolated Pawn</option>
+    <option value="Exposed King">Exposed King</option>
+    
+  </select>
+
+</div>
+<%end%>

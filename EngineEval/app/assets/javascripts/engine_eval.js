@@ -4,7 +4,7 @@ window.EngineEval = {
   Views: {},
   Routers: {},
   initialize: function() {
-    new EngineEval.Routers.Evaluations();
+    chessAnalysis.evaluation_router=new EngineEval.Routers.Evaluations();
     Backbone.history.start();
     
     

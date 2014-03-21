@@ -1,0 +1,10 @@
+if("<%=params[:tag_type]%>"==="opening"){
+	$("#opening-panel-body .tags").html('<%=j render('position_opening_tags')%>')}
+	else if("<%=params[:tag_type]%>"==="tactics"){
+		$("#tactics-panel-body .tags").html('<%=j render('position_tactics_tags')%>')}
+	
+	else{
+		$("#positional-panel-body .tags").html('<%=j render('position_positional_tags')%>')}
+	
+
+	$('.position-tag').popover({})	

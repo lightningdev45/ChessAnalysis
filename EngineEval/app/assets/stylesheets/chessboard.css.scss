@@ -774,3 +774,11 @@ input[type="checkbox"]{
 .panel-warning{
 	border-color:$boardedge;
 }
+
+.panel-group .panel{
+	
+}
+.panel-body{
+	height:200px;
+	overflow:auto;
+}

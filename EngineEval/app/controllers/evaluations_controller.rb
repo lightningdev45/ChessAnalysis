@@ -13,9 +13,14 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 			@position.fen=@fen_param
 			@position.save
 		end
-		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",@fen_param).order("nodes DESC, created_at DESC").limit(10)
+		@tags={openings:@position.opening_list,tactics:@position.tactic_list,positional:@position.positional_motif_list}
+		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",@fen_param).order("nodes DESC, created_at DESC").limit(10).to_a.push(@position)
 		respond_to do |format|
-			format.json{render :json=>@evaluations}
+			format.json{render :json=>{
+				evaluations:@evaluations,
+				tags:@tags,
+				fen_param:@fen_param}
+			}
 		end
 	end
 

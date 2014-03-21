@@ -1,0 +1,30 @@
+<%if user_signed_in?%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "Tag",tag_position_path(fen:fen_param,tag_type:"tactics"),data:{fen:"true"},class:"btn btn-default tactics-tag-button",remote:true,method: :post%>
+          </span>
+  <select class="form-control tactics-tag-select tag-select">
+   
+    <option value="Fork">Fork</option>
+    <option value="X-ray">X-ray</option>
+    <option value="Distraction">Distraction</option>
+
+  </select>
+
+</div><!-- /input-group -->
+
+<%else%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "Tag",user_session_path,class:"btn btn-default",data:{fen:"false"}%>
+          </span>
+  <select class="form-control">
+   
+    <option value="Fork">Fork</option>
+    <option value="X-ray">X-ray</option>
+    <option value="Distraction">Distraction</option>
+
+  </select>
+
+</div>
+<%end%>
