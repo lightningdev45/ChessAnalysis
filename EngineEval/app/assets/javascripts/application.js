@@ -18,6 +18,8 @@
 //= require backbone
 //= require engine_eval
 //= require customMenu
+//= require jquery-ui-1.10.3.custom
+//= require bootstrap.js
 //= require_tree ../templates
 //= require_tree ./models
 //= require_tree ./collections

@@ -4,5 +4,6 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_many :annotation_quality_votes
-  acts_as_tagger
+  has_many :taggings
+  
 end

@@ -2,7 +2,7 @@
 <%if user_signed_in?%>
 <div class="input-group">
           <span class="input-group-btn">
-            <%=link_to "Tag",tag_position_path(fen:fen_param,tag_type:"opening"),data:{fen:"true"},class:"btn btn-default opening-tag-button",remote:true,method: :post%>
+            <%=link_to "<i class=\"glyphicon glyphicon-tag\"></i> Tag".html_safe,tag_position_path(fen:fen_param,tag_type:"opening"),data:{fen:"true"},class:"btn btn-default opening-tag-button",remote:true,method: :post%>
           </span>
   <select class="form-control opening-tag-select tag-select">
    
@@ -62,14 +62,14 @@
     <option value="E12-E19: Queen's Indian Defense">E12-E19: Queen's Indian Defense</option>
     <option value="E20-E59: Nimzo-Indian Defense">E20-E59: Nimzo-Indian Defense</option>
     <option value="E60-E99: King's Indian Defense">E60-E99: King's Indian Defense</option>
-  </select>
+  </select><%=link_to "<i class=\"glyphicon glyphicon-trash\"></i> Untag".html_safe,untag_position_path(fen:fen_param,tag_type:"opening"), class:"input-group-addon opening-untag-button btn btn-default",remote:true,method: :post%>
 
 </div><!-- /input-group -->
 
 <%else%>
 <div class="input-group">
           <span class="input-group-btn">
-            <%=link_to "Tag",user_session_path,class:"btn btn-default",data:{fen:"false"}%>
+            <%=link_to "<i class=\"glyphicon glyphicon-tag\"></i> Tag".html_safe,user_session_path,class:"btn btn-default ",data:{fen:"false"}%>
           </span>
   <select class="form-control">
    
@@ -129,7 +129,7 @@
     <option value="E12-E19: Queen's Indian Defense">E12-E19: Queen's Indian Defense</option>
     <option value="E20-E59: Nimzo-Indian Defense">E20-E59: Nimzo-Indian Defense</option>
     <option value="E60-E99: King's Indian Defense">E60-E99: King's Indian Defense</option>
-  </select>
+  </select><%=link_to "<i class=\"glyphicon glyphicon-trash\"></i> Untag".html_safe,user_session_path, class:"input-group-addon btn-default btn"%>
 
 </div>
 <%end%>

@@ -11,7 +11,9 @@ resources :annotations
 resources :annotation_edits
 
 scope 'api' do
-  resources :evaluations do
+  get '/evaluations_index'=>'evaluations#evaluations_index'
+   resources :evaluations do
+
     
   end
 end
@@ -24,9 +26,10 @@ resources :annotation_quality_votes
 get 'clean_database'=>'games#clean_database'
 get '/how_to'=>"home#how_to"
 get '/support'=>"home#support"
-get '/user'=>"home#users"
+get '/user/:id'=>"home#user"
 get '/forum'=>"home#forum"
 post '/tag_position'=>"positions#tag_position"
+post '/untag_position'=>"positions#untag_position"
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

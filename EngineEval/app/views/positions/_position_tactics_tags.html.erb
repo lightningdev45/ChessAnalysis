@@ -1,9 +1,8 @@
-<%@position.tactic_list.each do |name|%>
-<li class="position-tag" data-toggle="tooltip" title="Tooltip on left"s>
+<%@tags.each do |tag|%>
+<li class="position-tag" >
     <a >
-        <i class="glyphicon glyphicon-thumbs-up"></i> 
-                        <%=name%> 
-        <i class="glyphicon glyphicon-thumbs-down"></i>
+		<span class="badge pull-right"><%=tag[1]%></span>
+        <%=tag[0]%>
     </a>
 </li>
 <%end%>

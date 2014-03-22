@@ -6,7 +6,6 @@ EngineEval.Views.TagsIndex = Backbone.View.extend({
   render:function(){
 
   	$(this.el).html(this.template({tags:this.collection}))
-
   	return this
 
   }

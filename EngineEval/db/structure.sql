@@ -337,13 +337,16 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE taggings (
     id integer NOT NULL,
-    tag_id integer,
+    user_id integer,
     taggable_id integer,
     taggable_type character varying(255),
-    tagger_id integer,
-    tagger_type character varying(255),
-    context character varying(128),
-    created_at timestamp without time zone
+    tag_category character varying(255),
+    tag_value character varying(255),
+    tag_vote integer,
+    tag_custom_vote character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    tag_id integer
 );
 
 
@@ -372,7 +375,13 @@ ALTER SEQUENCE taggings_id_seq OWNED BY taggings.id;
 
 CREATE TABLE tags (
     id integer NOT NULL,
-    name character varying(255)
+    tag_value character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    tag_count integer DEFAULT 0,
+    tag_sum integer DEFAULT 0,
+    taggable_id integer,
+    taggable_type character varying(255)
 );
 
 
@@ -660,13 +669,6 @@ ALTER TABLE ONLY votes
 
 
 --
--- Name: index_tags_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
-
-
---
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -692,13 +694,6 @@ CREATE INDEX index_votes_on_votable_id_and_votable_type_and_vote_scope ON votes 
 --
 
 CREATE INDEX index_votes_on_voter_id_and_voter_type_and_vote_scope ON votes USING btree (voter_id, voter_type, vote_scope);
-
-
---
--- Name: taggings_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX taggings_idx ON taggings USING btree (tag_id, taggable_id, taggable_type, context, tagger_id, tagger_type);
 
 
 --
@@ -748,6 +743,14 @@ INSERT INTO schema_migrations (version) VALUES ('20140318014029');
 
 INSERT INTO schema_migrations (version) VALUES ('20140319032641');
 
-INSERT INTO schema_migrations (version) VALUES ('20140319154729');
+INSERT INTO schema_migrations (version) VALUES ('20140321193146');
 
-INSERT INTO schema_migrations (version) VALUES ('20140319154730');
+INSERT INTO schema_migrations (version) VALUES ('20140321195235');
+
+INSERT INTO schema_migrations (version) VALUES ('20140321195354');
+
+INSERT INTO schema_migrations (version) VALUES ('20140321203936');
+
+INSERT INTO schema_migrations (version) VALUES ('20140322004625');
+
+INSERT INTO schema_migrations (version) VALUES ('20140322004828');
