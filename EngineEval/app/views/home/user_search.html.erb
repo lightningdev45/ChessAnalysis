@@ -1,0 +1,53 @@
+<br>
+
+<br>
+<div class="col-xs-8 col-sm-8  col-md-8 col-lg-8 col-xs-offset-8 col-sm-offset-8   col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="text-center" ><b>Users Found</b></h4>
+		</div>
+		<div class="panel-body">	
+			<table class="table table-hover text-center">
+
+				<thead>
+				<tr>
+					<th>Avatar</th>
+					<th>Profile Name</th>
+					<th>Followers</th>
+					<th>Following</th>
+					<th>Follow?</th>
+				</tr>
+			</thead>
+				<%@users.each do |user|%>
+
+				<tr>
+					<td>
+							<%=image_tag avatar_url(user,50)%>
+			</td>
+					<td><%=link_to user.profile_name,user_path(user.id)%></td>
+					<td id="count<%=user.id%>"><%=user.followers.count%></td>
+					<td><%=user.followed_users.count%></td>
+
+					<td id="follow<%=user.id%>"><%if current_user.followed_users.include?(user)%>
+					<%=link_to "Unfollow",change_relationship_path(follower:current_user.id,followed:user),method: :post,remote:true,class:"btn btn-primary"%>
+					
+					<%elsif current_user!=user%>
+					<%=link_to "Follow",change_relationship_path(follower:current_user.id,followed:user.id),method: :post,remote:true,class:"btn btn-primary",remote:true%>
+					<%else%>
+					<em>NA</em>
+					<%end%>
+					</td>
+				</tr>
+				<%end%>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="col-xs-2 col-sm-2  col-md-2 col-lg-2"></div>
+<br>
+<div class="text-center col-xs-8 col-sm-8  col-md-8 col-lg-8 col-xs-offset-8 col-sm-offset-8 col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
+	<%=will_paginate(@users)%>
+</div>
+<div class="col-xs-2 col-sm-2  col-md-2 col-lg-2"></div>
+<br>
+<br>

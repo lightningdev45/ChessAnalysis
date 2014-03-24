@@ -38,6 +38,9 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 	def create
 		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
 		@evaluation=Evaluation.new
+		if user_signed_in?
+			@evaluation.user_id=current_user.id
+		end
 		@evaluation.fen=@fen_param
 		@evaluation.position=@position
 		@evaluation.save

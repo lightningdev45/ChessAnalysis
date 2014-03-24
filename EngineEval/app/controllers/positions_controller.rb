@@ -7,8 +7,7 @@ class PositionsController < ApplicationController
 				if @tag=Tag.find_by(tag_value:params[:tag_value],taggable_id:@position.id)
 					if @tagging=Tagging.find_by(user_id:current_user.id,tag_category:params[:tag_type],tag_value:params[:tag_value],taggable_id:@position.id)
 						if(@tagging.tag_vote==0)
-							@tagging.tag_vote=1
-							@tagging.save
+							@tagging.delete
 							@tag.tag_sum+=1
 							@tag.save
 							@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
@@ -76,8 +75,7 @@ class PositionsController < ApplicationController
 								format.js{render :js=>"alert('You have already tagged this position with that value.')"}
 							end
 						else
-							@tagging.tag_vote=0
-							@tagging.save
+							@tagging.delete
 							@tag.tag_sum-=1
 							@tag.save
 							@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}

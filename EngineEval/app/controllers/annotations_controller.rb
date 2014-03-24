@@ -12,6 +12,7 @@ class AnnotationsController < ApplicationController
 			@annotation.comments=params[:comments]
 			@annotation.mainvariations=params[:mainvariations]
 			@annotation.version=0
+			@annotation.user_id=current_user.id
 
 			if @annotation.save
 				if Annotation.where(fen:@fen).count>1

@@ -190,7 +190,8 @@ CREATE TABLE evaluations (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     depth integer,
-    seldepth integer
+    seldepth integer,
+    user_id integer
 );
 
 
@@ -320,6 +321,38 @@ CREATE SEQUENCE positions_id_seq
 --
 
 ALTER SEQUENCE positions_id_seq OWNED BY positions.id;
+
+
+--
+-- Name: relationships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE relationships (
+    id integer NOT NULL,
+    follower_id integer,
+    followed_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: relationships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE relationships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE relationships_id_seq OWNED BY relationships.id;
 
 
 --
@@ -548,6 +581,13 @@ ALTER TABLE ONLY positions ALTER COLUMN id SET DEFAULT nextval('positions_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY relationships ALTER COLUMN id SET DEFAULT nextval('relationships_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY taggings ALTER COLUMN id SET DEFAULT nextval('taggings_id_seq'::regclass);
 
 
@@ -637,6 +677,14 @@ ALTER TABLE ONLY positions
 
 
 --
+-- Name: relationships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY relationships
+    ADD CONSTRAINT relationships_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: taggings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -666,6 +714,27 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_relationships_on_followed_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_relationships_on_followed_id ON relationships USING btree (followed_id);
+
+
+--
+-- Name: index_relationships_on_follower_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_relationships_on_follower_id ON relationships USING btree (follower_id);
+
+
+--
+-- Name: index_relationships_on_follower_id_and_followed_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_relationships_on_follower_id_and_followed_id ON relationships USING btree (follower_id, followed_id);
 
 
 --
@@ -754,3 +823,9 @@ INSERT INTO schema_migrations (version) VALUES ('20140321203936');
 INSERT INTO schema_migrations (version) VALUES ('20140322004625');
 
 INSERT INTO schema_migrations (version) VALUES ('20140322004828');
+
+INSERT INTO schema_migrations (version) VALUES ('20140323170628');
+
+INSERT INTO schema_migrations (version) VALUES ('20140323172217');
+
+INSERT INTO schema_migrations (version) VALUES ('20140323173234');

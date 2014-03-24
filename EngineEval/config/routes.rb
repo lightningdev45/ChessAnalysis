@@ -23,13 +23,18 @@ resources :games
 resources :dpositions
 resources :game_positions
 resources :annotation_quality_votes
+resources :relationships
 get 'clean_database'=>'games#clean_database'
 get '/how_to'=>"home#how_to"
 get '/support'=>"home#support"
-get '/user/:id'=>"home#user"
+get '/user/:id'=>"home#user",as: :user
 get '/forum'=>"home#forum"
 post '/tag_position'=>"positions#tag_position"
 post '/untag_position'=>"positions#untag_position"
+get 'user_search'=>"home#user_search"
+post 'change_relationship'=>'relationships#change_relationship'
+get 'list_followed'=>'home#list_followed'
+get 'list_followers'=>'home#list_followers'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

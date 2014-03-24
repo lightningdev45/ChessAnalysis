@@ -1,0 +1,4 @@
+
+$("#followers_list .modal-body").empty();
+$("#followers_list .modal-body").append('<%=j render(partial:"follow_list",locals:{collection:@followers})%>')
+ $('.pagination a').attr('data-remote', 'true');
