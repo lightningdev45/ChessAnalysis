@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Varela+Round);
+@import url('http://fonts.googleapis.com/css?family=Varela');
 html{
 	overflow:auto;
 	font-size: 14px;	
@@ -52,13 +52,13 @@ body{
 background: url("cartographer_@2X.png");
 background: url("shattered.png");
 background:white;
-font-family: 'Varela Round', sans-serif;
+font-family: 'Varela', sans-serif;
 	padding-top: 51px;
 	color:$dark-background;
 font-size:14px;
 }
 h1, h2, h3, h4, h5, h6{
-font-family: 'Varela Round', sans-serif;	
+font-family: 'Varela', sans-serif;	
 }
 
 
@@ -85,7 +85,7 @@ font-family: 'Varela Round', sans-serif;
 	overflow:auto;
 	font-weight: bold;
 	
-	font-family:cursive;
+	font-family:'Varela';
 	border-radius:15px;
 	}
 
@@ -270,7 +270,7 @@ font-family: 'Varela Round', sans-serif;
 
 	font-weight: bold;
 
-	font-family:cursive;
+	font-family:'Varela';
 	
 	
 
@@ -470,7 +470,7 @@ width:75px;
 }
 #problem-header{
 	text-align: center;
-	font-family: cursive;
+	font-family: 'Varela';
 }
 
 #problem-index{
@@ -802,5 +802,11 @@ input[type="checkbox"]{
 .table > tbody > tr > td{
 	 vertical-align:middle;
 	 }
+
+	 dd{height:20px;}
+
+.other-text{
+	 white-space:pre-wrap;
+}
 
 

@@ -205,24 +205,45 @@ $(".event-fen").hover(function(){
 						<h4>About</h4>
 					</div>
 				<div class="panel-body">
-				
+
+					<dl class="dl-horizontal">
+						<dt>Email</dt>
+						<dd><%=show_user_trait("email",@user)%></dd>
+					</dl>
+
+					<dl class="dl-horizontal">
+						<dt>Location</dt>
+						<dd><%=show_user_trait("location",@user)%></dd>
+					</dl>
+
+					<dl class="dl-horizontal">
+						<dt>Name</dt>
+						<dd><%if @user.last_name_privacy&&!@user.first_name_privacy%><%="#{@user.last_name}"%><%elsif @user.first_name_privacy&&!@user.last_name_privacy%><%="#{@user.first_name}"%></span>
+							<%elsif @user.first_name_privacy&&@user.last_name_privacy%><%="#{@user.first_name} #{@user.last_name}"%>
+							<%else%><em>Private</em>
+							<%end%>
+						</dd>
+					</dl>
+
 						<dl class="dl-horizontal">
 						  <dt>Rating</dt>
-						  <dd><%=@user.rating%></dd>
+						  <dd><%=show_user_trait("rating",@user)%></dd>
 						</dl>
+
 						<dl class="dl-horizontal">
 						  <dt>Title</dt>
-						  <dd><%=@user.title%></dd>
+						  <dd><%=show_user_trait("title",@user)%></dd>
 						</dl>
+
 						<dl class="dl-horizontal">
 						  <dt>Other</dt>
-						  <dd>abc</dd>
+						  <dd class="other-text"><%=show_user_trait("other",@user)%></dd>
 						</dl>
 
 				</div>
 			</div>
 		</div>
-
+		<div class="col-xs-3 col-sm-3"></div>
 		<div id="user-profile-actions" class=" col-xs-9 col-sm-9 col-md-9  col-lg-9">
 			<div class="panel-default panel">
 				<div class="panel-heading"><h4><%=@user.profile_name.capitalize+"'s Activity"%></h5>

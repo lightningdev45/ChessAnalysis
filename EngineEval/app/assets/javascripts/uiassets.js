@@ -1310,7 +1310,7 @@ var writeAnnotation = function (hmv, hm, spotAdjustment) {
                           fragment += "<span class='ann_move' id='var" + hmv + "move" + spot + "'>" + " " + chessAnalysis.moves[index][hmv][spot] + "</span>"
                         
                       }
-                      if(spot+1===chessAnalysis.moves[index][hmv].length&&$("#var"+hmv+"comment"+(spot+1)).length){
+                      if(spot+1===chessAnalysis.moves[index][hmv].length&&chessAnalysis.movescomment[index][hmv][spot+1]){
                         fragment+= "<textarea class='ann_comment' id='var" + hmv + "comment" + spot + "'>" + " " + chessAnalysis.movescomment[index][hmv][spot+1] + "</textarea>"
                       }
                       spot += 1;
@@ -1334,7 +1334,7 @@ var writeAnnotation = function (hmv, hm, spotAdjustment) {
                 }
                   fragment += "<span class='ann_move' id='var" + hmv + "move" + spot + "'>" + " " + chessAnalysis.moves[index][hmv][spot] + "</span>"
               }
-              if(spot+1===chessAnalysis.moves[index][hmv].length&&$("#var"+hmv+"comment"+(spot+1)).length){
+              if(spot+1===chessAnalysis.moves[index][hmv].length&&chessAnalysis.movescomment[index][hmv][spot+1]){
                         fragment+= "<textarea class='ann_move' id='var" + hmv + "comment" + spot + "'>" + " " + chessAnalysis.movescomment[index][hmv][spot+1] + "</textarea>"
                 }
               spot += 1;

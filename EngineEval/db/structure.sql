@@ -461,7 +461,24 @@ CREATE TABLE users (
     current_sign_in_ip character varying(255),
     last_sign_in_ip character varying(255),
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    location_privacy boolean DEFAULT false,
+    email_privacy boolean DEFAULT false,
+    rating_privacy boolean DEFAULT false,
+    title_privacy boolean DEFAULT false,
+    icc_privacy boolean DEFAULT false,
+    chesscom_privacy boolean DEFAULT false,
+    playchess_privacy boolean DEFAULT false,
+    other_privacy boolean DEFAULT false,
+    first_name_privacy boolean DEFAULT false,
+    last_name_privacy boolean DEFAULT false,
+    last_name character varying(255),
+    first_name character varying(255),
+    location character varying(255),
+    icc character varying(255),
+    chess_com character varying(255),
+    playchess character varying(255),
+    other text
 );
 
 
@@ -829,3 +846,7 @@ INSERT INTO schema_migrations (version) VALUES ('20140323170628');
 INSERT INTO schema_migrations (version) VALUES ('20140323172217');
 
 INSERT INTO schema_migrations (version) VALUES ('20140323173234');
+
+INSERT INTO schema_migrations (version) VALUES ('20140324185923');
+
+INSERT INTO schema_migrations (version) VALUES ('20140324191522');

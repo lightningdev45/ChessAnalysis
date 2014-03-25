@@ -16,7 +16,9 @@ else if('<%=params[:popup]%>'==="true")
 else if('<%=@direction%>'==="add")
 {
 $("#followers_link").text(parseInt($("#followers_link").text())+1);
+$("#count<%=params[:followed]%>").text(parseInt($("#count<%=params[:followed]%>").text())+1);
 }
 else
 {$("#followers_link").text(parseInt($("#followers_link").text())-1);
+$("#count<%=params[:followed]%>").text(parseInt($("#count<%=params[:followed]%>").text())-1);
 }
