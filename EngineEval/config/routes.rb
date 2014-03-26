@@ -10,13 +10,10 @@ EngineEval::Application.routes.draw do
 resources :annotations
 resources :annotation_edits
 
-scope 'api' do
-  get '/evaluations_index'=>'evaluations#evaluations_index'
-   resources :evaluations do
 
-    
-  end
-end
+get '/evaluations_index'=>'evaluations#evaluations_index'
+resources :evaluations
+
 
 get '/get_annotation_data'=>'annotations#get_annotation_data'
 resources :games
@@ -24,6 +21,7 @@ resources :dpositions
 resources :game_positions
 resources :annotation_quality_votes
 resources :relationships
+get 'about'=>"home#about"
 get 'clean_database'=>'games#clean_database'
 get '/how_to'=>"home#how_to"
 get '/support'=>"home#support"
@@ -38,7 +36,7 @@ get 'list_followers'=>'home#list_followers'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-root 'positions#index'
+root 'home#index'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

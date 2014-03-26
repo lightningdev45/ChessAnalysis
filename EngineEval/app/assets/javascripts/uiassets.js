@@ -688,6 +688,7 @@ var squarelocations = {};
 var dropstring = "";
 //this function takes a fen and adds the correct square for each piece to the "ploc" hash based on the fen
 var setup = function (fen) {
+   
     var avail = {
         "k": ["k"],
         "q": ["q", "q2", "q3", "q4", "q5", "q6", "q7", "q8"],

@@ -15,8 +15,17 @@
 //= require underscore
 //= require chessgenerator
 //= require uiassets
-//= require engine_eval
 //= require customMenu
 //= require jquery-ui-1.10.3.custom
 //= require bootstrap.js
-//= require_tree .
+//= require jquery
+//= require handlebars
+//= require ember
+//= require ember-data
+//= require_self
+//= require engine_eval
+
+// for more details see: http://emberjs.com/guides/application/
+EngineEval = Ember.Application.create();
+
+

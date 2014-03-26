@@ -48,7 +48,7 @@
   </div>
 </nav>
 <div class="container main-container">
-	<% if flash[:notice]%>
+  <% if flash[:notice]%>
         <div class="alert alert-success">
           <button type="button" class="close" data-dismiss="alert">&times;</button>
           <%= flash[:notice]%>
@@ -62,13 +62,13 @@
         </div>
     <%end%>
 
-	<div class="alert alert-danger javascript-alert">
+  <div class="alert alert-danger javascript-alert">
           <button type="button" class="close" data-dismiss="alert">&times;</button>
-	</div>
-	<div class="alert alert-success javascript-alert">
+  </div>
+  <div class="alert alert-success javascript-alert">
           <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
-	<%= yield %>
+  <%=yield%>
 </div>
 </body>
 </html>

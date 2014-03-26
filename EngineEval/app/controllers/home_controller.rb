@@ -9,6 +9,12 @@ class HomeController < ApplicationController
 	def forum
 	end
 
+	def about
+	end
+	
+	def index
+	end
+
 	def user
 		current_page = params[:page] || 1
   		per_page = params[:per_page] || 10
