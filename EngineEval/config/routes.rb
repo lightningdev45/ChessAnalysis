@@ -37,6 +37,7 @@ get 'list_followers'=>'home#list_followers'
   # root 'welcome#index'
 
 root 'home#index'
+get ':fen_param'=>"home#index"
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

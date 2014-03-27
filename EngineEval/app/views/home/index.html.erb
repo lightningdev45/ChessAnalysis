@@ -2,7 +2,7 @@
 <%=javascript_tag do %>
 $(document)
     .ready(function () {
-
+alert("boo")
     $(".opening-tag-select").on("change",function(){
         $(".opening-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=opening&tag_value="+encodeURIComponent($(".opening-tag-select").val()))
 

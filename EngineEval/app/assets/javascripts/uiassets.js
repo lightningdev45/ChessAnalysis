@@ -1186,7 +1186,9 @@ var add_spinner = function (elementId) {
         .spin(target);
 }
 var changeEnginePosition = function () {
-    chessAnalysis.evaluation_router.evaluations_collection.trigger("piece:drop")
+     var controller = EngineEval.__container__.lookup("controller:positions").send("newPosition");
+    
+        
     $("#fen-container")
         .val(chessAnalysis.chess[index].fen())
     if (chessAnalysis.engineStatus === true) {
