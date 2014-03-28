@@ -1,3 +1,2 @@
-EngineEval.Evaluation = DS.Model.extend({
-  engine: DS.attr('string')
+EngineEval.Evaluation = Ember.Object.extend({
 });

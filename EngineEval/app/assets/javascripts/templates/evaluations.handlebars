@@ -1,3 +1,33 @@
-{{#each controller}}
-{{id}}
-{{/each}}
+<table class="table table-hover col-lg-12 col-md-12">
+<thead>
+	<tr>
+		<th colspan=4 class="text-center">
+		<h3><b>Deepest Analysis</b></h3>
+		</th>
+	</tr>
+
+	<tr>
+		<th class="text-center">Rank</th>
+		<th class="text-center">Engine</th>
+		<th class="text-center">Nodes</th>
+		<th class="text-center">Evaluation</th>
+	</tr>
+</thead>
+	<tbody>
+	
+	{{#each controller}}
+		
+
+			<tr class="text-center">
+				<td>{{index}}</td>
+				<td>{{engine}}</td>
+				<td>{{nodes}}</td>
+				
+				<td>{{evaluation}}</td>
+				
+				</tr>
+	{{/each}}
+
+
+	</tbody>
+</table>
