@@ -1,5 +1,5 @@
 class PositionsController < ApplicationController
-	respond_to :json
+	
 
 	def tag_position
 		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
@@ -12,7 +12,7 @@ class PositionsController < ApplicationController
 							@tag.save
 							@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 							respond_to do |format|
-								format.js{}
+								format.text{render json:@tags.to_json}
 							end
 						else
 							respond_to do |format|
@@ -33,7 +33,7 @@ class PositionsController < ApplicationController
 						@tagging.save
 						@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 						respond_to do |format|
-							format.js{}
+							format.text{render json:@tags.to_json}
 						end
 
 					end
@@ -55,7 +55,7 @@ class PositionsController < ApplicationController
 					@tagging.save
 					@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 					respond_to do |format|
-						format.js{}
+						format.text{render json:@tags.to_json}
 					end
 				end
 		else
@@ -80,7 +80,7 @@ class PositionsController < ApplicationController
 							@tag.save
 							@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 							respond_to do |format|
-								format.js{}
+								format.text{render json:@tags.to_json}
 							end
 						end
 
@@ -98,7 +98,7 @@ class PositionsController < ApplicationController
 						@tagging.save
 						@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 						respond_to do |format|
-							format.js{}
+							format.text{render json:@tags.to_json}
 						end
 
 					end
@@ -120,7 +120,7 @@ class PositionsController < ApplicationController
 					@tagging.save
 					@tags=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>params[:tag_type],'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 					respond_to do |format|
-						format.js{}
+						format.text{render json:@tags.to_json}
 					end
 				end
 		else
@@ -146,15 +146,16 @@ class PositionsController < ApplicationController
 		end
 		@tags={}
 		@tags[:tactics]=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>"tactics",'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
-		@tags[:tactics]=[1,2]
 		@tags[:positional]=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>"positional",'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 		@tags[:opening]=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>"opening",'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",@fen_param).order("nodes DESC, created_at DESC").limit(10).to_a
+		@signed_in=user_signed_in?
 		respond_to do |format|
 			format.json{render :json=>{
 				evaluations:@evaluations,
 				tags:@tags,
-				fen_param:@fen_param
+				fen_param:@fen_param,
+				signed_in:@signed_in
 				}
 			}
 		end

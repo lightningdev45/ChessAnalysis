@@ -21,21 +21,34 @@ EngineEval.PositionRoute = Ember.Route.extend({
 							{eval.set("evaluation",eval.get("evaluation")*-1)}
 						return eval
 					}))
-					router.controllerFor("tags").set('model',response.tags)
+					router.controllerFor("tactictags").set('model',response.tags.tactics)
+					router.controllerFor("tactictags").set('signed_in',response.signed_in)
+					router.controllerFor("positionaltags").set('model',response.tags.positional)
+					router.controllerFor("positionaltags").set('signed_in',response.signed_in)
+					router.controllerFor("openingtags").set('model',response.tags.opening)
+					router.controllerFor("openingtags").set('signed_in',response.signed_in)
 				})
 			
 					
 			},
 			renderTemplate: function() {
         // Render default outlet   
-		        this.render();
+		         this.render();
 		        // render extra outlets
 		        this.render("evaluations", {
 		            outlet: "evaluations",
 		            into: "positions" // important when using at root level
 		        });
-		        this.render("tags", {
-		            outlet: "tags",
+		        this.render("tactictags", {
+		            outlet: "tactictags",
+		            into: "positions" // important when using at root level
+		        });
+		        this.render("positionaltags", {
+		            outlet: "positionaltags",
+		            into: "positions" // important when using at root level
+		        });
+		        this.render("openingtags", {
+		            outlet: "openingtags",
 		            into: "positions" // important when using at root level
 		        });
     		}

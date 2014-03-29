@@ -33,6 +33,7 @@ get 'user_search'=>"home#user_search"
 post 'change_relationship'=>'relationships#change_relationship'
 get 'list_followed'=>'home#list_followed'
 get 'list_followers'=>'home#list_followers'
+
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

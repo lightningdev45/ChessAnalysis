@@ -2,20 +2,13 @@
 <%=javascript_tag do %>
 $(document)
     .ready(function () {
-
     $(".opening-tag-select").on("change",function(){
-        $(".opening-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=opening&tag_value="+encodeURIComponent($(".opening-tag-select").val()))
-
         $(".opening-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=opening&tag_value="+encodeURIComponent($(".opening-tag-select").val()))
     })
     $(".positional-tag-select").on("change",function(){
-        $(".positional-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=positional&tag_value="+encodeURIComponent($(".positional-tag-select").val()))
-
         $(".positional-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=positional&tag_value="+encodeURIComponent($(".positional-tag-select").val()))
     })
     $(".tactics-tag-select").on("change",function(){
-        $(".tactics-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=tactics&tag_value="+encodeURIComponent($(".tactics-tag-select").val()))
-
         $(".tactics-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=tactics&tag_value="+encodeURIComponent($(".tactics-tag-select").val()))
     })
     $("#copy-fen").click(function(){       

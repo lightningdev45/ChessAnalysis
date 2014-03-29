@@ -3,6 +3,6 @@ EngineEval.Router.map(function() {
   this.resource('positions',{path:''},function(){
   	this.resource('position',{path:':fen_param'})
   })
-  
+ 
 
 });

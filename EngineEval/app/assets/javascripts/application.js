@@ -24,6 +24,7 @@
 //= require ember-data
 //= require_self
 //= require engine_eval
+//= require addComment.js
 
 // for more details see: http://emberjs.com/guides/application/
 EngineEval = Ember.Application.create();
