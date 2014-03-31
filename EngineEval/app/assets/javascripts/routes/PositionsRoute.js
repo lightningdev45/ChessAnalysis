@@ -1,7 +1,7 @@
 EngineEval.PositionsRoute = Ember.Route.extend({
 	 setupController:function(controller){
 			var router=this
-
+			
 			if(this.modelFor('position'))
 				{}
 			else
@@ -24,9 +24,9 @@ EngineEval.PositionsRoute = Ember.Route.extend({
 					
 			},
 			renderTemplate: function() {
-        // Render default outlet 
-        if(document.URL==="http://0.0.0.0:3000/")
-		        {this.render();}
+    
+        	
+		        this.render();
 		        // render extra outlets
 		        this.render("evaluations", {
 		            outlet: "evaluations",
@@ -44,7 +44,9 @@ EngineEval.PositionsRoute = Ember.Route.extend({
 		            outlet: "openingtags",
 		            into: "positions" // important when using at root level
 		        });
-    		}
-	}) 		
+		    }
+   	
+	}) 	
+
 
 	

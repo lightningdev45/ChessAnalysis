@@ -1,3 +1,4 @@
+<h1>{{fen_param}}</h1>
 <div class="row">
   <h1 class="text-center col-lg-12 col-md-12"><b>Chess Analysis</b></h1></div>
   <br>
@@ -31,22 +32,8 @@
           </div>
         </div>
              <div id="board">
-    <%list=["a","b","c","d","e","f","g","h"]%>
-    <%numlist=[8,7,6,5,4,3,2,1]%>
-    <% 8.times do |x|%>
-    
 
-      <%8.times do |y|%>
-      <%if (y%2==0)&&(x%2==0)%>
-        <div class="square whitesquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
-      <%elsif (x%2!=0)&&(y%2!=0)%>
-        <div class="square whitesquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
-      <%else%>
-        <div class="square blacksquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
-      <%end%>
-      <%end%>
-   
-    <%end%>
+    
   </div>
    <div class="rightnotrow">
     <div class="rightnot">
@@ -99,7 +86,7 @@
     </div>
     <br>
 
-    <div  id="update-annotation-button-container"><span class="btn btn-primary"><%="<i class=\"glyphicon glyphicon-cloud-upload\"></i> Update".html_safe%></span></div>
+    <div  id="update-annotation-button-container"><span class="btn btn-primary"><i class="glyphicon glyphicon-cloud-upload"></i> Update</span></div>
   </div>
 </div>
 
