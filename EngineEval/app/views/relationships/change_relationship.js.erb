@@ -1,5 +1,4 @@
-$(".follow-user-button").empty();
-$(".follow-user-button").append('<%=@button_content%>')
+$(".follow-user-button").val('<%=@button_content%>')
 $("#follow<%=params[:followed]%> .btn").empty();
 $("#follow<%=params[:followed]%> .btn").append('<%=@button_content.split[0]%>');
 

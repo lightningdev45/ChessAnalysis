@@ -1,0 +1,37 @@
+<div class="panel-body">
+	<div class="col-xs-12 col-sm-12 col-md-12  col-lg-12">
+		{{#with user as user}}				
+		{{#each events}}
+							
+			{{#if evaluation}}
+				<div class="media">
+							  <div class="pull-left" href="#">
+							   <span class="media-object glyphicon glyphicon-stats"></span>
+							  </div>
+							  <div class="media-body">
+							  	{{#view EngineEval.PositionHoverView fen=fen}}
+								{{user.profile_name}} analyzed <a {{action "viewFen" fen urifen}} class="event-fen">{{view.fen}}</a> with engine {{engine}} {{/view}}
+								  </div>
+							</div>
+							{{else}}
+							<div class="media">
+							  <div class="pull-left" href="#">
+							   <span class="media-object glyphicon glyphicon-pencil"></span>
+							  </div>
+							  <div class="media-body">
+							  	{{#view EngineEval.PositionHoverView fen=fen}}
+								{{user.profile_name}} annotated <a {{action "viewFen" fen urifen}} class="event-fen">{{view.fen}}</a>
+								{{/view}}
+								
+								  </div>
+							</div>
+							{{/if}}										  
+							  {{/each}}	
+							  {{/with}}				
+					</div>
+					<div class="float-clear"></div>
+<br>
+					<div class="text-center">{{eventpagination paginate}}</div>
+				</div>
+
+

@@ -1,0 +1,44 @@
+<br>
+<br>
+
+
+<div class="col-xs-8 col-sm-8  col-md-8 col-lg-8 col-xs-offset-8 col-sm-offset-8   col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h4 class="text-center" ><b>Users Found</b></h4>
+		</div>
+		<div class="panel-body">	
+			<table class="table table-hover text-center">
+
+				<thead>
+				<tr >
+					<th class="text-center">Avatar</th>
+					<th class="text-center">Profile Name</th>
+					<th class="text-center">Reputation</th>
+					<th class="text-center">Followers</th>
+					<th class="text-center">Follow?</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#with this as controller}}
+				{{#each users}}
+
+				<tr>
+					<td>
+						<img {{bind-attr src=avatar}}>
+					</td>
+					<td>{{#link-to "profile.events" id 1}}{{profile_name}}{{/link-to}}</td>
+					<td>{{reputation}}</td>
+					{{element_id "count" id}}{{follower_count}}</td>
+					{{element_id "follow" id}}			
+						{{follow_user_button id controller.currentUser.id controller.isAuthenticated followed_user}}					
+					</td>
+				</tr>
+				{{/each}}
+				{{/with}}
+
+			</tbody>
+			</table>
+		</div>
+	</div>
+</div>

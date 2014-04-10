@@ -1,58 +1,61 @@
 var chessAnalysis = {};
-chessAnalysis.engines = [];
-chessAnalysis.engineStatus = false;
-chessAnalysis.engineId = ""
-chessAnalysis.mode = "engine_analysis_mode"
-chessAnalysis.chess = [new Chess(), new Chess()]
-chessAnalysis.moves = [
-    [],
-    []
-];
-chessAnalysis.hm = [0, 0]
-chessAnalysis.hmv = [0, 0];
-chessAnalysis.parents = [
-    [],
-    []
-]
-chessAnalysis.children = [{}, {}]
-chessAnalysis.currentHighlighted = $();
-chessAnalysis.rclickmove = ["", ""]
-chessAnalysis.showCustomMenu = "";
-chessAnalysis.boardcolor = "white";
-chessAnalysis.sortedMoves = [];
-chessAnalysis.update_move_tree = function () {};
-chessAnalysis.file_actions = {
-    1: ["add"]
-}
-chessAnalysis.action_groups = 1
-chessAnalysis.currentUser = "";
-chessAnalysis.savedStatus = true
-chessAnalysis.numvariations = [0, 0];
-chessAnalysis.mainvariations = [
-    [],
-    []
-];
-chessAnalysis.movescomment = [
-    [
-        [""]
-    ],
-    [
-        [""]
-    ]
-]
-chessAnalysis.sortlist = [
-    [],
-    []
-]
-chessAnalysis.atStart = [true, true]
-chessAnalysis.dropcount = [0, 0]
-chessAnalysis.startpositionfen = [new Chess()
-    .fen(), new Chess()
-    .fen()
-]
-chessAnalysis.editStatus=[false,false]
-
 var index = 0
+var setupChess=function(fen){
+    chessAnalysis.engines = [];
+    chessAnalysis.engineStatus = false;
+    chessAnalysis.engineId = ""
+    chessAnalysis.mode = "engine_analysis_mode"
+    chessAnalysis.chess = [new Chess(), new Chess()]
+    chessAnalysis.chess[0].load(fen)
+    chessAnalysis.chess[1].load(fen)
+    chessAnalysis.moves = [
+        [],
+        []
+    ];
+    chessAnalysis.hm = [0, 0]
+    chessAnalysis.hmv = [0, 0];
+    chessAnalysis.parents = [
+        [],
+        []
+    ]
+    chessAnalysis.children = [{}, {}]
+    chessAnalysis.currentHighlighted = $();
+    chessAnalysis.rclickmove = ["", ""]
+    chessAnalysis.showCustomMenu = "";
+    chessAnalysis.boardcolor = "white";
+    chessAnalysis.sortedMoves = [];
+    chessAnalysis.update_move_tree = function () {};
+    chessAnalysis.file_actions = {
+        1: ["add"]
+    }
+    chessAnalysis.action_groups = 1
+    chessAnalysis.currentUser = "";
+    chessAnalysis.savedStatus = true
+    chessAnalysis.numvariations = [0, 0];
+    chessAnalysis.mainvariations = [
+        [],
+        []
+    ];
+    chessAnalysis.movescomment = [
+        [
+            [""]
+        ],
+        [
+            [""]
+        ]
+    ]
+    chessAnalysis.sortlist = [
+        [],
+        []
+    ]
+    chessAnalysis.atStart = [true, true]
+    chessAnalysis.dropcount = [0, 0]
+    chessAnalysis.startpositionfen = [fen, fen
+    ]
+    chessAnalysis.editStatus=[false,false]
+
+}
+setupChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 var generatePosition = function (hmv, hm, startpositionfen) {
     if (hm === 0 || hm === -1) {
         return startpositionfen
@@ -1028,6 +1031,7 @@ var keynavigate = function (location) {
                     event.preventDefault();
                 }
                 if (event.which === 37) {
+                    
                     if (popup === false) {
                         if (chessAnalysis.hm[index] >= 2&&chessAnalysis.chess[index].fen()!==chessAnalysis.startpositionfen[index]) {
                             if (chessAnalysis.parents[index][chessAnalysis.hmv[index]][1] === chessAnalysis.hm[index] - 1) {

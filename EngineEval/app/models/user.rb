@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   has_many :annotations
   has_many :evaluations
   mount_uploader :avatar,UserAvatarUploader
+  validates_uniqueness_of :profile_name
+  validates_presence_of :profile_name,:email
 
 
     def self.full_text_search(query)

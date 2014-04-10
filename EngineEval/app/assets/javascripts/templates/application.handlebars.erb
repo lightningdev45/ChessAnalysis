@@ -1,17 +1,14 @@
-{{render navbar}}
+{{render "navbar"}}
 
-<div class="container main-container">
-	<br>
-{{render alert}}
+<div class="container" id="main-container">
+{{render "alert"}}
 
-  <div class="alert alert-danger javascript-alert">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-  </div>
-  <div class="alert alert-success javascript-alert">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
     {{outlet}}
 </div>
+<footer class="footer text-center">
+   Copyright <i class="glyphicon glyphicon-copyright-mark"></i> ChessPrime 2014
+</footer>
 </body>
+
 </html>
 

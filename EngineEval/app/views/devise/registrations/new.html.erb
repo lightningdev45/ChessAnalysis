@@ -8,34 +8,3 @@ windowHeight=$(window).height();
 $(".centered-user-interface").css("top",(windowHeight-height)/2-70);
 })
 <%end%>
-<br>
-<div class="centered-user-interface well col-xs-6 col-sm-6 col-md-6  col-lg-6 col-xs-offset-3 col-sm-offset-3  col-md-offset-3 col-lg-offset-3">
-
-<br>
-<h2 class="col-xs-12 col-sm-12 col-md-12  col-lg-12 text-center">Sign up</h2>
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name),html:{id:"register-form",class:"form-horizontal col-xs-12 col-sm-12 col-md-12  col-lg-12"}) do |f| %>
-  <%= devise_error_messages! %>
-
-
-
-
-  <div class="form-group"><%= f.label :email,{},class:"control-label col-xs-3 col-sm-3 col-md-3  col-lg-3" %>
- <div class="col-xs-7 col-sm-7 col-md-7  col-lg-7"> <%= f.email_field :email, required:"required",:autofocus => true,class:"form-control" %></div><div class="col-xs-1 col-sm-1 col-md-1  col-lg-1"></div></div>
-
-   <div class="form-group"><%= f.label :profile_name,{},class:"control-label col-xs-3 col-sm-3 col-md-3  col-lg-3" %>
-  <div class="col-xs-7 col-sm-7 col-md-7  col-lg-7"><%= f.text_field :profile_name,required:"required",class:"form-control" %></div><div class="col-xs-1 col-sm-1 col-md-1  col-lg-1"></div></div>
-
-   <div class="form-group"><%= f.label :password ,{},class:"control-label col-xs-3 col-sm-3 col-md-3  col-lg-3"%>
- <div class="col-xs-7 col-sm-7 col-md-7  col-lg-7"> <%= f.password_field :password,class:"form-control" %></div><div class="col-xs-1 col-sm-1 col-md-1  col-lg-1"></div></div>
-
-  <div class="form-group"><%= f.label :password_confirmation,{},class:"control-label col-xs-3 col-sm-3 col-md-3  col-lg-3" %>
- <div class="col-xs-7 col-sm-7 col-md-7  col-lg-7"> <%= f.password_field :password_confirmation,class:"form-control" %></div><div class="col-xs-1 col-sm-1 col-md-1  col-lg-1"></div></div>
-<br>
- <div class="btntext-center col-xs-12 col-sm-12 col-md-12  col-lg-12"><%= f.submit "Sign up",class:"btn btn-primary" %></div>
-<% end %>
-<div class="float-clear"></div>
-<br>
-<%= render "devise/shared/links" %>
-</div>
-
-<div class="col-xs-3 col-sm-3 col-md-3  col-lg-3"></div>

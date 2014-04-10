@@ -1,37 +1,34 @@
-<nav class="navbar navbar-fixed-top navbar-default" role="navigation">
+
+<nav class="navbar  navbar-inverse navbar-fixed-top" role="navigation">
+
   <div class="container">
   <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    {{#link-to "positions" class="navbar-brand"}}Chess Analysis{{/link-to}}
+  <i id="navbar-tower" class="navbar-brand glyphicon glyphicon-tower"></i>
+    {{#link-to "home" class="navbar-brand"}}
+    {{#view EngineEval.NavbarClickView}}CHESSPRIME{{/view}}{{/link-to}}
   </div>
-
-  <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
        {{#if isAuthenticated}}
-       <li><a>My Profile</a></li>
+       <li>{{#link-to "profile.events" currentUser.id 1}}{{#view EngineEval.NavbarClickView}}My Profile{{/view}}{{/link-to}}</li>
       {{/if}}
-       <li>{{#link-to 'howto'}}How To{{/link-to}}</li>
-        <li>{{#link-to 'support'}}Support{{/link-to}}</li>
+        <li><a {{action "viewFen"}}>{{#view EngineEval.NavbarClickView}}Analysis{{/view}}</a></li>
+       <li>{{#link-to 'howto'}}{{#view EngineEval.NavbarClickView}}Tutorial{{/view}}{{/link-to}}</li>
+        <li>{{#link-to 'support'}}{{#view EngineEval.NavbarClickView}}Support{{/view}}{{/link-to}}</li>
+
         
 
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
       {{#if isAuthenticated}}
-          <li><a {{action edit}}>{{currentUser.profile_name}}</a> </li>
-          <li><a {{action logout}}>Logout</a></li>
+          <li> {{#link-to "edit"}}{{#view EngineEval.NavbarClickView}}{{currentUser.profile_name}}{{/view}}{{/link-to}} </li>
+          <li><a {{action "logout"}}>Logout</a></li>
           {{else}}
-          <li>{{#link-to register}}Register{{/link-to}}</li>
-          <li>{{#link-to "login"}}Log in{{/link-to}}</a></li>
+          <li>{{#link-to "register"}}{{#view EngineEval.NavbarClickView}}Register{{/view}}{{/link-to}}</li>
+          <li>{{#link-to "login"}}{{#view EngineEval.NavbarClickView}}Log in{{/view}}{{/link-to}}</a></li>
         {{/if}}
     
     </ul>
-  </div>
+
   </div>
 </nav>

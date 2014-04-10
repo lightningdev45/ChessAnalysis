@@ -3,6 +3,7 @@
 --
 
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -445,7 +446,6 @@ CREATE TABLE users (
     id integer NOT NULL,
     email character varying(255) DEFAULT ''::character varying NOT NULL,
     encrypted_password character varying(255) DEFAULT ''::character varying NOT NULL,
-    profile_name character varying(255) NOT NULL,
     avatar character varying(255),
     rating integer,
     admin integer,
@@ -478,7 +478,8 @@ CREATE TABLE users (
     icc character varying(255),
     chess_com character varying(255),
     playchess character varying(255),
-    other text
+    other text,
+    profile_name character varying(255)
 );
 
 
@@ -850,3 +851,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140323173234');
 INSERT INTO schema_migrations (version) VALUES ('20140324185923');
 
 INSERT INTO schema_migrations (version) VALUES ('20140324191522');
+
+INSERT INTO schema_migrations (version) VALUES ('20140402194541');

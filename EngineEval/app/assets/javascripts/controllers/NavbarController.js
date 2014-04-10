@@ -9,7 +9,10 @@ EngineEval.NavbarController = Ember.ObjectController.extend({
   	},
   	edit:function(){
   		alert("edit")
-  	}
+  	},
+    viewFen:function(){
+      this.transitionToRoute("position",encodeURIComponent(chessAnalysis.chess[0].fen()))
+    }
       
   }
     

@@ -1,7 +1,7 @@
-EngineEval.PositionsView = Ember.View.extend({
-  templateName: 'positions',
+EngineEval.PositionView = Ember.View.extend({
+  templateName: 'position',
   didInsertElement: function() {
-
+    var view=this;
     var list=["a","b","c","d","e","f","g","h"]
    var numlist=[8,7,6,5,4,3,2,1];
 
@@ -19,7 +19,11 @@ EngineEval.PositionsView = Ember.View.extend({
         }
     }
     }
-    
+    setup(chessAnalysis.chess[index].fen());
+    addpieces();
+    movegen();
+    drag();
+    drop();
     $(".opening-tag-select").on("change",function(){
 
         $(".opening-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(chessAnalysis.chess[0].fen())+"&tag_type=opening&tag_value="+encodeURIComponent($(".opening-tag-select").val()))
@@ -175,11 +179,12 @@ EngineEval.PositionsView = Ember.View.extend({
                         alert("Please edit the annotation before updating.")
                     }
         })
+        $(document).unbind("keydown");
         keynavigate("show");
         $("#boardedge")
             .height($("#boardedge")
                 .width())
-        setup(chessAnalysis.chess[index].fen());
+        
         $("#browser_engine_button")
             .click(function () {
                 if (chessAnalysis.engineStatus === true) {
@@ -197,7 +202,16 @@ EngineEval.PositionsView = Ember.View.extend({
                         type:"GET",
                         error:function(){
                         alert("error")
-                    }
+                    },
+                        success:function(data){
+                            view.get("controller.controllers.evaluations").set('model',_.map(data.evaluations,function(object,key){
+                            var eval=object.evaluations
+                            eval.index=key+1
+                            if(chessAnalysis.chess[index].fen().split(" ")[1]==="b")
+                                {eval.evaluation=eval.evaluation*-1}
+                            return eval
+                            }))
+                        }
 
                     })
 
@@ -303,13 +317,9 @@ EngineEval.PositionsView = Ember.View.extend({
                     }
                 }
             })
-        addpieces();
-        movegen();
-        drag();
-        drop();
+
         $("#fen-container")
             .val(chessAnalysis.chess[index].fen())
-        EngineEval.initialize();
         connectionId = Math.floor(Math.random() * 1000000000)
         $("#connectionId")
             .append(connectionId)
@@ -389,6 +399,7 @@ EngineEval.PositionsView = Ember.View.extend({
                             else if (chessAnalysis.mode === "engine_analysis_mode") {
                                 //$("#your_analysis").empty()
                                 index = 0
+
                                 setup(chessAnalysis.chess[index].fen());
                                 addpieces();
                                 movegen();

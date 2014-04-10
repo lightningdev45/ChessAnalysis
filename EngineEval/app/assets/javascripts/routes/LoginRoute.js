@@ -7,14 +7,11 @@ EngineEval.LoginRoute = Ember.Route.extend({
       password: "",
       errorMsg: ""
     });
-  
     
   },
     
   actions:{
   	login: function(){
-  	console.log("Logging in...")
-
       this.controllerFor("auth").login(this)	
   	},  
     cancel:function(){

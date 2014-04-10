@@ -1,0 +1,32 @@
+ <br>
+      <div class="jumbotron text-center home-banner">
+       <div class="home-header-wrapper">
+        <h1 id="home-title">CHESSPRIME</h1>
+        <p class="lead"><em>ChessPrime is a community for collaborating on chess analysis and training</em></p>
+        </div>
+      </div>
+  
+
+
+      <!-- Example row of columns -->
+      <div class=" text-center home-link-banner">
+        <div class="text-center container home-link-container">
+        <div class="col-lg-4">
+          <h3 class="home-heading">Enter as Guest but no Kibitzing!</h3><br>
+         {{#link-to "position" "rnbqkbnr%2Fpppppppp%2F8%2F8%2F8%2F8%2FPPPPPPPP%2FRNBQKBNR%20w%20KQkq%20-%200%201" }}{{#view EngineEval.HomeImageHoverView class="home-image"}}<img src="blank-profile.jpg"  height:"200px" class=" img-circle">{{/view}}{{/link-to}}
+        
+        </div>
+
+        <div class="col-lg-4 text-center">
+          <h3 class="home-heading">Register and add to Human Knowledge! </h3><br>
+         {{#link-to "register" }}{{#view EngineEval.HomeImageHoverView class="home-image"}} <img src="chesskid.jpg"  height="225px" width="225px" class=" img-circle">{{/view}}{{/link-to}}
+       </div>
+
+        <div class="col-lg-4 text-center">
+        <h3 class="home-heading">Sign in Like a Boss</h3><br><br>
+         {{#link-to "login" }}{{#view EngineEval.HomeImageHoverView class="home-image"}} <img src="fischer.jpg"  height:"200px" class=" img-circle ">
+        {{/view}}{{/link-to}}</div>
+      </div>
+      </div>
+
+ 

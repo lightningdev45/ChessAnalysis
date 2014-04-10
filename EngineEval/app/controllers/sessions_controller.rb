@@ -8,5 +8,24 @@ class SessionsController < Devise::SessionsController
 	    }
   	end
 
+  	def current
+  		if user_signed_in?
+  				render json:{"user"=>current_user}
+  		else
+  			respond_with nil
+  		end
+  	end
+
+  def create
+    self.resource = warden.authenticate!(auth_options)
+    
+    sign_in(resource_name, resource)
+    yield resource if block_given?
+    render json: {
+      "user"=>resource,
+        'csrf-param' => request_forgery_protection_token,
+        'csrf-token' => form_authenticity_token
+      }
+  end
   	
 end

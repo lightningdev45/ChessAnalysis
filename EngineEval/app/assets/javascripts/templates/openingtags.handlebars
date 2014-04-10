@@ -72,8 +72,9 @@
       {{else}}
       <div class="input-group">
                
-                <span {{action "tagOpening"}} class="input-group-btn btn btn-default opening-tag-button">
-                </span>
+                <a  class="input-group-btn ">
+                 <button class=" btn btn-default opening-tag-button" {{action "alertSignIn"}}> <i class="glyphicon glyphicon-tag"></i> Tag</button>
+                </a>
                 
         <select class="form-control opening-tag-select tag-select">
          
@@ -136,7 +137,7 @@
 
 
         </select>
-        <a class="input-group-addon opening-untag-button btn btn-default" {{action "untagOpening"}}> <i class="glyphicon glyphicon-trash"></i> Untag
+        <a class="input-group-addon opening-untag-button btn btn-default" {{action "alertSignIn"}}> <i class="glyphicon glyphicon-trash"></i> Untag
          	</a>
 
       </div>

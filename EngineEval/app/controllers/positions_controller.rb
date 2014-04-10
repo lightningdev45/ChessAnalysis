@@ -148,7 +148,7 @@ class PositionsController < ApplicationController
 		@tags[:tactics]=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>"tactics",'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 		@tags[:positional]=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>"positional",'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
 		@tags[:opening]=Tag.where('tag_sum>? AND tags.taggable_id=?',0,@position.id).joins(:taggings).where('taggings.taggable_type'=>"Position",'taggings.tag_category'=>"opening",'taggings.taggable_id'=>@position.id).distinct.map{|tag|[tag.tag_value,tag.tag_sum]}
-		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",@fen_param).order("nodes DESC, created_at DESC").limit(10).to_a
+		@evaluations=Evaluation.where("fen=? AND nodes IS NOT NULL",@fen_param).order("nodes DESC, created_at DESC").limit(6).to_a
 		@signed_in=user_signed_in?
 		respond_to do |format|
 			format.json{render :json=>{

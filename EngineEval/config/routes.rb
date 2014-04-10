@@ -2,14 +2,16 @@ EngineEval::Application.routes.draw do
   devise_for :users,:controllers => {:registrations => "registrations",:sessions=>"sessions"}
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
-
+devise_scope :user do
+  get '/users/current'=>"sessions#current"
+end
   resources :positions do
     collection {get :update_evaluation}
   end
 
 resources :annotations
 resources :annotation_edits
-
+get "/position/:position_fen"=>"home#index"
 
 get '/evaluations_index'=>'evaluations#evaluations_index'
 resources :evaluations
@@ -33,6 +35,7 @@ get 'user_search'=>"home#user_search"
 post 'change_relationship'=>'relationships#change_relationship'
 get 'list_followed'=>'home#list_followed'
 get 'list_followers'=>'home#list_followers'
+
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

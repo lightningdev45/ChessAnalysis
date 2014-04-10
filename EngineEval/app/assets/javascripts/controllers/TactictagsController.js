@@ -1,5 +1,6 @@
 EngineEval.TactictagsController=Ember.ArrayController.extend({
-
+	needs:["auth","alert"],
+	isAuthenticated: Em.computed.alias("controllers.auth.isAuthenticated"),
 	actions:{
 		tagTactic:function(){
 			var controller=this
@@ -20,6 +21,10 @@ EngineEval.TactictagsController=Ember.ArrayController.extend({
 					{
 						controller.set("model",JSON.parse(response))}
 			})
+		},
+		alertSignIn:function(){
+			this.get("controllers.alert").send("showAlert","Your must log-in to perform this action!","alert alert-warning alert-dismissable","devise-alert")
+
 		}
 	}
 })

@@ -18,17 +18,17 @@
 
       {{else}}
       <div class="input-group">
-               
-                <span {{action "tagTactic" }} class="input-group-btn btn btn-default tactics-tag-button">
-                </span>
+               <a  class="input-group-btn ">
+                 <button class=" btn btn-default tactics-tag-button" {{action "alertSignIn"}}> <i class="glyphicon glyphicon-tag"></i> Tag</button>
+                </a>
                 
-        <select class="form-control">
+        <select class="form-control tactics-tag-select tag-select">
          
           <option value="Fork">Fork</option>
           <option value="X-ray">X-ray</option>
           <option value="Distraction">Distraction</option>
 
-        </select>     <a class="input-group-addon tactics-untag-button btn btn-default" {{action "untagTactic"}}> <i class="glyphicon glyphicon-trash"></i> Untag
+        </select>     <a class="input-group-addon tactics-untag-button btn btn-default" {{action "alertSignIn"}}> <i class="glyphicon glyphicon-trash"></i> Untag
           </a>
 
       </div>
