@@ -1,0 +1,2 @@
+module DPositionsHelper
+end

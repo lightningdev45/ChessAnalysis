@@ -1,0 +1,36 @@
+<table class="table table-default mgametable  text-center">
+	<thead>
+	<tr >
+		<th class="text-center">Avatar</th>
+		<th class="text-center">Profile Name</th>
+
+		<th class="text-center">Followers</th>
+		<th class="text-center">Following</th>
+		<th class="text-center">Follow?</th>
+	</tr>
+	</thead>
+	<%collection.each do |user|%>
+
+	<tr>
+		<td class="text-center">
+			<%=image_tag(avatar_url(user.email,50))%>
+		</td>
+		<td class="text-center"><%=link_to user.profile_name,"/#/profile/#{user.id}/1"%></td>
+
+		<td id="count<%=user.id%>" class="text-center"><%=user.followers.count%></td>
+		<td><%=user.followed_users.count%></td>
+
+		<td id="follow<%=user.id%>" class="text-center"><%if current_user.followed_users.include?(user)%>
+		<%=link_to "Unfollow",change_relationship_path(follower:current_user.id,followed:user.id,popup:"true",same:same_user?(params[:id],current_user.id.to_s)),method: :post,remote:true,class:"btn btn-primary"%>
+	
+		<%elsif current_user!=user%>
+		<%=link_to "Follow",change_relationship_path(follower:current_user.id,followed:user.id,popup:"true",same:same_user?(params[:id],current_user.id.to_s)),method: :post,remote:true,class:"btn btn-primary",remote:true%>
+	
+		<%else%>
+		<em>NA</em>
+		<%end%>
+		</td>
+	</tr>
+	<%end%>
+</table>
+<%=will_paginate collection%>

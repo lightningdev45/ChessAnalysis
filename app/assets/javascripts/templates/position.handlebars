@@ -1,0 +1,326 @@
+
+<br>
+  <br>
+<div class="row">
+	  <div class="boardenv   col-md-5  col-lg-5   ">
+        <div id="boardedge" class="  col-md-12  col-lg-12">
+          <div class="leftnotcolumn">
+          <div class="leftnot">
+            8
+          </div>
+          <div class="leftnot">
+            7
+          </div>
+          <div class="leftnot">
+            6
+          </div>
+          <div class="leftnot">
+            5
+          </div>
+          <div class="leftnot">
+            4
+          </div>
+          <div class="leftnot">
+            3
+          </div>
+          <div class="leftnot">
+            2
+          </div>
+          <div class="leftnot">
+            1
+          </div>
+        </div>
+             <div id="board">
+
+    
+  </div>
+   <div class="rightnotrow">
+    <div class="rightnot">
+            a
+          </div>
+            <div class="rightnot">
+            b
+          </div>
+            <div class="rightnot">
+            c
+          </div>
+            <div class="rightnot">
+            d
+          </div>
+            <div class="rightnot">
+            e
+          </div>
+            <div class="rightnot">
+            f
+          </div>
+            <div class="rightnot">
+            g
+          </div>
+            <div class="rightnot">
+            h
+          </div>
+          <br>
+
+          </div>
+
+
+	</div>
+
+
+
+
+  </div>
+<ul class="nav nav-tabs col-md-7 col-lg-7">
+  <li class="active change-mode" id="engine_analysis_mode"><a href="#evaluations_table" data-toggle="tab">Engine Analysis</a></li>
+  <li class="change-mode" id="your_analysis_mode"><a href="#your_analysis" data-toggle="tab">Your Analysis</a></li>
+
+</ul>
+
+<div class="tab-content col-md-7 col-lg-7">
+  <div class="tab-pane active" id="evaluations_table">
+{{outlet "evaluations"}}
+  </div>
+  <div class="tab-pane" id="your_analysis">
+    <div id="annotation_moves">
+    </div>
+    <br>
+
+    <div  id="update-annotation-button-container"><span class="btn btn-primary"><i class="glyphicon glyphicon-cloud-upload"></i> Update</span></div><br>
+  </div>
+</div>
+
+</div>
+<br>
+<div class="row">
+  <div class="col-md-5  col-lg-5  form-horizontal ">
+
+ 
+
+    <div class="input-group">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fen <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li id="copy-fen"><a>Copy Fen</a></li>
+          <li id="load-fen"><a>Load Fen</a></li>
+          <li id="load-startposition"><a>Load Startposition</a></li>
+        </ul>
+      </div>
+      <input class="form-control" id="fen-container"></input>
+  </div>
+      <div class="col-md-2 col-lg-2"></div>
+    </div>
+
+    <div class="col-md-7 col-lg-7"></div>
+  </div>
+  <br>
+
+
+
+  <div class="row engine-row">
+    <div class="col-lg-5 col-md-5" id="tag-container">
+  <div class="panel-group" id="accordion">      
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          Tactical Motifs
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body" id="tactics-panel-body">
+
+ 
+
+      {{outlet "tactictags"}}
+
+
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          Positional Motifs
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body" id="positional-panel-body">
+      {{outlet "positionaltags"}}
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+          Opening Structure(s)
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body" id="opening-panel-body">
+      {{outlet "openingtags"}}
+      </div>
+    </div>
+  </div>  
+
+    
+
+
+    
+    </div>
+</div>
+    <div class="panel panel-primary col-lg-offset-5 col-md-offset-5">
+
+    <div class="panel-heading text-center"><b><h4>My Engines</h4></b></div>
+      
+       
+      <table class="table engine-row table-hover">
+        <thead>
+         
+          <tr >
+            <th class="text-center">Engine</th>
+            <th class="text-center">Nodes</th>
+            <th class="text-center">Depth</th>
+            <th class="text-center">Seldepth</th>
+            <th class="text-center">Evaluation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center">
+            <td id="browser_engine">Browser Stockfish</td>
+             <td id="browser_engine_nodes"></td>
+              <td id="browser_engine_depth"></td>
+               <td id="browser_engine_seldepth"></td>
+                <td id="browser_engine_evaluation"></td>
+          </tr>
+          <tr class="text-center">
+            <td id="my_engine"></td>
+             <td id="my_engine_nodes"></td>
+              <td id="my_engine_depth"></td>
+               <td id="my_engine_seldepth"></td>
+                <td id="my_engine_evaluation"></td>
+          </tr>
+         
+        </tbody>
+      </table>
+      <div class="text-center"><div class="btn btn-success" id="browser_engine_button">Start Stockfish</div></div>
+      <br>
+    </div>
+  </div>
+
+
+   <div class="row" id="annotation-version-row">
+    <div class="col-md-2 col-lg-2"></div>
+    <div class="col-md-8 col-lg-8">
+        <div class=" panel panel-primary">
+          
+           <div class="panel-heading text-center"><b><h4>Versions</h4></b></div>
+          <table class="table">
+            <thead>
+
+              <tr >
+                <th class="text-center">Id</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Date Superceded</th>
+                <th class="text-center">Rollback</th>
+                <th class="text-center">Editor</th>
+                <th class="text-center">Vote</th>
+              </tr>
+            </thead>
+            <tbody>
+             
+            </tbody>
+          </table>
+        </div>
+    </div>
+    <div class="col-md-2 col-lg-2"></div>
+</div>
+
+  <br>
+
+
+
+
+
+
+
+<div class="modal fade" id="promotionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong>Choose a Piece:</strong></h4>
+      </div>
+      <div class="modal-body">
+           
+          <div id="whitepopup">
+          <p>Please Select a Piece:</p>
+          <br>     
+              <img src="/assets/whitequeen.png" id="q"  >  
+            <img src="/assets/whitebishop.png" id="b" >  
+            <img src="/assets/whiteknight.png" id="n" >           
+            <img src="/assets/whiterook.png" id="r"  >
+        
+        </div>
+
+
+        <div id="blackpopup">
+          <p>Please Select a Piece:</p>
+         
+          <div id="bqueenpop">
+            <img src="/assets/blackqueen.png" id="q">
+          </div>
+          <div id="bbishoppop">
+            <img src="/assets/blackbishop.png" id="b">
+          </div>
+          <div id="bknightpop">
+            <img src="/assets/blackknight.png"  id="n">
+          </div>
+          <div id="brookpop">
+            <img src="/assets/blackrook.png" id="r" >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div id="next-move-select" class="text-center well">
+    <p>Please Select a Move:</p>
+    <div id="scroll-container">
+    
+      </div>
+      <br>
+      <div id="scroll-move-select" class="btn btn-primary">Select</div>
+      <div id="scroll-cancel" class="btn btn-primary">Cancel</div>
+  </div>
+
+
+<div id="rmenu" class="well">
+  <p id="delete-remaining" class="rselect">Delete rest of variation</p>
+  <p id="delete-variation" class="rselect">Delete Variation</p>
+  <p id="add-comment-before" class="rselect">Add Comment Before Move</p>
+  <p id="add-comment-after" class="rselect">Add Comment After Move</p>
+
+  <div class="text-center"><div id="rmenu-cancel" class="btn btn-primary">Cancel</div></div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong>Edit</strong></h4>
+      </div>
+      <div class="modal-body">
+           
+
+      </div>
+    </div>
+  </div>
+</div>

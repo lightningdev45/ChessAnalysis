@@ -1,0 +1,46 @@
+{{#if isAuthenticated}}
+      <div class="input-group ">
+                <a  class="input-group-btn ">
+                 <button class=" btn btn-default tactics-tag-button" {{action "tagTactic"}}> <i class="glyphicon glyphicon-tag"></i> Tag</button>
+                </a>
+        <select class="form-control tactics-tag-select tag-select">
+         
+          <option value="fork">Fork</option>
+          <option value="x-ray">X-ray</option>
+          <option value="distraction">Distraction</option>
+
+        </select>
+         	<a class="input-group-addon tactics-untag-button btn btn-default" {{action "untagTactic"}}> <i class="glyphicon glyphicon-trash"></i> Untag
+         	</a>
+         
+
+      </div>
+
+      {{else}}
+      <div class="input-group">
+               <a  class="input-group-btn ">
+                 <button class=" btn btn-default tactics-tag-button" {{action "alertSignIn"}}> <i class="glyphicon glyphicon-tag"></i> Tag</button>
+                </a>
+                
+        <select class="form-control tactics-tag-select tag-select">
+         
+          <option value="Fork">Fork</option>
+          <option value="X-ray">X-ray</option>
+          <option value="Distraction">Distraction</option>
+
+        </select>     <a class="input-group-addon tactics-untag-button btn btn-default" {{action "alertSignIn"}}> <i class="glyphicon glyphicon-trash"></i> Untag
+          </a>
+
+      </div>
+{{/if}}
+
+<ul class="tags">
+{{#each}}
+<li class="position-tag" >
+    <a >
+		<span class="badge pull-right">{{this.[1]}}</span>
+        {{this.[0]}}
+    </a>
+</li>
+{{/each}}
+</ul>

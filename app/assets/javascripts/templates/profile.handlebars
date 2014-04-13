@@ -1,0 +1,243 @@
+<br>
+<div class="row">
+	<div class="col-xs-8 col-sm-8 col-md-8  col-lg-8 col-xs-offset-2 col-sm-offset-2  col-md-offset-2 col-lg-offset-2">
+
+				{{#if iscurrentUser}}
+		<form  {{action "user_search" on="submit"}} id="user-search-form" class="form col-xs-12 col-sm-12 col-md-12  col-lg-12" >
+			<div class="text-center form-group col-xs-8 col-sm-8 col-md-8  col-lg-8 col-xs-offset-2 col-sm-offset-2  col-md-offset-2 col-lg-offset-2">
+				    <div class="input-group">
+				     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span> 
+      				{{view Ember.TextField value=search type="text" id="search" class="form-control" placeholder="Profile Name" required="true"}}
+      				<span class="input-group-btn">
+      					<button  type="submit" class="btn btn-primary">Search <i class="glyphicon glyphicon-search"></i></button>
+				      </span>					
+    				</div>	
+    			<div class="col-xs-2 col-sm-2 col-md-2  col-lg-2"></div></div>
+		</form>						
+				{{else}}
+				<div class="text-center">	{{follow_user_button user.id currentUser.id true isFollowed}}</div>
+					
+				{{/if}}
+					
+		</div>
+
+
+	</div>
+	<div class="col-xs-2 col-sm-2 col-md-2  col-lg-2"></div>
+	<div class="float-clear"></div>
+
+<br>
+<div id="profile-row" class="row">
+	<div id="top-profile-container" class=" col-xs-12 col-sm-12 col-md-12  col-lg-12">
+		<div id="profile-avatar-space" class="col-xs-3 col-sm-3 col-md-3  col-lg-3">
+			<div class="panel-primary panel">
+			<div id="avatar-profile-name" class="panel-heading" ><b><h4>{{user.profile_name}}</h4></b></div>
+
+			
+		<div class="panel-body text-center">	
+			<img {{bind-attr src=gravatar_url}}>
+			<br>
+			<br>
+		
+			<ul id="user-profile-list-group" class="list-group  text-left">
+				
+				<li class="list-group-item"><span class="badge"> <a id="followers_link" {{action "list_followers"}}>{{followers_count}}</a></span><b>Followers:</b></li>
+				<li class="list-group-item"><span class="badge"><a id="followed_link" {{action "list_followed"}} >{{followed_count}}</a></span><b>Following:</b> </li>
+				<li class="list-group-item"><span class="badge"> {{user.reputation}}0</span><b>Reputation:</b></li></ul>
+				<br>
+	<div class="boardenv   col-md-12  col-lg-12   ">
+        <div id="boardedge" class="  col-md-12  col-lg-12">
+          <div class="leftnotcolumn">
+          <div class="leftnot">
+            8
+          </div>
+          <div class="leftnot">
+            7
+          </div>
+          <div class="leftnot">
+            6
+          </div>
+          <div class="leftnot">
+            5
+          </div>
+          <div class="leftnot">
+            4
+          </div>
+          <div class="leftnot">
+            3
+          </div>
+          <div class="leftnot">
+            2
+          </div>
+          <div class="leftnot">
+            1
+          </div>
+        </div>
+             <div id="board">
+
+  </div>
+   <div class="rightnotrow">
+    <div class="rightnot">
+            a
+          </div>
+            <div class="rightnot">
+            b
+          </div>
+            <div class="rightnot">
+            c
+          </div>
+            <div class="rightnot">
+            d
+          </div>
+            <div class="rightnot">
+            e
+          </div>
+            <div class="rightnot">
+            f
+          </div>
+            <div class="rightnot">
+            g
+          </div>
+            <div class="rightnot">
+            h
+          </div>
+
+          </div>
+
+
+	</div>
+
+
+
+
+  </div>
+</div>
+</div>
+		</div>
+
+	
+<div class="modal fade" id="followed_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong>{{user.profile_name}} is following...</strong></h4>
+      </div>
+      <div class="modal-body">
+  		
+ 
+
+      </div>
+
+    </div>
+  </div>
+</div>	
+<div class="modal fade" id="followers_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong>{{user.profile_name}}'s followers...</strong></h4>
+      </div>
+      <div class="modal-body">
+
+ 
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>	
+
+		<div class="  col-xs-9 col-sm-9 col-md-9  col-lg-9">
+			<div class="panel-primary panel">
+					<div class="panel-heading">
+						<h4>About</h4>
+					</div>
+				<div class="panel-body">
+
+					<dl class="dl-horizontal">
+						<dt>Email</dt>
+						<dd>{{#if user.email_privacy}}
+							{{user.email}}
+							{{else}}
+							<em>Private</em>
+							{{/if}}
+						</dd>
+					</dl>
+
+					<dl class="dl-horizontal">
+						<dt>Location</dt>
+						<dd>{{#if user.location_privacy}}
+							{{user.location}}
+							{{else}}
+							<em>Private</em>
+							{{/if}}</dd>
+					</dl>
+
+					<dl class="dl-horizontal">
+						<dt>Name</dt>
+						<dd>{{#if user.last_name_privacy}}
+								{{#if user.first_name_privacy}}
+									{{user.first_name}} {{user.last_name}}
+								{{else}}
+									{{user.last_name}}
+								{{/if}}
+							{{else}}
+								{{#if user.first_name_privacy}}
+									{{user.first_name}}
+								{{/if}}
+								<em>Private</em>
+							{{/if}}
+						</dd>
+					</dl>
+						<dl class="dl-horizontal">
+						  <dt>Rating</dt>
+						  <dd>{{#if user.rating_privacy}}
+							{{user.rating}}
+							{{else}}
+							<em>Private</em>
+							{{/if}}</dd>
+						</dl>
+
+						<dl class="dl-horizontal">
+						  <dt>Title</dt>
+						  <dd>{{#if user.title_privacy}}
+							{{user.title}}
+							{{else}}
+							<em>Private</em>
+							{{/if}}</dd>
+						</dl>
+
+						<dl class="dl-horizontal">
+						  <dt>Other</dt>
+						  <dd>{{#if user.other_privacy}}
+							{{user.other}}
+							{{else}}
+							<em>Private</em>
+							{{/if}}</dd>
+						</dl>
+				</div>
+			</div>
+		</div>
+
+	<div class="col-xs-3 col-sm-3"></div>
+		<div id="user-profile-actions" class=" col-xs-9 col-sm-9 col-md-9  col-lg-9">
+			<div class="panel-primary panel">
+				<div class="panel-heading"><h4>{{user.profile_name}}'s Activity</h4>
+				</div>
+			<div class="panel-body">
+			{{view EngineEval.ProfileEventsView}}
+
+
+			</div>			
+		</div>
+		</div>
+	</div>
+	<div class="float-clear">
+	</div>
+		
+		<div class="col-lg-3 col-md-3"></div>
+</div>	
+
+
+
