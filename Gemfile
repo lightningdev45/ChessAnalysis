@@ -35,7 +35,7 @@ group :doc do
 end
 gem 'rails_12factor'
 # gem 'rails_12factor'
-
+gem 'chess'
 gem 'devise'
 ruby "2.1.1"
 
