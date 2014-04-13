@@ -27,7 +27,6 @@ gem 'jquery-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
-gem 'puma'
 gem 'carrierwave'
 gem 'will_paginate'
 group :doc do
