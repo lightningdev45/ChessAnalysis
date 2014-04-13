@@ -5,7 +5,7 @@ EngineEval.UserSearchRoute = Ember.Route.extend({
 			return response
 		},function(error){
 			route.controllerFor("alert").send("showAlert","There was an error.  Please try again.","alert alert-warning alert-dismissable","devise-alert")
-			route.transitionTo("profile.events",route.controllerFor("auth").currentUser.id,"1")
+			route.transitionTo("profile",route.controllerFor("auth").currentUser.id,"1")
 		})
 	}
 })

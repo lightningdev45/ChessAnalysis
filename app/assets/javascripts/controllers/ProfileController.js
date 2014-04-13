@@ -10,14 +10,12 @@ EngineEval.ProfileController = Ember.ObjectController.extend({
 			alert("change")
 		},
 		list_followers:function(){
-			console.log(this.get("user"))
 			$.ajax({
 				url:"/list_followers?id="+this.get("user").id
 			})
 			
 		},
 		list_followed:function(){
-			console.log(this.get("user"))
 			$.ajax({
 				url:"/list_followed?id="+this.get("user").id
 			})

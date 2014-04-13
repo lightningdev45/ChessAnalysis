@@ -2,6 +2,7 @@ EngineEval.ProfileRoute = Ember.Route.extend({
 	model:function(params){	
 		$("#followers_list").modal('hide');
 		$("#followed_list").modal('hide');
+		
 		$("#user-profile-actions .panel-body").css("opacity", 0);
 		$("#user-profile-actions .panel-body").fadeTo(500,1);
 		 return $.getJSON("/user/"+params.profile_id+"?events_id="+params.events_id).then(function(data){
@@ -12,6 +13,11 @@ EngineEval.ProfileRoute = Ember.Route.extend({
 	      	})
 	      	return response
 	      })	
+		},
+		setupController:function(controller,model){
+		controller.set("model",model)
+		$("#followers_link").text(model.followers_count)
+    	$("#followed_link").text(model.followed_count)
 		}
 	
 

@@ -1,6 +1,8 @@
 EngineEval.ProfileView = Ember.View.extend({
 	didInsertElement: function() {
-  
+
+    $("#followers_link").text(this.controller.get("followers_count"))
+    $("#followed_link").text(this.controller.get("followed_count"))
 	$("#followed_link").click(function(){
 	$("#followed_list").modal({keyboard:false,backdrop:'static'});
 	})
