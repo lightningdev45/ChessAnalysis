@@ -51,6 +51,7 @@ EngineEval.PositionView = Ember.View.extend({
             {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
 
         chessAnalysis.hmv[index] = 0;
+        chessAnalysis.hm[index] = 0;
         chessAnalysis.children[index] = {};
         chessAnalysis.parents[index] = [];
         chessAnalysis.moves[index] = [];
@@ -84,6 +85,7 @@ EngineEval.PositionView = Ember.View.extend({
                     {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
 
                 chessAnalysis.hmv[index] = 0;
+                chessAnalysis.hm[index] = 0;
                 chessAnalysis.children[index] = {};
                 chessAnalysis.parents[index] = [];
                 chessAnalysis.moves[index] = [];
@@ -113,6 +115,7 @@ EngineEval.PositionView = Ember.View.extend({
                     {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
 
                 chessAnalysis.hmv[index] = 0;
+                chessAnalysis.hm[index] = 0;
                 chessAnalysis.children[index] = {};
                 chessAnalysis.parents[index] = [];
                 chessAnalysis.moves[index] = [];
@@ -434,6 +437,6 @@ EngineEval.PositionView = Ember.View.extend({
     },
 
     animateOut : function (done) {
-        this.$().effect({effect:"drop",easing:"swing",duration:250,complete:done});
+        this.$().fadeTo(250, 0, done);
     }
 });

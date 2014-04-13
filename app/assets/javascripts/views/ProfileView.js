@@ -47,6 +47,6 @@ EngineEval.ProfileView = Ember.View.extend({
 
     animateOut : function (done) {
 
-        this.$().effect({effect:"drop",easing:"swing",duration:250,complete:done});
+        this.$().fadeTo(250, 0, done);
     }
 })
