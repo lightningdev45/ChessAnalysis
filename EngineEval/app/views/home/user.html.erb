@@ -1,0 +1,309 @@
+<%=javascript_tag do%>
+$(document).ready(function(){
+
+$("#followed_link").click(function(){
+	$("#followed_list").modal({keyboard:false,backdrop:'static'});
+})
+$("#followers_link").click(function(){
+	$("#followers_list").modal({keyboard:false,backdrop:'static'});
+})
+$("#boardedge")
+    .height($("#boardedge")
+        .width())
+$("#user-board")
+    .height($("#boardedge")
+        .width())
+setup(chessAnalysis.chess[index].fen());
+addpieces();
+var userId='<%=params[:id]%>'
+$(".boardenv").hide()
+$(".event-fen").hover(function(){
+	setup($(this).text());
+	addpieces();
+	$(".boardenv").fadeIn("medium",function(){
+	})
+},function(){$(".boardenv").hide()})
+
+
+
+
+	
+});
+<%end%>
+
+
+	<br>
+<div class="row">
+	<div   class="col-xs-8 col-sm-8 col-md-8  col-lg-8 col-xs-offset-2 col-sm-offset-2  col-md-offset-2 col-lg-offset-2">
+			<%=form_tag user_search_path,:method=> "get",id:"user-search-form",class:"form col-xs-12 col-sm-12 col-md-12  col-lg-12"  do%>
+				<div class="text-center form-group col-xs-8 col-sm-8 col-md-8  col-lg-8 col-xs-offset-2 col-sm-offset-2  col-md-offset-2 col-lg-offset-2">
+				<%if @user==current_user%>
+				    <div class="input-group">
+				     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span> 
+      				<%=text_field_tag(:search,params[:search],class:"form-control",placeholder:"Profile Name")%>
+      				<span class="input-group-btn">
+				        <%= button_tag(:type => 'submit', :class => 'btn btn-primary') do %>
+						Search <i class="glyphicon glyphicon-search"></i>
+						<% end %>
+				      </span>
+					
+    				</div><!-- /input-group -->
+					
+
+					
+				<%else%>
+					<%=link_to @follow_button,change_relationship_path(followed:@user.id,follower:current_user.id),method:"post",remote:true, class:"btn btn-primary follow-user-button"%>
+					
+				<%end%>
+					
+				</div>
+
+				<div class="col-xs-2 col-sm-2 col-md-2  col-lg-2"></div>
+			<%end%>
+	</div>
+	<div class="col-xs-2 col-sm-2 col-md-2  col-lg-2"></div>
+	<div class="float-clear"></div>
+
+</div>
+
+<div id="profile-row" class="row">
+	<div id="top-profile-container" class=" col-xs-12 col-sm-12 col-md-12  col-lg-12">
+		<div id="profile-avatar-space" class="well text-center  col-xs-3 col-sm-3 col-md-3  col-lg-3">
+			<br>
+			<p id="avatar-profile-name"><b><%=@user.profile_name%></b></p>
+
+			
+			
+			<%=image_tag avatar_url(@user,100)%>
+			
+
+			<br>
+			<br>
+			<p>Followers: <%=link_to "#{@user.followers.length}",list_followers_path(id:params[:id]), id:"followers_link",remote:true%></p>
+			<p>Following: <%=link_to "#{@user.followed_users.length}",list_followed_path(id:params[:id]), id:"followed_link",remote:true%></p>
+			<p>Reputation: <%=@user.reputation%>
+	<div class="boardenv   col-md-12  col-lg-12   ">
+        <div id="boardedge" class="  col-md-12  col-lg-12">
+          <div class="leftnotcolumn">
+          <div class="leftnot">
+            8
+          </div>
+          <div class="leftnot">
+            7
+          </div>
+          <div class="leftnot">
+            6
+          </div>
+          <div class="leftnot">
+            5
+          </div>
+          <div class="leftnot">
+            4
+          </div>
+          <div class="leftnot">
+            3
+          </div>
+          <div class="leftnot">
+            2
+          </div>
+          <div class="leftnot">
+            1
+          </div>
+        </div>
+             <div id="board">
+    <%list=["a","b","c","d","e","f","g","h"]%>
+    <%numlist=[8,7,6,5,4,3,2,1]%>
+    <% 8.times do |x|%>
+    
+
+      <%8.times do |y|%>
+      <%if (y%2==0)&&(x%2==0)%>
+        <div class="square whitesquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
+      <%elsif (x%2!=0)&&(y%2!=0)%>
+        <div class="square whitesquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
+      <%else%>
+        <div class="square blacksquare" id="<%="#{list[y]}"+"#{numlist[x]}"+"s"%>"></div>
+      <%end%>
+      <%end%>
+   
+    <%end%>
+  </div>
+   <div class="rightnotrow">
+    <div class="rightnot">
+            a
+          </div>
+            <div class="rightnot">
+            b
+          </div>
+            <div class="rightnot">
+            c
+          </div>
+            <div class="rightnot">
+            d
+          </div>
+            <div class="rightnot">
+            e
+          </div>
+            <div class="rightnot">
+            f
+          </div>
+            <div class="rightnot">
+            g
+          </div>
+            <div class="rightnot">
+            h
+          </div>
+          <br>
+
+          </div>
+
+
+	</div>
+
+
+
+
+  </div>
+		</div>
+
+<div class="modal fade" id="followed_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong><%=User.find(params[:id]).profile_name+" is following..."%></strong></h4>
+      </div>
+      <div class="modal-body">
+  		
+ 
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="followers_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><strong><%=User.find(params[:id]).profile_name+"'s followers"%></strong></h4>
+      </div>
+      <div class="modal-body">
+
+ 
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+		<div class="  col-xs-9 col-sm-9 col-md-9  col-lg-9">
+			<div class="panel-default panel">
+					<div class="panel-heading">
+						<h4>About</h4>
+					</div>
+				<div class="panel-body">
+
+					<dl class="dl-horizontal">
+						<dt>Email</dt>
+						<dd><%=show_user_trait("email",@user)%></dd>
+					</dl>
+
+					<dl class="dl-horizontal">
+						<dt>Location</dt>
+						<dd><%=show_user_trait("location",@user)%></dd>
+					</dl>
+
+					<dl class="dl-horizontal">
+						<dt>Name</dt>
+						<dd><%if @user.last_name_privacy&&!@user.first_name_privacy%><%="#{@user.last_name}"%><%elsif @user.first_name_privacy&&!@user.last_name_privacy%><%="#{@user.first_name}"%></span>
+							<%elsif @user.first_name_privacy&&@user.last_name_privacy%><%="#{@user.first_name} #{@user.last_name}"%>
+							<%else%><em>Private</em>
+							<%end%>
+						</dd>
+					</dl>
+
+						<dl class="dl-horizontal">
+						  <dt>Rating</dt>
+						  <dd><%=show_user_trait("rating",@user)%></dd>
+						</dl>
+
+						<dl class="dl-horizontal">
+						  <dt>Title</dt>
+						  <dd><%=show_user_trait("title",@user)%></dd>
+						</dl>
+
+						<dl class="dl-horizontal">
+						  <dt>Other</dt>
+						  <dd class="other-text"><%=show_user_trait("other",@user)%></dd>
+						</dl>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-3 col-sm-3"></div>
+		<div id="user-profile-actions" class=" col-xs-9 col-sm-9 col-md-9  col-lg-9">
+			<div class="panel-default panel">
+				<div class="panel-heading"><h4><%=@user.profile_name.capitalize+"'s Activity"%></h5>
+				</div>
+				<div class="panel-body">
+					<div class="col-xs-12 col-sm-12 col-md-12  col-lg-12">
+						
+							<%@events.each do |event|%>
+							
+							 <%if event.class.name=="Evaluation"%>
+							 <div class="media">
+							  <div class="pull-left" href="#">
+							   <span class="media-object glyphicon glyphicon-stats"></span>
+							  </div>
+							  <div class="media-body">
+								<%=@user.profile_name.capitalize+" analyzed "%><%=link_to "#{event.fen}",root_path,class:"event-fen"%><%=" with engine #{event.engine} "%>
+								  </div>
+							</div>
+							<%else%>
+							<div class="media">
+							  <div class="pull-left" href="#">
+							   <span class="media-object glyphicon glyphicon-pencil"></span>
+							  </div>
+							  <div class="media-body">
+								<%=@user.profile_name.capitalize+" annotated "%><%=link_to "#{event.fen}",root_path,class:"event-fen"%>
+								  </div>
+							</div>
+							<%end%>
+
+							
+							  
+							  <%end%>
+					
+					</div>
+				</div>
+				<div class="text-center"><%=will_paginate(@events)%></div>
+			</div>
+			
+		</div>
+
+
+
+	</div>
+
+		
+	
+
+	<div class="float-clear">
+	</div>
+		
+		<div class="col-lg-3 col-md-3"></div>
+	
+	
+
+				
+	
+		
+		
+
+</div>	
+
+	  
+

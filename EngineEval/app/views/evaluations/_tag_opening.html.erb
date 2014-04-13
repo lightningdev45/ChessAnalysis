@@ -1,0 +1,135 @@
+
+<%if user_signed_in?%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "<i class=\"glyphicon glyphicon-tag\"></i> Tag".html_safe,tag_position_path(fen:fen_param,tag_type:"opening"),data:{fen:"true"},class:"btn btn-default opening-tag-button",remote:true,method: :post%>
+          </span>
+  <select class="form-control opening-tag-select tag-select">
+   
+    <option value="A01: Larsen Attack">A01: Larsen Attack</option>
+    <option value="A02-A03: Bird's Opening">A02-A03: Bird's Opening</option>
+    <option value="A04-A09: King's Indian Attack">A04-A09: King's Indian Attack</option>
+    <option value="A10: English Opening">A10: English Opening</option>
+    <option value="A11-A12: Reti Opening">A11-A12: Reti Opening</option>
+    <option value="A13-A39: English Opening">A13-A39: English Opening</option>
+    <option value="A40: Englund Gambit">A40: Englund Gambit</option>
+    <option value="A41-A42: Modern Defense">A41-A42: Modern Defense</option>
+    <option value="A43-A44: Old Benoni Defense">A43-A44: Old Benoni Defense</option>
+    <option value="A45: Trompovsky Attack">A45: Trompovsky Attack</option>
+    <option value="A46: Queen's Pawn Game">A46: Queen's Pawn Game</option>
+    <option value="A47: Queen's Indian Defense">A47: Queen's Indian Defense</option>
+    <option value="A48-A49: Torre Attack">A48-A49: Torre Attack</option>
+    <option value="A50: Queen's Indian Defense">A50: Queen's Indian Defense</option>
+    <option value="A51-A52: Budapest Gambit">A51-A52: Budapest Gambit</option>
+    <option value="A53-A55: Old Indian Defense">A53-A55: Old Indian Defense</option>
+    <option value="A56: Czech Benoni Defense">A56: Czech Benoni Defense</option>
+    <option value="A57-A59: Benko (Volga) Gambit">A57-A59: Benko (Volga) Gambit</option>
+    <option value="A60-A79: Modern Benoni Defense">A60-A79: Modern Benoni Defense</option>
+    <option value="A80-A99: Dutch Defense">A80-A99: Dutch Defense</option>
+    <option value="B00: Nimzowitsch, Owens Defenses">B00: Nimzowitsch, Owens Defenses</option>
+    <option value="B01: Scandinavian Defense">B01: Scandinavian Defense</option>
+    <option value="B02-B05: Alekhine's Defense">B02-B05: Alekhine's Defense</option>
+    <option value="B06: Modern Defense">B06: Modern Defense</option>
+    <option value="B07-B09: Pirc Defense">B07-B09: Pirc Defense</option>
+    <option value="B10-B19: Caro-Kann Defense">B10-B19: Caro-Kann Defense</option>
+    <option value="B20-B99: Sicilian Defense">B20-B99: Sicilian Defense</option>
+    <option value="C00-C20: French Defense">C00-C20: French Defense</option>
+    <option value="C21: Nordic Gambit">C21: Nordic Gambit</option>
+    <option value="C22: Center Game">C22: Center Game</option>
+    <option value="C23-C24: Bishop's Opening">C23-C24: Bishop's Opening</option>
+    <option value="C25-C29: Vienna Game">C25-C29: Vienna Game</option>
+    <option value="C30-C39: King's Gambit">C30-C39: King's Gambit</option>
+    <option value="C40: Latvian Gambit">C40: Latvian Gambit</option>
+    <option value="C41: Philidor's Defense">C41: Philidor's Defense</option>
+    <option value="C42-C43: Russian (Petroff's) Defense">C42-C43: Russian (Petroff's) Defense</option>
+    <option value="C44: Ponziani Opening">C44: Ponziani Opening</option>
+    <option value="C45: Scotch Game">C45: Scotch Game</option>
+    <option value="C46: Three Knights' Opening">C46: Three Knights' Opening</option>
+    <option value="C47-C49: Four Knights' Opening">C47-C49: Four Knights' Opening</option>
+    <option value="C50-C59: Italian Game (Giuoco Piano)">C50-C59: Italian Game (Giuoco Piano)</option>
+    <option value="C60-C99: Spanish Opening (Ruy Lopez)">C60-C99: Spanish Opening (Ruy Lopez)</option>
+    <option value="D00: Queen's Pawn Opening">D00: Queen's Pawn Opening</option>
+    <option value="D01: Veresov Opening">D01: Veresov Opening</option>
+    <option value="D02: Gruenfeld Reversed Opening">D02: Gruenfeld Reversed Opening</option>
+    <option value="D03: Torre attack (Tartakower variation)">D03: Torre attack (Tartakower variation)</option>
+    <option value="D04: Queen's pawn game">D04: Queen's pawn game</option>
+    <option value="D05: Colle System">D05: Colle System</option>
+    <option value="D06-D69: Queen's Gambit">D06-D69: Queen's Gambit</option>
+    <option value="D70-D99: Grunfeld Defense">D70-D99: Grunfeld Defense</option>
+    <option value="E00-E09: Catalan Opening">E00-E09: Catalan Opening</option>
+    <option value="E10: Blumenfeld Gambit">E10: Blumenfeld Gambit</option>
+    <option value="E11: Bogo-Indian Defense">E11: Bogo-Indian Defense</option>
+    <option value="E12-E19: Queen's Indian Defense">E12-E19: Queen's Indian Defense</option>
+    <option value="E20-E59: Nimzo-Indian Defense">E20-E59: Nimzo-Indian Defense</option>
+    <option value="E60-E99: King's Indian Defense">E60-E99: King's Indian Defense</option>
+  </select><%=link_to "<i class=\"glyphicon glyphicon-trash\"></i> Untag".html_safe,untag_position_path(fen:fen_param,tag_type:"opening"), class:"input-group-addon opening-untag-button btn btn-default",remote:true,method: :post%>
+
+</div><!-- /input-group -->
+
+<%else%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "<i class=\"glyphicon glyphicon-tag\"></i> Tag".html_safe,user_session_path,class:"btn btn-default ",data:{fen:"false"}%>
+          </span>
+  <select class="form-control">
+   
+    <option value="A01: Larsen Attack">A01: Larsen Attack</option>
+    <option value="A02-A03: Bird's Opening">A02-A03: Bird's Opening</option>
+    <option value="A04-A09: King's Indian Attack">A04-A09: King's Indian Attack</option>
+    <option value="A10: English Opening">A10: English Opening</option>
+    <option value="A11-A12: Reti Opening">A11-A12: Reti Opening</option>
+    <option value="A13-A39: English Opening">A13-A39: English Opening</option>
+    <option value="A40: Englund Gambit">A40: Englund Gambit</option>
+    <option value="A41-A42: Modern Defense">A41-A42: Modern Defense</option>
+    <option value="A43-A44: Old Benoni Defense">A43-A44: Old Benoni Defense</option>
+    <option value="A45: Trompovsky Attack">A45: Trompovsky Attack</option>
+    <option value="A46: Queen's Pawn Game">A46: Queen's Pawn Game</option>
+    <option value="A47: Queen's Indian Defense">A47: Queen's Indian Defense</option>
+    <option value="A48-A49: Torre Attack">A48-A49: Torre Attack</option>
+    <option value="A50: Queen's Indian Defense">A50: Queen's Indian Defense</option>
+    <option value="A51-A52: Budapest Gambit">A51-A52: Budapest Gambit</option>
+    <option value="A53-A55: Old Indian Defense">A53-A55: Old Indian Defense</option>
+    <option value="A56: Czech Benoni Defense">A56: Czech Benoni Defense</option>
+    <option value="A57-A59: Benko (Volga) Gambit">A57-A59: Benko (Volga) Gambit</option>
+    <option value="A60-A79: Modern Benoni Defense">A60-A79: Modern Benoni Defense</option>
+    <option value="A80-A99: Dutch Defense">A80-A99: Dutch Defense</option>
+    <option value="B00: Nimzowitsch, Owens Defenses">B00: Nimzowitsch, Owens Defenses</option>
+    <option value="B01: Scandinavian Defense">B01: Scandinavian Defense</option>
+    <option value="B02-B05: Alekhine's Defense">B02-B05: Alekhine's Defense</option>
+    <option value="B06: Modern Defense">B06: Modern Defense</option>
+    <option value="B07-B09: Pirc Defense">B07-B09: Pirc Defense</option>
+    <option value="B10-B19: Caro-Kann Defense">B10-B19: Caro-Kann Defense</option>
+    <option value="B20-B99: Sicilian Defense">B20-B99: Sicilian Defense</option>
+    <option value="C00-C20: French Defense">C00-C20: French Defense</option>
+    <option value="C21: Nordic Gambit">C21: Nordic Gambit</option>
+    <option value="C22: Center Game">C22: Center Game</option>
+    <option value="C23-C24: Bishop's Opening">C23-C24: Bishop's Opening</option>
+    <option value="C25-C29: Vienna Game">C25-C29: Vienna Game</option>
+    <option value="C30-C39: King's Gambit">C30-C39: King's Gambit</option>
+    <option value="C40: Latvian Gambit">C40: Latvian Gambit</option>
+    <option value="C41: Philidor's Defense">C41: Philidor's Defense</option>
+    <option value="C42-C43: Russian (Petroff's) Defense">C42-C43: Russian (Petroff's) Defense</option>
+    <option value="C44: Ponziani Opening">C44: Ponziani Opening</option>
+    <option value="C45: Scotch Game">C45: Scotch Game</option>
+    <option value="C46: Three Knights' Opening">C46: Three Knights' Opening</option>
+    <option value="C47-C49: Four Knights' Opening">C47-C49: Four Knights' Opening</option>
+    <option value="C50-C59: Italian Game (Giuoco Piano)">C50-C59: Italian Game (Giuoco Piano)</option>
+    <option value="C60-C99: Spanish Opening (Ruy Lopez)">C60-C99: Spanish Opening (Ruy Lopez)</option>
+    <option value="D00: Queen's Pawn Opening">D00: Queen's Pawn Opening</option>
+    <option value="D01: Veresov Opening">D01: Veresov Opening</option>
+    <option value="D02: Gruenfeld Reversed Opening">D02: Gruenfeld Reversed Opening</option>
+    <option value="D03: Torre attack (Tartakower variation)">D03: Torre attack (Tartakower variation)</option>
+    <option value="D04: Queen's pawn game">D04: Queen's pawn game</option>
+    <option value="D05: Colle System">D05: Colle System</option>
+    <option value="D06-D69: Queen's Gambit">D06-D69: Queen's Gambit</option>
+    <option value="D70-D99: Grunfeld Defense">D70-D99: Grunfeld Defense</option>
+    <option value="E00-E09: Catalan Opening">E00-E09: Catalan Opening</option>
+    <option value="E10: Blumenfeld Gambit">E10: Blumenfeld Gambit</option>
+    <option value="E11: Bogo-Indian Defense">E11: Bogo-Indian Defense</option>
+    <option value="E12-E19: Queen's Indian Defense">E12-E19: Queen's Indian Defense</option>
+    <option value="E20-E59: Nimzo-Indian Defense">E20-E59: Nimzo-Indian Defense</option>
+    <option value="E60-E99: King's Indian Defense">E60-E99: King's Indian Defense</option>
+  </select><%=link_to "<i class=\"glyphicon glyphicon-trash\"></i> Untag".html_safe,user_session_path, class:"input-group-addon btn-default btn"%>
+
+</div>
+<%end%>

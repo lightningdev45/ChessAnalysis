@@ -1,0 +1,30 @@
+<%if user_signed_in?%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "<i class=\"glyphicon glyphicon-tag\"></i> Tag".html_safe,tag_position_path(fen:fen_param,tag_type:"tactics"),data:{fen:"true"},class:"btn btn-default tactics-tag-button",remote:true,method: :post%>
+          </span>
+  <select class="form-control tactics-tag-select tag-select">
+   
+    <option value="Fork">Fork</option>
+    <option value="X-ray">X-ray</option>
+    <option value="Distraction">Distraction</option>
+
+  </select><%=link_to "<i class=\"glyphicon glyphicon-trash\"></i> Untag".html_safe,untag_position_path(fen:fen_param,tag_type:"tactics"), class:"input-group-addon tactics-untag-button btn btn-default",remote:true,method: :post%>
+
+</div><!-- /input-group -->
+
+<%else%>
+<div class="input-group">
+          <span class="input-group-btn">
+            <%=link_to "<i class=\"glyphicon glyphicon-tag\"></i> Tag".html_safe,user_session_path,class:" btn btn-default",data:{fen:"false"}%>
+          </span>
+  <select class="form-control">
+   
+    <option value="Fork">Fork</option>
+    <option value="X-ray">X-ray</option>
+    <option value="Distraction">Distraction</option>
+
+  </select><%=link_to "<i class=\"glyphicon glyphicon-trash\"></i> Untag".html_safe,root_path, class:"input-group-addon btn btn-default"%>
+
+</div>
+<%end%>

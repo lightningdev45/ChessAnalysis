@@ -1,0 +1,67 @@
+EngineEval.Routers.Evaluations = Backbone.Router.extend({
+	routes:{
+		"":'index'
+	},
+
+	index:function(){
+
+		jQuery.ajax({
+			url:'/api/evaluations/?fen='+chessAnalysis.chess[index].fen(),
+			type:"GET",
+			success:function(data){
+				
+				chessAnalysis.evaluation_router.evaluations_collection= new EngineEval.Collections.Evaluations(data.evaluations)
+				chessAnalysis.evaluation_router.tags_collection=data.tags
+				chessAnalysis.evaluation_router.evaluations_view=new EngineEval.Views.EvaluationsIndex({collection:chessAnalysis.evaluation_router.evaluations_collection})
+				chessAnalysis.evaluation_router.tags_tactics_view=new EngineEval.Views.TagsIndex({collection:chessAnalysis.evaluation_router.tags_collection.tactics})
+				chessAnalysis.evaluation_router.tags_positional_view=new EngineEval.Views.TagsIndex({collection:chessAnalysis.evaluation_router.tags_collection.positional})
+				chessAnalysis.evaluation_router.tags_opening_view=new EngineEval.Views.TagsIndex({collection:chessAnalysis.evaluation_router.tags_collection.opening})
+
+				$(".opening-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=opening&tag_value="+$(".opening-tag-select").val())
+				$(".positional-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=positional&tag_value="+$(".positional-tag-select").val())
+				$(".tactics-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=tactics&tag_value="+$(".tactics-tag-select").val())
+				$(".opening-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=opening&tag_value="+$(".opening-tag-select").val())
+				$(".positional-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=positional&tag_value="+$(".positional-tag-select").val())
+				$(".tactics-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=tactics&tag_value="+$(".tactics-tag-select").val())
+				
+				$("#tactics-panel-body").append(chessAnalysis.evaluation_router.tags_tactics_view.render().el)
+				$("#positional-panel-body").append(chessAnalysis.evaluation_router.tags_positional_view.render().el)
+				$("#opening-panel-body").append(chessAnalysis.evaluation_router.tags_opening_view.render().el)
+				$("#evaluations_table").html(chessAnalysis.evaluation_router.evaluations_view.render().el)
+				chessAnalysis.evaluation_router.evaluations_collection.on("piece:drop",chessAnalysis.evaluation_router.changePosition,chessAnalysis.evaluation_router);
+				}
+			})
+				
+		},
+
+	changePosition:function(){
+		jQuery.ajax({
+			url:'/api/evaluations/?fen='+chessAnalysis.chess[index].fen(),
+			type:"GET",
+			success:function(data){
+				$(".tags").remove()
+				chessAnalysis.evaluation_router.evaluations_collection= new EngineEval.Collections.Evaluations(data.evaluations)
+				chessAnalysis.evaluation_router.tags_collection=data.tags
+				chessAnalysis.evaluation_router.evaluations_view=new EngineEval.Views.EvaluationsIndex({collection:chessAnalysis.evaluation_router.evaluations_collection})
+				chessAnalysis.evaluation_router.tags_tactics_view=new EngineEval.Views.TagsIndex({collection:chessAnalysis.evaluation_router.tags_collection.tactics})
+				chessAnalysis.evaluation_router.tags_positional_view=new EngineEval.Views.TagsIndex({collection:chessAnalysis.evaluation_router.tags_collection.positional})
+				chessAnalysis.evaluation_router.tags_opening_view=new EngineEval.Views.TagsIndex({collection:chessAnalysis.evaluation_router.tags_collection.opening})
+
+				$(".opening-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=opening&tag_value="+$(".opening-tag-select").val())
+				$(".positional-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=positional&tag_value="+$(".positional-tag-select").val())
+				$(".tactics-tag-button").attr("href","/tag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=tactics&tag_value="+$(".tactics-tag-select").val())
+				$(".opening-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=opening&tag_value="+$(".opening-tag-select").val())
+				$(".positional-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=positional&tag_value="+$(".positional-tag-select").val())
+				$(".tactics-untag-button").attr("href","/untag_position?fen="+encodeURIComponent(data.fen_param)+"&tag_type=tactics&tag_value="+$(".tactics-tag-select").val())
+				
+				$("#tactics-panel-body").append(chessAnalysis.evaluation_router.tags_tactics_view.render().el)
+				$("#positional-panel-body").append(chessAnalysis.evaluation_router.tags_positional_view.render().el)
+				$("#opening-panel-body").append(chessAnalysis.evaluation_router.tags_opening_view.render().el)
+				$("#evaluations_table").html(chessAnalysis.evaluation_router.evaluations_view.render().el)
+				chessAnalysis.evaluation_router.evaluations_collection.on("piece:drop",chessAnalysis.evaluation_router.changePosition,chessAnalysis.evaluation_router);
+				}
+			})
+		
+	}
+})
+
