@@ -1,4 +1,4 @@
-<table class="table table-default mgametable  text-center">
+<table class="table table-hover text-center">
 	<thead>
 	<tr >
 		<th class="text-center">Avatar</th>
@@ -10,7 +10,7 @@
 	</tr>
 	</thead>
 	<%collection.each do |user|%>
-
+	<tbody>
 	<tr>
 		<td class="text-center">
 			<%=image_tag(avatar_url(user.email,50))%>
@@ -31,6 +31,7 @@
 		<%end%>
 		</td>
 	</tr>
+	</tbody>
 	<%end%>
 </table>
-<%=will_paginate collection%>
+<div class="text-center"><%=will_paginate collection%></div>

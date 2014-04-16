@@ -1,7 +1,7 @@
 EngineEval.AuthController = Ember.ObjectController.extend({
   needs:["alert"],
   currentUser:null,
-  isAuthenticated: function(key,value) {
+  isAuthenticated: function() {
    var me=this;
     if(this.get("currentUser")){
       return true

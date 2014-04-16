@@ -149,7 +149,7 @@ DEPENDENCIES
   chess
   devise
   ember-rails
-  ember-source (~> 1.5.0)
+  ember-source
   jbuilder (~> 1.2)
   jquery-rails
   pg

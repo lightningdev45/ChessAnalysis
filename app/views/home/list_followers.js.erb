@@ -1,4 +1,5 @@
-
-$("#followers_list .modal-body").empty();
-$("#followers_list .modal-body").append('<%=j render(partial:"follow_list",locals:{collection:@followers})%>')
- $('.pagination a').attr('data-remote', 'true');
+$("#followers_list_panel_body").css("opacity",0)
+$("#followers_list_panel_body").fadeTo(250,1)
+$("#followers_list_panel_body").empty();
+$("#followers_list_panel_body").append('<%=j render(partial:"follow_list",locals:{collection:@followers})%>')
+ $('#followers_list_panel_body .pagination a').attr('data-remote', 'true');

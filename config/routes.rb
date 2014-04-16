@@ -35,6 +35,8 @@ get 'user_search'=>"home#user_search"
 post 'change_relationship'=>'relationships#change_relationship'
 get 'list_followed'=>'home#list_followed'
 get 'list_followers'=>'home#list_followers'
+post 'downvote_evaluation'=>"evaluations#downvote_evaluation"
+post 'upvote_evaluation'=>"evaluations#upvote_evaluation"
 
 
   # You can have the root of your site routed with "root"

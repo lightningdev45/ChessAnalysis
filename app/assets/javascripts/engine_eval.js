@@ -1,5 +1,6 @@
 //= require_tree ./mixins
 //= require_tree ./models
+//= require ./store
 //= require_tree ./controllers
 //= require_tree ./views
 //= require_tree ./helpers

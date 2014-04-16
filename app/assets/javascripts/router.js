@@ -10,7 +10,7 @@ EngineEval.Router.map(function() {
   this.route("register")
   this.route("edit")
   this.resource("profile",{path:"profile/:profile_id/:events_id"})
-  this.route("user_search",{path:"user_search"})
+  this.route("user_search",{path:"user_search/:page"})
 
 
 

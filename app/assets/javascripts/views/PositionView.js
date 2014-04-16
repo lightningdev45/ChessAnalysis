@@ -1,6 +1,7 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
+
     var view=this;
     var list=["a","b","c","d","e","f","g","h"]
    var numlist=[8,7,6,5,4,3,2,1];
@@ -157,7 +158,7 @@ EngineEval.PositionView = Ember.View.extend({
 
 }
 })
-        $("#update-annotation-button-container").click(function(){
+        $("#update-annotation-button-container .btn").click(function(){
         if(chessAnalysis.editStatus[index]===true)
          {var continue_update=confirm("Are you sure you would like to save your changes to this annotation?")
          if(continue_update){
@@ -198,27 +199,34 @@ EngineEval.PositionView = Ember.View.extend({
                     $("#browser_engine_button")
                         .addClass("btn-success")
                     $("#browser_engine_button")
-                        .text("Start stockfish")
-                        
-                    jQuery.ajax({
-                        url:"/evaluations_index/?fen="+chessAnalysis.chess[index].fen(),
-                        type:"GET",
-                        error:function(){
-                        alert("error")
-                    },
-                        success:function(data){
-                            view.get("controller.controllers.evaluations").set('model',_.map(data.evaluations,function(object,key){
-                            var eval=object.evaluations
-                            eval.index=key+1
-                            if(chessAnalysis.chess[index].fen().split(" ")[1]==="b")
-                                {eval.evaluation=eval.evaluation*-1}
-                            return eval
-                            }))
-                        }
-
-                    })
-
-                }
+                        .text("Start stockfish")   
+                     view.get("controller").store.find("evaluation",chessAnalysis.evaluationId).then(function(stored_evaluation){
+                        var id=stored_evaluation.get("id");
+                            view.get("controller.controllers.evaluations").pushObject(stored_evaluation)
+                             jQuery.ajax({
+                                            type: "PUT",
+                                            url: "/evaluations/"+id,
+                                            data: {
+                                                nodes: stored_evaluation.get("nodes"),
+                                                seldepth: stored_evaluation.get("seldepth"),
+                                                depth: stored_evaluation.get("depth"),
+                                                evaluation: stored_evaluation.get("evaluation"),
+                                                engine: "stockfish_browser"
+                                            },
+                                            success:function(data){},
+                                            error: function (data) {
+                                                alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                                            }
+                                })                        
+                            view.get("controller.controllers.evaluations").set("model",_.sortBy(view.get("controller.controllers.evaluations").get("model"),function(evaluation){
+                                return evaluation.get("nodes")
+                            }).reverse())
+                            _.each(view.get("controller.controllers.evaluations").get("model"),function(evaluation,index){
+                                evaluation.set("index",index+1)
+                            })
+                     })                                                   
+                    
+                 }
                 else {
                     var fen=chessAnalysis.chess[index].fen()
                     chessAnalysis.engineStatus = true
@@ -234,6 +242,7 @@ EngineEval.PositionView = Ember.View.extend({
                         async: false,
                         success: function (data) {
                             chessAnalysis.evaluationId = data.id
+                            view.get("controller").store.createRecord("evaluation",data)
                         },
                         error: function (data) {
                             alert("There was an error uploading analysis.  Please refresh the page and try again.")
@@ -259,20 +268,21 @@ EngineEval.PositionView = Ember.View.extend({
                                     .text(depth);
                                 $("#browser_engine_seldepth")
                                     .text(seldepth);
-                                jQuery.ajax({
-                                    type: "PUT",
-                                    url: "/evaluations/" + chessAnalysis.evaluationId,
-                                    data: {
-                                        nodes: nodes,
-                                        seldepth: seldepth,
-                                        depth: depth,
-                                        evaluation: evaluation,
-                                        engine: "stockfish_browser"
-                                    },
-                                    error: function (data) {
-                                        alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                                view.get("controller").store.find("evaluation",chessAnalysis.evaluationId).then(function(stored_evaluation){
+                                    stored_evaluation.set("nodes",nodes)
+                                    stored_evaluation.set("seldepth",seldepth)
+                                    stored_evaluation.set("depth",depth)
+                                    stored_evaluation.set("legit",0)
+                                    if (chessAnalysis.chess[index].turn() === 'b') {
+                                        stored_evaluation.set("evaluation",evaluation*-1)
                                     }
+                                    else {
+                                         stored_evaluation.set("evaluation",evaluation)
+                                    }
+                                   
+                                    stored_evaluation.set("engine",'stockfish_browser')
                                 })
+                                
                                 if (chessAnalysis.chess[index].turn() === 'b') {
                                     $("#browser_engine_evaluation")
                                         .text(evaluation * -1);
@@ -293,20 +303,20 @@ EngineEval.PositionView = Ember.View.extend({
                                     .text(depth);
                                 $("#browser_engine_seldepth")
                                     .text(seldepth);
-                                jQuery.ajax({
-                                    type: "PUT",
-                                    url: "/evaluations/" + chessAnalysis.evaluationId,
-                                    data: {
-                                        nodes: nodes,
-                                        seldepth: seldepth,
-                                        depth: depth,
-                                        evaluation: evaluation,
-                                        engine: "stockfish_browser"
-                                    },
-                                    error: function (data) {
-                                        alert("There was an error uploading analysis.  Please refresh the page and try again.")
+                                view.get("controller").store.find("evaluation",chessAnalysis.evaluationId).then(function(stored_evaluation){
+                                    stored_evaluation.set("nodes",nodes)
+                                    stored_evaluation.set("seldepth",seldepth)
+                                    stored_evaluation.set("depth",depth)
+                                    stored_evaluation.set("legit",0)
+                                    if (chessAnalysis.chess[index].turn() === 'b') {
+                                        stored_evaluation.set("evaluation",evaluation*-1)
                                     }
+                                    else {
+                                         stored_evaluation.set("evaluation",evaluation)
+                                    }
+                                    stored_evaluation.set("engine",'stockfish_browser')   
                                 })
+                                
                                 if (chessAnalysis.chess[index].turn() === 'b') {
                                     $("#browser_engine_evaluation")
                                         .text(evaluation * -1);

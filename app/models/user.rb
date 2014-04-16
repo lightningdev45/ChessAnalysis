@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   mount_uploader :avatar,UserAvatarUploader
   validates_uniqueness_of :profile_name
   validates_presence_of :profile_name,:email
+  acts_as_voter
 
 
     def self.full_text_search(query)

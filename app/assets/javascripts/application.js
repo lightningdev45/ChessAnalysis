@@ -21,10 +21,12 @@
 //= require jquery
 //= require handlebars
 //= require ember
+//= require ember-data
 //= require ember-animate
+//= require addComment
 //= require_self
 //= require engine_eval
-//= require addComment
+
 
 
 EngineEval = Ember.Application.create();

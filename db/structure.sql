@@ -192,7 +192,8 @@ CREATE TABLE evaluations (
     updated_at timestamp without time zone,
     depth integer,
     seldepth integer,
-    user_id integer
+    user_id integer,
+    legit integer DEFAULT 0
 );
 
 
@@ -450,7 +451,6 @@ CREATE TABLE users (
     rating integer,
     admin integer,
     language character varying(255),
-    reputation integer,
     title character varying(255),
     reset_password_token character varying(255),
     reset_password_sent_at timestamp without time zone,
@@ -479,7 +479,8 @@ CREATE TABLE users (
     chess_com character varying(255),
     playchess character varying(255),
     other text,
-    profile_name character varying(255)
+    profile_name character varying(255),
+    reputation integer DEFAULT 0
 );
 
 
@@ -853,3 +854,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140324185923');
 INSERT INTO schema_migrations (version) VALUES ('20140324191522');
 
 INSERT INTO schema_migrations (version) VALUES ('20140402194541');
+
+INSERT INTO schema_migrations (version) VALUES ('20140415020840');

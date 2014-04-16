@@ -2,8 +2,10 @@
                                     index = 1;
                                     $("#annotation_moves")
                                         .empty();
-                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
+                                    chessAnalysis.hm[index] = 0;
                                     chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
+                                    console.log(chessAnalysis.hm[index])
+                                    console.log(index)
                                     chessAnalysis.children[index] =<%=raw @children%>
                                     chessAnalysis.parents[index] = <%=raw @parents%>
                                     chessAnalysis.moves[index] = <%=raw @moves%>
@@ -64,7 +66,9 @@
                                     index = 1;
                                     $("#annotation_moves")
                                         .empty();
-                                    chessAnalysis.hm[index] = chessAnalysis.hm[index - 1];
+                                    chessAnalysis.hm[index] = 0;
+                                    console.log(chessAnalysis.hm[index])
+                                    console.log(index)
                                     chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
                                     chessAnalysis.children[index] = {};
                                     chessAnalysis.parents[index] = [];

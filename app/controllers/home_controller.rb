@@ -56,9 +56,26 @@ class HomeController < ApplicationController
 
 	def user_search
 		current_page = params[:page] || 1
-  		per_page = params[:per_page] || 10
+  		per_page = params[:per_page] || 5
   		@users=User.search(params[:search])
+  		
+
   		if @users
+  			@users_count=@users.count
+  			if @users_count%per_page==0
+				@page_count=@users.count/per_page
+			else
+				@page_count=@users.count/per_page+1
+			end
+
+			if current_page.to_i%10==0
+				@page_floor=current_page.to_i/10*10-9
+				@page_ceiling=[current_page.to_i/10*10,@page_count].min
+			else
+				@page_floor=current_page.to_i/10*10+1
+				@page_ceiling=[current_page.to_i/10*10+10,@page_count].min
+			end
+
   			if user_signed_in?
 	  			@followed_users=current_user.followed_users||[]
 	  			@followers=current_user.followers||[]
@@ -92,7 +109,7 @@ class HomeController < ApplicationController
 	  		end
 			
 			respond_to do |format|
-				format.json{render json:{users:@users}}
+				format.json{render json:{users:@users,paginate:[@page_floor,@page_ceiling,current_page.to_i,@page_count]}}
 			end
 		else
 			respond_to do |format|
@@ -103,7 +120,7 @@ class HomeController < ApplicationController
 
 	def list_followers
 		@user=User.find(params[:id])
-		@followers=@user.followers.paginate(page:params[:page], per_page:10)
+		@followers=@user.followers.paginate(page:params[:page], per_page:5)
 	
 		respond_to do |format|
 			format.js{}
@@ -112,7 +129,7 @@ class HomeController < ApplicationController
 
 	def list_followed
 		@user=User.find(params[:id])
-		@followed=@user.followed_users.paginate(page:params[:page],per_page:10)
+		@followed=@user.followed_users.paginate(page:params[:page],per_page:5)
 
 		respond_to do |format|
 			format.js{}

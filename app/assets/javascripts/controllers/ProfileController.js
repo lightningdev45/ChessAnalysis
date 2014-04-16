@@ -4,7 +4,7 @@ EngineEval.ProfileController = Ember.ObjectController.extend({
   	currentUser: Em.computed.alias("controllers.auth.currentUser"),
 	actions:{
 		user_search:function(){
-			this.transitionToRoute("user_search")
+			this.transitionToRoute("user_search",1)
 		},
 		change_relationship:function(){
 			alert("change")

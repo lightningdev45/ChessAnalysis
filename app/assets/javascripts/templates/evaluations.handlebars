@@ -1,7 +1,7 @@
-<table class="table table-hover col-lg-12 col-md-12">
+<table class="table table-hover col-lg-12 col-md-12" id="evaluations_table">
 <thead>
 	<tr>
-		<th colspan=4 class="text-center">
+		<th colspan=6 class="text-center">
 		<h3><b>Deepest Analysis</b></h3>
 		</th>
 	</tr>
@@ -9,25 +9,41 @@
 	<tr>
 		<th class="text-center">Rank</th>
 		<th class="text-center">Engine</th>
+		<th class="text-center">Depth</th>
+		<th class="text-center">SelDepth</th>
 		<th class="text-center">Nodes</th>
 		<th class="text-center">Evaluation</th>
+		<th class="text-center">Legit?</th>
 	</tr>
 </thead>
-	<tbody>
+	<tbody id="evaluation_table_body">
 	
-	{{#each controller}}
-		
-
+	{{#each visibleList}}
 			<tr class="text-center">
 				<td>{{index}}</td>
 				<td>{{engine}}</td>
+				<td>{{depth}}</td>
+				<td>{{seldepth}}</td>	
 				<td>{{nodes}}</td>
-				
 				<td>{{evaluation}}</td>
-				
+				<td><i class="glyphicon glyphicon-thumbs-up" {{action "upvote_evaluation" id}}></i> {{legit}} <i class="glyphicon glyphicon-thumbs-down" {{action "downvote_evaluation" id}}></i></td>
 				</tr>
 	{{/each}}
 
 
 	</tbody>
+	
 </table>
+<div class="text-center"><ul class='pagination'>
+
+    {{#each pagination}}
+    	{{#if this.[1]}}
+      		<li class="evaluation_pagination active" {{action "changePage" this.[0]}}><a>{{this.[0]}}</a></li> 
+      		{{else}}
+      		<li class="evaluation_pagination" {{action "changePage" this.[0]}}><a>{{this.[0]}}</a></li>
+      	{{/if}}
+    {{/each}}
+
+ </ul>
+ </div>
+ <br>

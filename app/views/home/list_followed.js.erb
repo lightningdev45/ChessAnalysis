@@ -1,5 +1,5 @@
-
- $("#followed_list .modal-body").empty();
-$("#followed_list .modal-body").append('<%=j render(partial:"follow_list",locals:{collection:@followed})%>')
-
- $('.pagination a').attr('data-remote', 'true');
+$("#followed_list_panel_body").css("opacity",0)
+$("#followed_list_panel_body").fadeTo(250,1)
+ $("#followed_list_panel_body").empty();
+$("#followed_list_panel_body").append('<%=j render(partial:"follow_list",locals:{collection:@followed})%>')
+ $('#followed_list_panel_body .pagination a').attr('data-remote', 'true');

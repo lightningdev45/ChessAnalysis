@@ -120,33 +120,32 @@
 <div class="modal fade" id="followed_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><strong>{{user.profile_name}} is following...</strong></h4>
+      <div class="panel panel-primary" id="followed_list_panel">
+  		<div class="panel-heading">
+	  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	  		<h4><strong>{{user.profile_name}} is following...</strong></h4>
+  		</div>
+  		<div class="panel-body" id="followed_list_panel_body">
+  		</div>
       </div>
-      <div class="modal-body">
-  		
- 
-
-      </div>
-
+     </div>
     </div>
   </div>
-</div>	
+
+
 <div class="modal fade" id="followers_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="panel panel-primary" id="followers_list_panel">
+        <div class="panel-heading">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><strong>{{user.profile_name}}'s followers...</strong></h4>
+        	<h4><strong>{{user.profile_name}}'s followers...</strong></h4>
+        </div>
+        <div class="panel-body" id="followers_list_panel_body">
+  		</div>
       </div>
-      <div class="modal-body">
-
- 
-
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+    </div>
+  </div>
 </div>	
 
 		<div class="  col-xs-9 col-sm-9 col-md-9  col-lg-9">
