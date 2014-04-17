@@ -1190,7 +1190,7 @@ var add_spinner = function (elementId) {
         .spin(target);
 }
 var changeEnginePosition = function () {
-     var controller = EngineEval.__container__.lookup("controller:positions").send("newPosition");
+     var controller = EngineEval.__container__.lookup("controller:position").send("newPosition");
     
         
     $("#fen-container")

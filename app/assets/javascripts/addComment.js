@@ -1,6 +1,6 @@
 var addCommentBefore=function(){
 	var hm=chessAnalysis.rclickmove[index][0]
-	alert(hm)
+	
 	var hmv=chessAnalysis.rclickmove[index][1]
 	if(document.contains(document.getElementById("var"+hmv+"comment"+(hm-1))))
 		{$("#delete-remaining")
@@ -96,4 +96,27 @@ var addCommentAfter=function(){
 	        .css("display", "none");
 	    $("#var"+hmv+"comment"+(hm)).focus()
 		}
+}
+
+var addCommentBlank=function(){
+		var hm=0
+		var hmv=0
+		$("#annotation_moves").append("<textarea class='ann_comment' rows='1' id='var0comment0'></textarea>")
+		$("#var0comment0").css("max-width",$("#annotation_moves").width())
+		$("#var0comment0").on('input',function(){
+			chessAnalysis.editStatus[index]=true;
+			var id=$(this).attr("id")
+			$(this).width(getWidthOfInput(document.getElementById(id)))
+			//if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+			//{
+				$(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+			//}
+			chessAnalysis.movescomment[index][0][0]=$(this).val()
+		})	
+		
+	    $("#add-comment-blank")
+	        .unbind("click");
+	    $("#rmenu-blank")
+	        .css("display", "none");
+	    $("#var0comment0").focus()
 }

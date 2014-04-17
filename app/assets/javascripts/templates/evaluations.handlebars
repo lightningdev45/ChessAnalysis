@@ -1,3 +1,4 @@
+
 <table class="table table-hover col-lg-12 col-md-12" id="evaluations_table">
 <thead>
 	<tr>
@@ -17,18 +18,24 @@
 	</tr>
 </thead>
 	<tbody id="evaluation_table_body">
-	
-	{{#each visibleList}}
+	{{#with controller}}
+	{{#each visible in visibleList }}
 			<tr class="text-center">
-				<td>{{index}}</td>
-				<td>{{engine}}</td>
-				<td>{{depth}}</td>
-				<td>{{seldepth}}</td>	
-				<td>{{nodes}}</td>
-				<td>{{evaluation}}</td>
-				<td><i class="glyphicon glyphicon-thumbs-up" {{action "upvote_evaluation" id}}></i> {{legit}} <i class="glyphicon glyphicon-thumbs-down" {{action "downvote_evaluation" id}}></i></td>
+				<td>{{visible.index}}</td>
+				<td>{{visible.engine}}</td>
+				<td>{{visible.depth}}</td>
+				<td>{{visible.seldepth}}</td>	
+				<td>{{visible.nodes}}</td>
+				<td>{{visible.evaluation}}</td>
+				<td>
+				{{#if isAuthenticated}}<i class="glyphicon glyphicon-thumbs-up" {{action "upvote_evaluation" visible.id}}></i> {{/if}}
+				{{visible.legit}} 
+				{{#if isAuthenticated}}<i class="glyphicon glyphicon-thumbs-down" {{action "downvote_evaluation" visible.id}}></i>{{/if}}
+
+				</td>
 				</tr>
 	{{/each}}
+	{{/with}}
 
 
 	</tbody>
@@ -45,5 +52,6 @@
     {{/each}}
 
  </ul>
+
  </div>
  <br>

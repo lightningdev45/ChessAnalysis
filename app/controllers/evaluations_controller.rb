@@ -57,44 +57,52 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 	end
 
 	def upvote_evaluation
-		@evaluation=Evaluation.find(params[:id])
-		voted_for=current_user.voted_for? @evaluation,vote_scope:"legitimacy"
-		@evaluation.vote voter:current_user, vote_scope:"legitimacy"
-		if @evaluation.vote_registered
-			if voted_for
-				@evaluation.legit+=2
-				@evaluation.save
-				hello=true
-			else
-				@evaluation.legit+=1
-				@evaluation.save
+		if user_signed_in?
+			@evaluation=Evaluation.find(params[:id])
+			voted_for=current_user.voted_for? @evaluation,vote_scope:"legitimacy"
+			@evaluation.vote voter:current_user, vote_scope:"legitimacy"
+			if @evaluation.vote_registered
+				if voted_for
+					@evaluation.legit+=2
+					@evaluation.save
+					hello=true
+				else
+					@evaluation.legit+=1
+					@evaluation.save
+				end
 			end
+			render json:{legitimacy:@evaluation.legit}
+		else
+			render js:"alert('You must sign in to vote on an evaluation!')",status:403
 		end
-		render json:{legitimacy:@evaluation.legit}
 	end
 
 	def downvote_evaluation
-		@evaluation=Evaluation.find(params[:id])
-		voted_for=current_user.voted_for? @evaluation,vote_scope:"legitimacy"
-		@evaluation.downvote_from current_user, vote_scope:"legitimacy"
-		if @evaluation.vote_registered
-			if voted_for
-				@evaluation.legit-=2
-				if @evaluation.legit<=-5
-					@evaluation.destroy
+		if user_signed_in?
+			@evaluation=Evaluation.find(params[:id])
+			voted_for=current_user.voted_for? @evaluation,vote_scope:"legitimacy"
+			@evaluation.downvote_from current_user, vote_scope:"legitimacy"
+			if @evaluation.vote_registered
+				if voted_for
+					@evaluation.legit-=2
+					if @evaluation.legit<=-5
+						@evaluation.destroy
+					else
+						@evaluation.save
+					end
 				else
-					@evaluation.save
-				end
-			else
-				@evaluation.legit-=1
-				if @evaluation.legit<=-5
-					@evaluation.destroy
-				else
-					@evaluation.save
+					@evaluation.legit-=1
+					if @evaluation.legit<=-5
+						@evaluation.destroy
+					else
+						@evaluation.save
+					end
 				end
 			end
+			render json:{legitimacy:@evaluation.legit}
+		else
+			render js:"alert('You must sign in to vote on an evaluation!')",status:403
 		end
-		render json:{legitimacy:@evaluation.legit}
 	end
 
 	private

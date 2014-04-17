@@ -1,5 +1,6 @@
 EngineEval.EvaluationsController=Ember.ArrayController.extend({
-	needs:["position"],
+	needs:["position","auth"],
+	isAuthenticated: Em.computed.alias("controllers.auth.isAuthenticated"),
 	actions:{
 		upvote_evaluation:function(id){
 			console.log(this.get("visibleList").length)
@@ -8,9 +9,9 @@ EngineEval.EvaluationsController=Ember.ArrayController.extend({
 				url:"/upvote_evaluation?id="+id,
 				method:"POST",
 				success:function(response){
-				controller.store.find("evaluation",id).then(function(evaluation){
-					evaluation.set("legit",response.legitimacy)					
-				})
+					controller.store.find("evaluation",id).then(function(evaluation){
+						evaluation.set("legit",response.legitimacy)					
+					})
 			}
 			})
 		},

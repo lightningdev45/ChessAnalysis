@@ -43,33 +43,43 @@ EngineEval.PositionView = Ember.View.extend({
     })
 
      $("#load-fen").click(function(){ 
-        chessAnalysis.mode="engine_analysis_mode"
-        $('#engine_analysis_mode a[data-toggle="tab"]').tab('show')
-        index = 0;
-        if($("#fen-container").val().split(" ")[1]==="w")
-            {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2}
-        else
-            {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
+         if(chessAnalysis.editStatus[index]){
+            var confirmChange=confirm("Your have made changes to the annotation.  Are you sure you want to discard those changes?")
+            if(confirmChange){
+                chessAnalysis.mode="engine_analysis_mode"
+                $('#engine_analysis_mode a[data-toggle="tab"]').tab('show')
+                index = 0;
+                if($("#fen-container").val().split(" ")[1]==="w")
+                    {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2}
+                else
+                    {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
 
-        chessAnalysis.hmv[index] = 0;
-        chessAnalysis.hm[index] = 0;
-        chessAnalysis.children[index] = {};
-        chessAnalysis.parents[index] = [];
-        chessAnalysis.moves[index] = [];
-        chessAnalysis.mainvariations[index] = []
-        chessAnalysis.movescomment[index] = [[""]]
-        chessAnalysis.numvariations[index] = 0
-        chessAnalysis.dropcount[index] = 0
-        chessAnalysis.atStart[index] = true
-        chessAnalysis.editStatus[index]=false;
-        chessAnalysis.chess[index].load($("#fen-container").val())
-        chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index].fen();
-        setup(chessAnalysis.chess[index].fen());
-        addpieces();
-        movegen();
-        drag();
-        drop();
-        changeEnginePosition();      
+                setupChess($("#fen-container").val())
+                setup(chessAnalysis.chess[index].fen());
+                addpieces();
+                movegen();
+                drag();
+                drop();
+                changeEnginePosition();   
+            }
+        }
+        else{chessAnalysis.mode="engine_analysis_mode"
+                $('#engine_analysis_mode a[data-toggle="tab"]').tab('show')
+                index = 0;
+                if($("#fen-container").val().split(" ")[1]==="w")
+                    {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2}
+                else
+                    {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
+
+                setupChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+                setup(chessAnalysis.chess[index].fen());
+                addpieces();
+                movegen();
+                drag();
+                drop();
+                $("#fen-container").val(chessAnalysis.chess[index].fen())
+                changeEnginePosition();       
+        }
         
     })
 
@@ -85,19 +95,7 @@ EngineEval.PositionView = Ember.View.extend({
                 else
                     {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
 
-                chessAnalysis.hmv[index] = 0;
-                chessAnalysis.hm[index] = 0;
-                chessAnalysis.children[index] = {};
-                chessAnalysis.parents[index] = [];
-                chessAnalysis.moves[index] = [];
-                chessAnalysis.mainvariations[index] = []
-                chessAnalysis.movescomment[index] = [[""]]
-                chessAnalysis.numvariations[index] = 0
-                chessAnalysis.dropcount[index] = 0
-                chessAnalysis.atStart[index] = true
-                chessAnalysis.editStatus[index]=false;
-                chessAnalysis.chess[index].load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-                chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index].fen();
+                setupChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
                 setup(chessAnalysis.chess[index].fen());
                 addpieces();
                 movegen();
@@ -115,19 +113,7 @@ EngineEval.PositionView = Ember.View.extend({
                 else
                     {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
 
-                chessAnalysis.hmv[index] = 0;
-                chessAnalysis.hm[index] = 0;
-                chessAnalysis.children[index] = {};
-                chessAnalysis.parents[index] = [];
-                chessAnalysis.moves[index] = [];
-                chessAnalysis.mainvariations[index] = []
-                chessAnalysis.movescomment[index] = [[""]]
-                chessAnalysis.numvariations[index] = 0
-                chessAnalysis.dropcount[index] = 0
-                chessAnalysis.atStart[index] = true
-                chessAnalysis.editStatus[index]=false;
-                chessAnalysis.chess[index].load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-                chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index].fen();
+                setupChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
                 setup(chessAnalysis.chess[index].fen());
                 addpieces();
                 movegen();
@@ -159,30 +145,35 @@ EngineEval.PositionView = Ember.View.extend({
 }
 })
         $("#update-annotation-button-container .btn").click(function(){
-        if(chessAnalysis.editStatus[index]===true)
-         {var continue_update=confirm("Are you sure you would like to save your changes to this annotation?")
-         if(continue_update){
-            jQuery.ajax({
-                            url: "/annotations",
-                            type: "POST",
-                            data: {
-                                moves: JSON.stringify(chessAnalysis.moves[index]),
-                                comments: JSON.stringify(chessAnalysis.movescomment[index]),
-                                mainvariations: JSON.stringify(chessAnalysis.mainvariations[index]),
-                                numvariations: chessAnalysis.numvariations[index],
-                                parents: JSON.stringify(chessAnalysis.parents[index]),
-                                children: JSON.stringify(chessAnalysis.children[index]),
-                                dropcount: chessAnalysis.dropcount[index],
-                                fen: chessAnalysis.chess[0].fen()
+            if(view.get("controller").get("isAuthenticated"))
+                {if(chessAnalysis.editStatus[index]===true)
+                 {var continue_update=confirm("Are you sure you would like to save your changes to this annotation?")
+                 if(continue_update){
+                    jQuery.ajax({
+                                    url: "/annotations",
+                                    type: "POST",
+                                    data: {
+                                        moves: JSON.stringify(chessAnalysis.moves[index]),
+                                        comments: JSON.stringify(chessAnalysis.movescomment[index]),
+                                        mainvariations: JSON.stringify(chessAnalysis.mainvariations[index]),
+                                        numvariations: chessAnalysis.numvariations[index],
+                                        parents: JSON.stringify(chessAnalysis.parents[index]),
+                                        children: JSON.stringify(chessAnalysis.children[index]),
+                                        dropcount: chessAnalysis.dropcount[index],
+                                        fen: chessAnalysis.chess[0].fen()
+                                    }
+                                })
+                                chessAnalysis.editStatus[index]=false;
                             }
-                        })
-                        chessAnalysis.editStatus[index]=false;
+                        }
+                    else{
+                            alert("Please edit the annotation before updating.")
+                            }
                     }
-                }
-                        else{
-                        alert("Please edit the annotation before updating.")
+            else{view.get("controller").transitionToRoute("login")
+                view.get("controller.controllers.alert").send("showAlert","You must login to complete this action!","alert alert-warning alert-dismissable","devise-alert")
                     }
-        })
+            })
         $(document).unbind("keydown");
         keynavigate("show");
         $("#boardedge")
@@ -342,14 +333,13 @@ EngineEval.PositionView = Ember.View.extend({
         //$("#my_engine_evaluation").html(data.evaluation)
         //})
         $(".change-mode")
-            .click(function () {
+            .click(function () {             
                 if (chessAnalysis.mode !== $(this)
                     .attr("id")) {
                     if(chessAnalysis.editStatus[index]){
                         var confirmChange=confirm("Your have made changes to the annotation.  Are you sure you want to discard those changes?")
                         if(confirmChange){
-                            if (chessAnalysis.mode === "your_analysis_mode") {
-                               
+                            if (chessAnalysis.mode === "your_analysis_mode") {                              
                                 $("#annotation-version-row").hide()
                                 $(".engine-row").show()
 
@@ -424,9 +414,11 @@ EngineEval.PositionView = Ember.View.extend({
                     }
                 
             })
-        $("#rmenu-cancel")
+        $(".rmenu-cancel")
             .click(function () {
                 $("#rmenu")
+                    .css("display", "none");
+                $("#rmenu-blank")
                     .css("display", "none");
                 $("#delete-remaining")
                     .unbind("click");
@@ -436,7 +428,13 @@ EngineEval.PositionView = Ember.View.extend({
                     .unbind("click");
                 $("#make-critical")
                     .unbind("click");
-            }); // will log 'hello world'
+                $("#add-comment-blank")
+                    .unbind("click");
+                $("#add-comment-before")
+                    .unbind("click");
+                $("#add-comment-after")
+                    .unbind("click");
+            }); 
   },
         willAnimateIn : function () {
         this.$().css("opacity", 0);

@@ -1,6 +1,6 @@
 EngineEval.PositionRoute = Ember.Route.extend({
  model: function(params) {
-
+ 	chessAnalysis.mode="engine_analysis_mode"
  	$("#evaluations_table").css("opacity",0)
  	$("#evaluations_table").fadeTo(500,1)
 	return {fen_param:params.fen_param};

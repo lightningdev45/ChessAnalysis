@@ -29,7 +29,7 @@
                                     $(".ann_move")
                                         .hover(function () {
                                             annIn($(this)
-                                                .attr("id"))
+                                                .attr("id"),false)
                                         }, function () {
                                             annOut()
                                         });
@@ -67,8 +67,6 @@
                                     $("#annotation_moves")
                                         .empty();
                                     chessAnalysis.hm[index] = 0;
-                                    console.log(chessAnalysis.hm[index])
-                                    console.log(index)
                                     chessAnalysis.hmv[index] = chessAnalysis.hmv[index - 1];
                                     chessAnalysis.children[index] = {};
                                     chessAnalysis.parents[index] = [];
@@ -81,4 +79,10 @@
                                     chessAnalysis.editStatus[index]=false;
                                     chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
                                     chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                    $("#your_analysis")
+                                        .hover(function () {
+                                            annIn("var0move0",true)
+                                        }, function () {
+                                            annOut()
+                                        });
                                 }

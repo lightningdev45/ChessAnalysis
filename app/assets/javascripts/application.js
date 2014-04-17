@@ -24,6 +24,8 @@
 //= require ember-data
 //= require ember-animate
 //= require addComment
+//= require delete_variation
+//= require delete_remaining
 //= require_self
 //= require engine_eval
 
