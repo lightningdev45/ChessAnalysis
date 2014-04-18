@@ -1,8 +1,18 @@
 EngineEval.PositionRoute = Ember.Route.extend({
- model: function(params) {
- 	chessAnalysis.mode="engine_analysis_mode"
+ activate:function(){
+ 	chessAnalysis.mode="engine_analysis_mode";
+ 	chessAnalysis.editStatus[1]=false;
+ 	console.log("not edited")
+ 	index=0;
  	$("#evaluations_table").css("opacity",0)
  	$("#evaluations_table").fadeTo(500,1)
+ },
+ model: function(params) {
+ 	if(chessAnalysis.chess){
+	 	}
+	else{
+	 	setupChess(decodeURIComponent(params.fen_param))
+	 	}
 	return {fen_param:params.fen_param};
   },
 

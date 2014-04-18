@@ -36,7 +36,7 @@ EngineEval.ProfileView = Ember.View.extend({
         }
     }
     }
-    setup(chessAnalysis.startpositionfen[0]);
+    setup("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	addpieces();
 	},
 	    willAnimateIn : function () {

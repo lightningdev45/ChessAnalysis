@@ -11,7 +11,11 @@ EngineEval.NavbarController = Ember.ObjectController.extend({
   		alert("edit")
   	},
     viewFen:function(){
-      this.transitionToRoute("position",encodeURIComponent(chessAnalysis.chess[0].fen()))
+      if(chessAnalysis.chess)
+      {this.transitionToRoute("position",encodeURIComponent(chessAnalysis.chess[0].fen()))}
+      else{
+        this.transitionToRoute("position",encodeURIComponent("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+      }
     }
       
   }

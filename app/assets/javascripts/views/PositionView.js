@@ -71,7 +71,7 @@ EngineEval.PositionView = Ember.View.extend({
                 else
                     {chessAnalysis.hm[index]=($("#fen-container").val().split(" ")[5]-1)*2+1}
 
-                setupChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+                setupChess($("#fen-container").val())
                 setup(chessAnalysis.chess[index].fen());
                 addpieces();
                 movegen();
@@ -193,7 +193,7 @@ EngineEval.PositionView = Ember.View.extend({
                         .text("Start stockfish")   
                      view.get("controller").store.find("evaluation",chessAnalysis.evaluationId).then(function(stored_evaluation){
                         var id=stored_evaluation.get("id");
-                            view.get("controller.controllers.evaluations").pushObject(stored_evaluation)
+                            
                              jQuery.ajax({
                                             type: "PUT",
                                             url: "/evaluations/"+id,
@@ -204,17 +204,40 @@ EngineEval.PositionView = Ember.View.extend({
                                                 evaluation: stored_evaluation.get("evaluation"),
                                                 engine: "stockfish_browser"
                                             },
-                                            success:function(data){},
+                                            success:function(data){
+                                                var controller=view.get("controller")
+                                                if(data.added===true){
+                                                  view.get("controller.controllers.navbar").set("currentUser",data.user)
+                                                  view.get("controller.controllers.evaluations").pushObject(stored_evaluation)
+                                                  if(data.deleted_id){
+                                                    controller.get("store").find("evaluation",data.deleted_id).then(function(deleted){
+                                                        view.get("controller.controllers.evaluations").removeObject(deleted)
+                                                        view.get("controller.controllers.evaluations").set("model",_.sortBy(view.get("controller.controllers.evaluations").get("model"),function(evaluation){
+                                                            return evaluation.get("nodes")
+                                                        }).reverse())
+                                                        _.each(view.get("controller.controllers.evaluations").get("model"),function(evaluation,index){
+                                                            evaluation.set("index",index+1)
+                                                        })
+                                                    })
+                                                  }
+                                                  else{
+                                                    view.get("controller.controllers.evaluations").set("model",_.sortBy(view.get("controller.controllers.evaluations").get("model"),function(evaluation){
+                                                        return evaluation.get("nodes")
+                                                    }).reverse())
+                                                    _.each(view.get("controller.controllers.evaluations").get("model"),function(evaluation,index){
+                                                        evaluation.set("index",index+1)
+                                                    })
+                                                  } 
+                                                   
+                                                }
+                                                else{
+                                                    view.get("controller.controllers.alert").send("showAlert","Your analysis wasn't saved to because it wasn't among the 64 deepest!","alert alert-warning alert-dismissable","devise-alert")
+                                                }
+                                            },
                                             error: function (data) {
                                                 alert("There was an error uploading analysis.  Please refresh the page and try again.")
                                             }
                                 })                        
-                            view.get("controller.controllers.evaluations").set("model",_.sortBy(view.get("controller.controllers.evaluations").get("model"),function(evaluation){
-                                return evaluation.get("nodes")
-                            }).reverse())
-                            _.each(view.get("controller.controllers.evaluations").get("model"),function(evaluation,index){
-                                evaluation.set("index",index+1)
-                            })
                      })                                                   
                     
                  }
@@ -260,9 +283,9 @@ EngineEval.PositionView = Ember.View.extend({
                                 $("#browser_engine_seldepth")
                                     .text(seldepth);
                                 view.get("controller").store.find("evaluation",chessAnalysis.evaluationId).then(function(stored_evaluation){
-                                    stored_evaluation.set("nodes",nodes)
-                                    stored_evaluation.set("seldepth",seldepth)
-                                    stored_evaluation.set("depth",depth)
+                                    stored_evaluation.set("nodes",parseInt(nodes))
+                                    stored_evaluation.set("seldepth",parseInt(seldepth))
+                                    stored_evaluation.set("depth",parseInt(depth))
                                     stored_evaluation.set("legit",0)
                                     if (chessAnalysis.chess[index].turn() === 'b') {
                                         stored_evaluation.set("evaluation",evaluation*-1)
@@ -295,9 +318,9 @@ EngineEval.PositionView = Ember.View.extend({
                                 $("#browser_engine_seldepth")
                                     .text(seldepth);
                                 view.get("controller").store.find("evaluation",chessAnalysis.evaluationId).then(function(stored_evaluation){
-                                    stored_evaluation.set("nodes",nodes)
-                                    stored_evaluation.set("seldepth",seldepth)
-                                    stored_evaluation.set("depth",depth)
+                                    stored_evaluation.set("nodes",parseInt(nodes))
+                                    stored_evaluation.set("seldepth",parseInt(seldepth))
+                                    stored_evaluation.set("depth",parseInt(depth))
                                     stored_evaluation.set("legit",0)
                                     if (chessAnalysis.chess[index].turn() === 'b') {
                                         stored_evaluation.set("evaluation",evaluation*-1)

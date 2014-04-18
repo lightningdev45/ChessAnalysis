@@ -21,7 +21,7 @@
 
     <ul class="nav navbar-nav navbar-right">
       {{#if isAuthenticated}}
-          <li> {{#link-to "edit"}}{{#view EngineEval.NavbarClickView}}{{currentUser.profile_name}}{{/view}}{{/link-to}} </li>
+          <li> {{#link-to "edit"}}{{#view EngineEval.NavbarClickView}}{{currentUser.profile_name}} <span class="label label-primary">{{currentUser.reputation}}</span>{{/view}}{{/link-to}} </li> 
           <li><a {{action "logout"}}>Logout</a></li>
           {{else}}
           <li>{{#link-to "register"}}{{#view EngineEval.NavbarClickView}}Register{{/view}}{{/link-to}}</li>

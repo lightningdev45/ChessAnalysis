@@ -183,14 +183,14 @@ ALTER SEQUENCE d_positions_id_seq OWNED BY d_positions.id;
 CREATE TABLE evaluations (
     id integer NOT NULL,
     engine character varying(255),
-    seconds_run integer,
+    seconds_run integer DEFAULT 0,
     evaluation numeric,
     fen character varying(255),
     position_id integer,
-    nodes integer,
+    nodes integer DEFAULT 0,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    depth integer,
+    depth integer DEFAULT 0,
     seldepth integer,
     user_id integer,
     legit integer DEFAULT 0
@@ -804,8 +804,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140228183025');
 INSERT INTO schema_migrations (version) VALUES ('20140228223844');
 
 INSERT INTO schema_migrations (version) VALUES ('20140304035507');
-
-INSERT INTO schema_migrations (version) VALUES ('20140308182121');
 
 INSERT INTO schema_migrations (version) VALUES ('20140316014830');
 

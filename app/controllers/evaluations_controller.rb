@@ -50,10 +50,52 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 		@evaluation.depth=params[:depth]
 		@evaluation.engine=params[:engine]
 		@evaluation.evaluation=BigDecimal.new(params[:evaluation])
-		@evaluation.save
-		respond_to do |format|
-			format.json{render :json=>{}}
+		@evaluations=Evaluation.where(fen:@evaluation.fen).order(depth: :desc,nodes: :desc).limit(100)
+		if !@evaluations.empty?
+			if @evaluations.length<6
+				@evaluation.save
+				if @user=@evaluation.user
+					if @evaluation.depth>@evaluations.first.depth&&(@evaluations.first.user_id!=@evaluation.user_id||@evaluations.length==1)
+						@user.reputation+=5
+					else
+						@user.reputation+=1
+					end
+					@user.save
+				end
+				respond_to do |format|
+					format.json{render :json=>{added:true,user:current_user}}
+				end
+			elsif @evaluation.depth>@evaluations[4].depth
+				@evaluation.save
+				if @user=@evaluation.user
+					if @evaluation.depth>@evaluations.first.depth&&(@evaluations.first.user_id!=@evaluation.user_id||@evaluations.length==1)
+						@user.reputation+=5
+						deleted_id=@evaluations[4].id
+						@evaluations[4].delete
+					else
+						@user.reputation+=1
+						deleted_id=@evaluations[4].id
+						@evaluations[4].delete
+					end
+					@user.save
+				end
+				respond_to do |format|
+					format.json{render :json=>{added:true,deleted_id:deleted_id,user:current_user}}
+				end
+			else
+				@evaluation.delete
+				respond_to do |format|
+					format.json{render :json=>{added:false}}
+				end
+			end
+		else
+			@evaluation.save
+			respond_to do |format|
+					format.json{render :json=>{added:true,empty:true}}
+			end
 		end
+			
+		
 	end
 
 	def upvote_evaluation

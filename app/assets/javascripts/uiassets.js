@@ -55,7 +55,7 @@ var setupChess=function(fen){
     chessAnalysis.editStatus=[false,false]
 
 }
-setupChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
 var generatePosition = function (hmv, hm, startpositionfen) {
     if (hm === 0 || hm === -1) {
         return startpositionfen
