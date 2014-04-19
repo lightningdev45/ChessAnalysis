@@ -78,6 +78,9 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 						@evaluations[4].delete
 					end
 					@user.save
+				else
+					deleted_id=@evaluations[4].id
+					@evaluations[4].delete
 				end
 				respond_to do |format|
 					format.json{render :json=>{added:true,deleted_id:deleted_id,user:current_user}}

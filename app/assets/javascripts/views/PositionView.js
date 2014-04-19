@@ -207,7 +207,8 @@ EngineEval.PositionView = Ember.View.extend({
                                             success:function(data){
                                                 var controller=view.get("controller")
                                                 if(data.added===true){
-                                                  view.get("controller.controllers.navbar").set("currentUser",data.user)
+                                                    if(data.user)
+                                                        {view.get("controller.controllers.navbar").set("currentUser",data.user)}
                                                   view.get("controller.controllers.evaluations").pushObject(stored_evaluation)
                                                   if(data.deleted_id){
                                                     controller.get("store").find("evaluation",data.deleted_id).then(function(deleted){
