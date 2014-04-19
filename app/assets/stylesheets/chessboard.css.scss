@@ -116,7 +116,7 @@ border-bottom:4px solid $black-square;
 	background-color:$black-square;
 }
 .whitesquare{
-	background-color:lightgrey;
+	background-color:white;
 }
 
 
@@ -219,7 +219,7 @@ h1,h2,h3,h4,h5,h6{
 		#boardedge{
 		
 			
-			background-color:white;
+			background-color:$boardedge;
 			padding-left: 0px;
 			padding-right: 0px;
 			border-radius:12px;
