@@ -60,36 +60,36 @@ padding-right:5px;
 padding-left:5px;
 margin-right:30px;
 }
-.navbar-nav > li > a.active {
+/*.navbar-nav > li > a.active {
 border-bottom:4px solid $black-square;
-}
-.navbar > .container .navbar-brand.active{
+}*/
+/*.navbar > .container .navbar-brand.active{
 border-bottom:4px solid $black-square;
-}
+}*/
 
-.navbar > .container .navbar-brand:hover{
+/*.navbar > .container .navbar-brand:hover{
 border-bottom:4px solid $black-square;
 	
-}
-.navbar-nav > li > a:hover {
+}*/
+/*.navbar-nav > li > a:hover {
 	border-bottom:4px solid $black-square;
-}
+}*/
 
 
 .navbar-inverse .navbar-nav > li > a{
 	color:#e4f0f1;
 	text-shadow:none;
 }
-.navbar-inverse .navbar-nav > li > a:hover{
+/*.navbar-inverse .navbar-nav > li > a:hover{
 	color:$black-square;
-}
+}*/
 .navbar-inverse .navbar-brand{
 	color:#e4f0f1;
 	text-shadow:none;
 }
-.navbar-inverse .navbar-brand:hover{
+/*.navbar-inverse .navbar-brand:hover{
 	color:$black-square;
-}
+}*/
 .navbar-brand{
 	font-size:18px;
 }
@@ -116,7 +116,7 @@ border-bottom:4px solid $black-square;
 	background-color:$black-square;
 }
 .whitesquare{
-	background-color:white;
+	background-color:lightgrey;
 }
 
 
@@ -128,10 +128,10 @@ height:100%;
  margin: 0 0 50px; /* bottom = footer height */
   padding: 0;
 font-family: 'Allerta', sans-serif;
-	padding-top: 70px;
+	padding-top: 50px;
 	color:$dark-background;
 font-size:14px;
-	background:#e4f0f1;
+	background:white;
 
 }
 
@@ -219,7 +219,7 @@ h1,h2,h3,h4,h5,h6{
 		#boardedge{
 		
 			
-			background-color:$boardedge;
+			background-color:white;
 			padding-left: 0px;
 			padding-right: 0px;
 			border-radius:12px;
@@ -843,11 +843,11 @@ input[type="checkbox"]{
 }
 
 .panel-primary>.panel-heading{
-	background:$black-square;
+	/*background:$black-square;*/
 }
 
 .panel-primary{
-	border-color:$black-square;
+	/*border-color:$black-square;*/
 }
 
 .dropdown-menu li{
@@ -949,29 +949,25 @@ color:$dark-background;
 	opacity:0.5;
 	cursor:pointer;
 }
-.home-header-wrapper{
-position:relative;
-top:123px;	
-}
+
 
 
 .home-banner{
-	position:absolute;
+
 	top:70px;
-	height:450px;
 	width:100%;
 	left:0px;
-	background:#e4f0f1;
+
 	color:$dark-background;
 }
 .home-link-banner{
-	position:absolute;
-	top:520px;
+
+
 	width:100%;
 	left:0px;
 	right:0px;
 	
-	background:#e4f0f1;
+
 	
 }
 
@@ -984,7 +980,7 @@ top:123px;
 	margin-top:0px;
 }
 
-.btn-primary{
+/*.btn-primary{
 	background: $black-square;
 	border-color:$black-square;
 }
@@ -992,15 +988,15 @@ top:123px;
 	background-color: $dark-background;
 	border-color:$dark-background;
 	color:$white-square;
-}
+}*/
 
 #navbar-tower{
 	font-size:36px;
 }
-#navbar-tower:hover{
+/*#navbar-tower:hover{
 	color:#e4f0f1;
 	border-bottom:none;
-}
+}*/
 
 #followed_list_panel{
 	margin:0px;
