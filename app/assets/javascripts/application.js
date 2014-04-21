@@ -30,7 +30,6 @@
 //= require engine_eval
 
 
-
 EngineEval = Ember.Application.create();
 
 

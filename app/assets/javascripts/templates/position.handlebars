@@ -220,22 +220,22 @@
         <div class=" panel panel-primary">
           
            <div class="panel-heading text-center"><b><h4>Versions</h4></b></div>
-          <table class="table">
+          <table class="table table-hover">
             <thead>
 
               <tr >
                 <th class="text-center">Id</th>
-                <th class="text-center">Status</th>
+                <th class="text-center">Date Created</th>
                 <th class="text-center">Date Superceded</th>
                 <th class="text-center">Rollback</th>
                 <th class="text-center">Editor</th>
+                <th class="text-center">Quality</th>
                 <th class="text-center">Vote</th>
               </tr>
             </thead>
-            <tbody>
-             
-            </tbody>
-          </table>
+            <tbody id="annotation_edit_table">
+             {{outlet "annotation_edits"}}
+            
         </div>
     </div>
     <div class="col-md-2 col-lg-2"></div>

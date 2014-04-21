@@ -1,0 +1,50 @@
+
+    {{#each visible in visibleList}}
+    <tr class="text-center">
+        <td>{{visible.id}}{{stuff}}</td>
+        <td>{{visible.created_at}}</td>
+        <td>{{#if visible.date_superceded}}{{visible.date_superceded}}{{else}}NA{{/if}}</td>
+        <td>{{#if visible.visible}}
+                {{#if visible.date_superceded}}
+                <a {{action "rollback" visible.id}} class="btn btn-primary">Rollback</a>
+                {{else}}
+                <a {{action "view" visible.id}} class="disabled btn btn-primary">View</a>
+                {{/if}}
+            {{else}}
+            <a {{action "view" visible.id}} class="btn btn-primary">View</a>
+            {{/if}} 
+        </td>
+        <td>{{#link-to "profile" visible.user_id 1}}{{visible.profile_name}}{{/link-to}}</td>
+
+        <td>{{#if visible.isEditing}}
+            {{view EngineEval.AnnotationSelect identifier=visible.id content=possibleQualityScores  class="form-control"}}
+        {{else}}
+        <span {{action "editQualityScore" visible.id on="doubleClick"}}>{{#if visible.quality_score}}{{visible.quality_score}} / {{visible.votes_count}} votes{{else}}Unrated{{/if}}</span>
+        {{/if}}
+        </td>
+        {{#if isAuthenticated}}
+        <td class="annotation-vote-cell"><i {{action "vote" 1 visible.id}} class="glyphicon glyphicon-thumbs-up"></i> <span><b>{{visible.quality}}</b></span> <i {{action "vote" 0 visible.id}} class="glyphicon glyphicon-thumbs-down"></i></td>
+        {{else}}
+        <td class="annotation-vote-cell"><i {{action "vote" 1 visible.id}} class="glyphicon glyphicon-thumbs-up"></i> <span><b>{{visible.quality}}</b></span> <i {{action "vote" 0 visible.id}} class="glyphicon glyphicon-thumbs-down"></i></td>
+        {{/if}}
+
+    </tr>
+    {{/each}}
+
+</tbody>
+</table>
+<br>
+<div class="text-center"><ul class='pagination'>
+
+    {{#each pagination}}
+    	{{#if this.[1]}}
+      		<li class="evaluation_pagination active" {{action "changePage" this.[0]}}><a>{{this.[0]}}</a></li> 
+      		{{else}}
+      		<li class="evaluation_pagination" {{action "changePage" this.[0]}}><a>{{this.[0]}}</a></li>
+      	{{/if}}
+    {{/each}}
+
+ </ul>
+
+ </div>
+ <br>

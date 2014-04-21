@@ -37,6 +37,7 @@ get 'list_followed'=>'home#list_followed'
 get 'list_followers'=>'home#list_followers'
 post 'downvote_evaluation'=>"evaluations#downvote_evaluation"
 post 'upvote_evaluation'=>"evaluations#upvote_evaluation"
+post 'vote_quality_score'=>"annotations#vote_quality_score"
 
 
   # You can have the root of your site routed with "root"

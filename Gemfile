@@ -22,7 +22,9 @@ gem 'redis'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-
+group :development do 
+	gem 'bullet'
+end
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -34,7 +36,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 #gem 'rails_12factor'
- gem 'rails_12factor'
+ #gem 'rails_12factor'
 gem 'chess'
 #gem 'puma'
 gem 'devise'

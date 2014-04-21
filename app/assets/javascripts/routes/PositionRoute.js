@@ -13,6 +13,7 @@ EngineEval.PositionRoute = Ember.Route.extend({
 	else{
 	 	setupChess(decodeURIComponent(params.fen_param))
 	 	}
+	 	console.log(params)
 	return {fen_param:params.fen_param};
   },
 
@@ -21,6 +22,7 @@ EngineEval.PositionRoute = Ember.Route.extend({
     return { fen_param: model.get('slug') };
   },
 		setupController:function(controller,model){
+			console.log("boo")
 			var router=this
 			var fen_param=this.modelFor('position').fen_param
 				$.getJSON("/positions?fen="+this.modelFor('position').fen_param).then(function(response){
@@ -47,7 +49,6 @@ EngineEval.PositionRoute = Ember.Route.extend({
 					
 			},
 			renderTemplate: function() {
- 
 		         this.render();
 
 		        this.render("evaluations", {
@@ -64,6 +65,10 @@ EngineEval.PositionRoute = Ember.Route.extend({
 		        });
 		        this.render("openingtags", {
 		            outlet: "openingtags",
+		            into: "position" 
+		        });
+		        this.render("annotation_edits", {
+		            outlet: "annotation_edits",
 		            into: "position" 
 		        });
     		}

@@ -1,7 +1,6 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
-
     var view=this;
     var list=["a","b","c","d","e","f","g","h"]
    var numlist=[8,7,6,5,4,3,2,1];
@@ -161,6 +160,17 @@ EngineEval.PositionView = Ember.View.extend({
                                         children: JSON.stringify(chessAnalysis.children[index]),
                                         dropcount: chessAnalysis.dropcount[index],
                                         fen: chessAnalysis.chess[0].fen()
+                                    },success:function(data){
+                                        view.get("controller").get("store").unloadAll(EngineEval.Annotation)
+                                        view.get("controller.controllers.annotation_edits").set("model", _.map(data.annotation_versions,function(annotation){
+                                            annotation=view.get("controller").get("store").createRecord("annotation",annotation)
+                                            return annotation
+                                        }))
+                                        view.get("controller.controllers.auth").set("currentUser",data.user)
+                                        view.get("controller.controllers.alert").send("showAlert","You have successfully annotated the position!","alert alert-success alert-dismissable","devise-alert")
+                                    },
+                                    error:function(error){
+                                        view.get("controller.controllers.alert").send("showAlert",JSON.parse(error.responseText).error,"alert alert-warning alert-dismissable","devise-alert")
                                     }
                                 })
                                 chessAnalysis.editStatus[index]=false;
@@ -206,6 +216,7 @@ EngineEval.PositionView = Ember.View.extend({
                                             },
                                             success:function(data){
                                                 var controller=view.get("controller")
+
                                                 if(data.added===true){
                                                     if(data.user)
                                                         {view.get("controller.controllers.navbar").set("currentUser",data.user)}
@@ -378,10 +389,8 @@ EngineEval.PositionView = Ember.View.extend({
                                         fen: chessAnalysis.chess[index].fen(),version:1
                                     },
                                     error:function(data){
-                                    alert("error")
                                     },
                                     success: function (data) {
-                                       
                                     }
                                 })
                                 $(".engine-row").hide();
@@ -417,16 +426,105 @@ EngineEval.PositionView = Ember.View.extend({
                                     alert("error")
                                     },
                                     success: function (data) {
-                                       
+                                        if (data.fen !== "false"&&data.moves) {
+                                            index = 1;
+                                            $("#annotation_moves")
+                                                .empty();
+                                            chessAnalysis.hm[index] = 0;
+                                            chessAnalysis.hmv[index] = 0;
+                                            chessAnalysis.children[index] =data.children
+                                            chessAnalysis.parents[index] = data.parents
+                                            chessAnalysis.moves[index] = data.moves
+                                            chessAnalysis.mainvariations[index] = data.mainvariations
+                                            chessAnalysis.movescomment[index] = data.comments
+                                            chessAnalysis.numvariations[index] = data.numvariations
+                                            chessAnalysis.dropcount[index] = data.dropcount
+                                            chessAnalysis.atStart[index] = false
+                                            chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                            chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                            chessAnalysis.editStatus[index]=false;
+                                            $("#fen-container")
+                                                .val(chessAnalysis.chess[index].fen())
+                                            $("#annotation_moves")
+                                                .html(writeAnnotation(0, 0, 0))
+                                            $(".ann_move")
+                                                .click(function () {
+                                                    clickNavigate($(this)
+                                                        .attr("id"))
+                                                })
+                                            $(".ann_move")
+                                                .hover(function () {
+                                                    annIn($(this)
+                                                        .attr("id"),false)
+                                                }, function () {
+                                                    annOut()
+                                                });
+                                            $(".ann_comment").unbind("input");
+                                            $(".ann_comment").on("input",function(){
+                                                chessAnalysis.editStatus[index]=true;
+                                                var id=$(this).attr("id")
+                                                var moves_num=id.split("var")[1].split("comment")
+                                                var hm=moves_num[1]
+                                                var hmv=moves_num[0]
+                                                $(this).width(getWidthOfInput(document.getElementById(id)))
+                                                //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+                                                //{
+                                                    $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                                                //}
+                                                chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
+                                            });
+                                            $(".ann_comment")
+                                                .css("max-width", $("#annotation_moves")
+                                                    .width())
+                                            $(".ann_comment")
+                                                .each(function () {
+                                                    var id = $(this)
+                                                        .attr("id")
+                                                    var width = getWidthOfInput(document.getElementById(id))
+                                                    $(this)
+                                                        .width(width);
+                                                    $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                                                })  
+                                        }
+                                        else {
+                                            index = 1;
+                                            $("#annotation_moves")
+                                                .empty();
+                                            chessAnalysis.hm[index] = 0;
+                                            chessAnalysis.hmv[index] = 0;
+                                            chessAnalysis.children[index] = {};
+                                            chessAnalysis.parents[index] = [];
+                                            chessAnalysis.moves[index] = [];
+                                            chessAnalysis.mainvariations[index] = []
+                                            chessAnalysis.movescomment[index] = [[""]]
+                                            chessAnalysis.numvariations[index] = 0
+                                            chessAnalysis.dropcount[index] = 0
+                                            chessAnalysis.atStart[index] = true
+                                            chessAnalysis.editStatus[index]=false;
+                                            chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                            chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                            $("#your_analysis")
+                                                .hover(function () {
+                                                    annIn("var0move0",true)
+                                                }, function () {
+                                                    annOut()
+                                                });
+                                        }
+                                        view.get("controller").get("store").unloadAll(EngineEval.Annotation)
+                                         view.get("controller.controllers.annotation_edits").set("model", _.map(data.annotation_versions,function(annotation){
+                                            annotation=view.get("controller").get("store").createRecord("annotation",annotation)
+                                            return annotation
+                                        }))
+                                         view.get("controller.controllers.annotation_edits").set("currentPage",1)
+                                          
                                     }
                                 })
                                 $(".engine-row").hide();
                                 $("#annotation-version-row").show()
                             }
                             else if (chessAnalysis.mode === "engine_analysis_mode") {
-                                //$("#your_analysis").empty()
-                                index = 0
 
+                                index = 0
                                 setup(chessAnalysis.chess[index].fen());
                                 addpieces();
                                 movegen();
