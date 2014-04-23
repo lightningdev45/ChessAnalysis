@@ -1,0 +1,3 @@
+<div>{{view Ember.TextArea value=rawPgn class="form-control"}}</div>
+<br>
+<div class="text-center"><span {{action "covertRawPgn"}} class="btn btn-primary">Load</span></div>

@@ -1,0 +1,9 @@
+EngineEval.GameInputController=Ember.ObjectController.extend({
+	rawPgn:"",
+	editMode:true,
+	actions:{
+		covertRawPgn:function(){
+			alert(this.rawPgn)
+		}
+	}
+})
