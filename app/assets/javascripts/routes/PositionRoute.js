@@ -71,5 +71,9 @@ EngineEval.PositionRoute = Ember.Route.extend({
 		            outlet: "annotation_edits",
 		            into: "position" 
 		        });
+		        this.render("game_input", {
+		            outlet: "game_input",
+		            into: "position" 
+		        });
     		}
     })

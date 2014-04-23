@@ -15,30 +15,20 @@ class AnnotationsController < ApplicationController
 			@annotation.numvariations=params[:numvariations]
 			@annotation.comments=params[:comments]
 			@annotation.mainvariations=params[:mainvariations]
-			@annotation.version=0
 			@annotation.user_id=@user.id
-			if @annotation.save
-				if Annotation.where(fen:@fen).count>1
-					@superceded=Annotation.find_by(fen:@fen,version:1)
-					@superceded.date_superceded=DateTime.now
-					@superceded.save
+			if Annotation.where(fen:@fen).count>0
 					@user.reputation+=1
 				else
 					@user.reputation+=2
-				end
+			end
+			if @annotation.save
 				@user.save
-				Annotation.where(fen:@fen).each do |annotation|
-					annotation.version+=1;
-					annotation.save
-				end
 				@annotation_versions=Annotation.where(fen:@fen).order(:created_at).reverse[0..63].to_a.map do |annotation|
 					votes_count=annotation.votes.size
 					annotation=annotation.serializable_hash
-					if annotation["date_superceded"]
-						annotation["date_superceded"]=annotation["date_superceded"].strftime("%m/%d/%y")
-					end
 					annotation["created_at"]=annotation["created_at"].strftime("%m/%d/%y")
 					annotation["profile_name"]=User.find(annotation["user_id"]).profile_name
+					annotation["superceded"]=true
 					annotation["isEditing"]=false
 					annotation["vote_count"]=votes_count
 					if annotation["id"]==@annotation.id
@@ -48,7 +38,9 @@ class AnnotationsController < ApplicationController
 					end
 					annotation
 				end
-				render json:{user:@user,annotation_versions:@annotation_versions}
+				@annotation_versions[0]["superceded"]=false
+				@annotation_versions[0]["visible"]=true
+				render json:{current_head:@annotation_versions[0]["id"],user:@user,annotation_versions:@annotation_versions}
 			else
 				render json:{error:"There was an error, please try again."},status:503
 			end
@@ -60,36 +52,31 @@ class AnnotationsController < ApplicationController
 	def get_annotation_data
 		require 'date'
 		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
-		if @annotation=Annotation.find_by(fen:@fen_param,version:params[:version])
+		if @annotation=Annotation.exists?(fen:@fen_param)
 			@annotation_versions=Annotation.where(fen:@fen_param).order(:created_at).reverse[0..63].to_a.map do |annotation|
 				votes_count=annotation.votes.size
 				annotation=annotation.serializable_hash
-				if annotation["date_superceded"]
-					annotation["date_superceded"]=annotation["date_superceded"].strftime("%m/%d/%y")
-				end
+				annotation["superceded"]=true
 				annotation["created_at"]=annotation["created_at"].strftime("%m/%d/%y")
 				annotation["profile_name"]=User.find(annotation["user_id"]).profile_name
 				annotation["isEditing"]=false
 				annotation["votes_count"]=votes_count
-				if annotation["id"]==@annotation.id
-					annotation["visible"]=true
-				else
-					annotation["visible"]=false
-				end
+				annotation["visible"]=false
 				annotation
 			end
-			@fen=@annotation.fen
-			@moves=JSON.parse(@annotation.moves)
-			@comments=JSON.parse(@annotation.comments)
-			@dropcount=@annotation.dropcount
-			@parents=JSON.parse(@annotation.parents)
-			@children=JSON.parse(@annotation.children)
-			@numvariations=@annotation.numvariations
-			@mainvariations=JSON.parse(@annotation.mainvariations)
+			@annotation_versions[0]["superceded"]=false
+			@annotation_versions[0]["visible"]=true
+			@moves=JSON.parse(@annotation_versions[0]["moves"])
+			@comments=JSON.parse(@annotation_versions[0]["comments"])
+			@dropcount=@annotation_versions[0]["dropcount"]
+			@parents=JSON.parse(@annotation_versions[0]["parents"])
+			@children=JSON.parse(@annotation_versions[0]["children"])
+			@numvariations=@annotation_versions[0]["numvariations"]
+			@mainvariations=JSON.parse(@annotation_versions[0]["mainvariations"])
 
-			render json:{fen:@fen,annotation_versions:@annotation_versions,moves:@moves,comments:@comments,dropcount:@dropcount,parents:@parents,children:@children,numvariations:@numvariations,mainvariations:@mainvariations}
+			render json:{current_head:@annotation_versions[0]["id"],fen:@fen_param,annotation_versions:@annotation_versions,moves:@moves,comments:@comments,dropcount:@dropcount,parents:@parents,children:@children,numvariations:@numvariations,mainvariations:@mainvariations}
 		else
-			@fen="false"
+			@fen_param="false"
 			@annotation_versions=[]
 			@moves=nil
 			@comments=""
@@ -98,7 +85,7 @@ class AnnotationsController < ApplicationController
 			@children=""
 			@numvariations=""
 			@mainvariations=""
-			render json:{fen:@fen,annotation_versions:@annotation_versions,moves:@moves,comments:@comments,dropcount:@dropcount,parents:@parents,children:@children,numvariations:@numvariations,mainvariations:@mainvariations}
+			render json:{current_head:nil,fen:@fen_param,annotation_versions:@annotation_versions,moves:@moves,comments:@comments,dropcount:@dropcount,parents:@parents,children:@children,numvariations:@numvariations,mainvariations:@mainvariations}
 		end
 	end
 
@@ -114,7 +101,7 @@ class AnnotationsController < ApplicationController
 				@annotation.liked_by @user,vote_weight:params[:vote].to_i
 			end
 			@votes_count=@annotation.votes.size
-			@quality_score=BigDecimal.new(@annotation.likes.sum(:vote_weight))/BigDecimal.new(@votes_count)
+			@quality_score=(BigDecimal.new(@annotation.likes.sum(:vote_weight))/BigDecimal.new(@votes_count)).round(3)
 			@annotation.quality_score=@quality_score
 			@annotation.save
 			render json:{quality_score:@quality_score,votes_count:@votes_count}

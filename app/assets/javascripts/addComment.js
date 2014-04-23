@@ -24,6 +24,7 @@ var addCommentBefore=function(){
 		$("#var"+hmv+"move"+(hm-1)).before("<textarea class='ann_comment' rows='1' id='var"+hmv+"comment"+(hm-1)+"'></textarea>")
 		$("#var"+hmv+"comment"+(hm-1)).css("max-width",$("#annotation_moves").width())
 		$("#var"+hmv+"comment"+(hm-1)).on('input',function(){
+			console.log("input")
 			chessAnalysis.editStatus[index]=true;
 			var id=$(this).attr("id")
 			$(this).width(getWidthOfInput(document.getElementById(id)))
@@ -74,6 +75,7 @@ var addCommentAfter=function(){
 		$("#var"+hmv+"move"+(hm-1)).after("<textarea class='ann_comment' rows='1' id='var"+hmv+"comment"+(hm)+"'></textarea>")
 		$("#var"+hmv+"comment"+(hm)).css("max-width",$("#annotation_moves").width())
 		$("#var"+hmv+"comment"+(hm)).on('input',function(){
+			console.log("input")
 			var id=$(this).attr("id")
 			chessAnalysis.editStatus[index]=true;
 			$(this).width(getWidthOfInput(document.getElementById(id)))
@@ -104,6 +106,7 @@ var addCommentBlank=function(){
 		$("#annotation_moves").append("<textarea class='ann_comment' rows='1' id='var0comment0'></textarea>")
 		$("#var0comment0").css("max-width",$("#annotation_moves").width())
 		$("#var0comment0").on('input',function(){
+			console.log("input")
 			chessAnalysis.editStatus[index]=true;
 			var id=$(this).attr("id")
 			$(this).width(getWidthOfInput(document.getElementById(id)))

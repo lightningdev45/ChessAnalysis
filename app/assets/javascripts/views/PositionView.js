@@ -1,6 +1,7 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
+    $(".tooltip-annotation-edits").tooltip({container:"body"})
     var view=this;
     var list=["a","b","c","d","e","f","g","h"]
    var numlist=[8,7,6,5,4,3,2,1];
@@ -124,11 +125,9 @@ EngineEval.PositionView = Ember.View.extend({
         }
     })
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    
+    $('.mode-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         if(chessAnalysis.mode!==$(this).parent().attr("id")){
             $(e.relatedTarget).tab('show')
-            
         }
     })
         window.addEventListener("beforeunload", 
@@ -167,7 +166,10 @@ EngineEval.PositionView = Ember.View.extend({
                                             return annotation
                                         }))
                                         view.get("controller.controllers.auth").set("currentUser",data.user)
+                                        view.get("controller.controllers.annotation_edits").set("currentHead",data.current_head)
+                                        view.get("controller.controllers.annotation_edits").set("currentVisible",data.current_head)
                                         view.get("controller.controllers.alert").send("showAlert","You have successfully annotated the position!","alert alert-success alert-dismissable","devise-alert")
+                                        
                                     },
                                     error:function(error){
                                         view.get("controller.controllers.alert").send("showAlert",JSON.parse(error.responseText).error,"alert alert-warning alert-dismissable","devise-alert")
@@ -386,7 +388,7 @@ EngineEval.PositionView = Ember.View.extend({
                                     url: "/get_annotation_data",
                                     type: "GET",
                                     data: {
-                                        fen: chessAnalysis.chess[index].fen(),version:1
+                                        fen: chessAnalysis.chess[index].fen()
                                     },
                                     error:function(data){
                                     },
@@ -516,7 +518,10 @@ EngineEval.PositionView = Ember.View.extend({
                                             return annotation
                                         }))
                                          view.get("controller.controllers.annotation_edits").set("currentPage",1)
-                                          
+                                         view.get("controller.controllers.annotation_edits").set("currentHead",data.current_head)
+                                         view.get("controller.controllers.annotation_edits").set("currentVisible",data.current_head)
+                                         
+
                                     }
                                 })
                                 $(".engine-row").hide();

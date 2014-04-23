@@ -70,7 +70,7 @@
 
 
   </div>
-<ul class="nav nav-tabs col-md-7 col-lg-7">
+<ul class="nav nav-tabs col-md-7 col-lg-7 mode-tabs">
   <li class="active change-mode" id="engine_analysis_mode"><a href="#evaluations_table" data-toggle="tab">Engine Analysis</a></li>
   <li class="change-mode" id="your_analysis_mode"><a href="#your_analysis" data-toggle="tab">Your Analysis</a></li>
 
@@ -86,7 +86,7 @@
     </div>
     <br>
 
-    <div  id="update-annotation-button-container"><span class="btn btn-primary"><i class="glyphicon glyphicon-cloud-upload"></i> Update</span></div><br>
+    <div id="update-annotation-button-container"><span class="btn btn-primary"><i class="glyphicon glyphicon-cloud-upload"></i> Update</span></div><br>
   </div>
 </div>
 
@@ -118,7 +118,14 @@
 
 
   <div class="row engine-row">
-    <div class="col-lg-5 col-md-5" id="tag-container">
+  <div class="col-md-5 col-lg-5">
+  <ul class="nav nav-tabs ">
+    <li class="active" id="tags_tab"><a href="#tag-container" data-toggle="tab">Tags</a></li>
+    <li id="game_input_tab"><a href="#game_input" data-toggle="tab">Explore a Game</a></li>
+  </ul>
+  <br>
+<div class="tab-content ">
+<div class="tab-pane active col-lg-12 col-md-12" id="tag-container">
   <div class="panel-group" id="accordion">      
   <div class="panel panel-primary">
     <div class="panel-heading">
@@ -174,6 +181,10 @@
     
     </div>
 </div>
+<div class="tab-pane" id="game_input">
+{{outlet "game_input"}}
+</div>
+</div></div>
     <div class="panel panel-primary col-lg-offset-5 col-md-offset-5">
 
     <div class="panel-heading text-center"><b><h4>My Engines</h4></b></div>
@@ -226,11 +237,10 @@
               <tr >
                 <th class="text-center">Id</th>
                 <th class="text-center">Date Created</th>
-                <th class="text-center">Date Superceded</th>
-                <th class="text-center">Rollback</th>
+                <th data-toggle="tooltip" data-placement="top" title="Reinstate Version (your must click 'view' first)" class="text-center tooltip-annotation-edits">Rollback</th>
                 <th class="text-center">Editor</th>
-                <th class="text-center">Quality</th>
-                <th class="text-center">Vote</th>
+                <th  data-toggle="tooltip" data-placement="top" title="Quality of Annotation (double-click to vote)" class="text-center tooltip-annotation-edits">Quality</th>
+                <th data-toggle="tooltip" data-placement="top" title="Did the Version Improve the Annotation?" class="text-center tooltip-annotation-edits">Vote</th>
               </tr>
             </thead>
             <tbody id="annotation_edit_table">

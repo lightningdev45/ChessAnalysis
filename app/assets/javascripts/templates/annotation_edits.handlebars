@@ -1,11 +1,9 @@
-
-    {{#each visible in visibleList}}
+{{#each visible in visibleList}}
     <tr class="text-center">
-        <td>{{visible.id}}{{stuff}}</td>
+        <td >{{visible.id}}{{stuff}}</td>
         <td>{{visible.created_at}}</td>
-        <td>{{#if visible.date_superceded}}{{visible.date_superceded}}{{else}}NA{{/if}}</td>
         <td>{{#if visible.visible}}
-                {{#if visible.date_superceded}}
+                {{#if visible.superceded}}
                 <a {{action "rollback" visible.id}} class="btn btn-primary">Rollback</a>
                 {{else}}
                 <a {{action "view" visible.id}} class="disabled btn btn-primary">View</a>
@@ -19,7 +17,7 @@
         <td>{{#if visible.isEditing}}
             {{view EngineEval.AnnotationSelect identifier=visible.id content=possibleQualityScores  class="form-control"}}
         {{else}}
-        <span {{action "editQualityScore" visible.id on="doubleClick"}}>{{#if visible.quality_score}}{{visible.quality_score}} / {{visible.votes_count}} votes{{else}}Unrated{{/if}}</span>
+        <span  {{action "editQualityScore" visible.id on="doubleClick"}}>{{#if visible.quality_score}}{{visible.quality_score}} / {{visible.votes_count}} votes{{else}}Unrated{{/if}}</span>
         {{/if}}
         </td>
         {{#if isAuthenticated}}

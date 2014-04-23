@@ -2,6 +2,8 @@ EngineEval.AnnotationEditsController = Ember.ArrayController.extend({
     needs: ["auth", "alert"],
     isAuthenticated: Em.computed.alias("controllers.auth.isAuthenticated"),
     possibleQualityScores: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    currentHead:1,
+    currentVisible:1,
     actions: {
         vote: function (vote, id) {
             var controller = this;
@@ -24,6 +26,7 @@ EngineEval.AnnotationEditsController = Ember.ArrayController.extend({
             })
         },
         view: function (id) {
+        	var controller=this;
         	this.get("store").find("annotation",id).then(function(annotation){
 	        	index = 1;
 	            $("#annotation_moves")
@@ -85,6 +88,17 @@ EngineEval.AnnotationEditsController = Ember.ArrayController.extend({
 	                })	
 	            setup(chessAnalysis.chess[index].fen())
 				addpieces();
+				annotation.set("visible",true)
+				controller.get("store").find("annotation",controller.get("currentVisible")).then(function(annotation){
+					annotation.set("visible",false)
+				})
+				controller.set("currentVisible",annotation.get("id"))
+				if(controller.get("currentVisible")!=controller.get("currentHead")){
+					$("#update-annotation-button-container .btn").addClass("disabled")
+				}
+				else{
+					$("#update-annotation-button-container .btn").removeClass("disabled")
+				}
 	        	})
 
 	        },
