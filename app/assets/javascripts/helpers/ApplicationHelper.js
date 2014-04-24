@@ -71,3 +71,11 @@ Ember.Handlebars.helper('follow_user_button', function(id,current_user_id,isAuth
 Ember.Handlebars.helper('element_id',function(text,id){
 	return new Handlebars.SafeString("<td id='"+text+id+"'>")
 });
+
+Ember.Handlebars.helper('game_input_move',function(move,index){
+	if(index%2==0)
+		{return new Handlebars.SafeString("<span id='game_input_move"+index+"' class='game_input_move'>"+(index/2+1)+". "+move+"</span>")}
+	else{
+		return new Handlebars.SafeString("<span id='game_input_move"+index+"' class='game_input_move'> "+move+"</span>")
+	}
+});

@@ -23,23 +23,7 @@ class AnnotationsController < ApplicationController
 			end
 			if @annotation.save
 				@user.save
-				@annotation_versions=Annotation.where(fen:@fen).order(:created_at).reverse[0..63].to_a.map do |annotation|
-					votes_count=annotation.votes.size
-					annotation=annotation.serializable_hash
-					annotation["created_at"]=annotation["created_at"].strftime("%m/%d/%y")
-					annotation["profile_name"]=User.find(annotation["user_id"]).profile_name
-					annotation["superceded"]=true
-					annotation["isEditing"]=false
-					annotation["vote_count"]=votes_count
-					if annotation["id"]==@annotation.id
-						annotation["visible"]=true
-					else
-						annotation["visible"]=false
-					end
-					annotation
-				end
-				@annotation_versions[0]["superceded"]=false
-				@annotation_versions[0]["visible"]=true
+				@annotation_versions=Annotation.annotation_versions(@fen)
 				render json:{current_head:@annotation_versions[0]["id"],user:@user,annotation_versions:@annotation_versions}
 			else
 				render json:{error:"There was an error, please try again."},status:503
@@ -53,19 +37,7 @@ class AnnotationsController < ApplicationController
 		require 'date'
 		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
 		if @annotation=Annotation.exists?(fen:@fen_param)
-			@annotation_versions=Annotation.where(fen:@fen_param).order(:created_at).reverse[0..63].to_a.map do |annotation|
-				votes_count=annotation.votes.size
-				annotation=annotation.serializable_hash
-				annotation["superceded"]=true
-				annotation["created_at"]=annotation["created_at"].strftime("%m/%d/%y")
-				annotation["profile_name"]=User.find(annotation["user_id"]).profile_name
-				annotation["isEditing"]=false
-				annotation["votes_count"]=votes_count
-				annotation["visible"]=false
-				annotation
-			end
-			@annotation_versions[0]["superceded"]=false
-			@annotation_versions[0]["visible"]=true
+			@annotation_versions=Annotation.annotation_versions(@fen_param)
 			@moves=JSON.parse(@annotation_versions[0]["moves"])
 			@comments=JSON.parse(@annotation_versions[0]["comments"])
 			@dropcount=@annotation_versions[0]["dropcount"]

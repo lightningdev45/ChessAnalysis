@@ -760,14 +760,33 @@ var addpieces = function () {
             .append(pieces[i])
     }
 };
+//var drag = function () {
+ //   $('.piece')
+      //  .draggable({
+        //    zIndex: 10,
+        //    revert: "invalid",
+         //   revertDuration:100,
+         //   cursorAt:{top:25,left:25}
+        //});
+//};
 var drag = function () {
-    $('.piece')
-        .draggable({
-            zIndex: 10,
-            revert: "invalid",
-            revertDuration:100,
-            cursorAt:{top:25,left:25}
-        });
+
+    $("#board").on('mouseenter', '.piece',  function(){
+         $(this).draggable({
+                zIndex: 10,
+                revert: "invalid",
+                revertDuration:100,
+                cursorAt:{top:25,left:25},
+                start:function(event,ui){
+                },
+                stop:function(event,ui){
+                    console.log(ui)
+                }
+            });
+    }).on('mouseleave', '.piece', function() {
+      
+    });         
+                   
 };
 var drop = function () {
     for (var i = 0; i < 64; i++) {
@@ -781,13 +800,10 @@ var drop = function () {
                 dropstring += squaremoves[squares[i]][z]
             }
         };
-        $(squares[i])
-            .droppable({
-                accept: dropstring || false
-            })
-    }
-    $(".square")
+    
+    $(squares[i])
         .droppable({
+             accept: dropstring || false,
             drop: function (event, ui) {
                 var from = ploc[(ui.draggable)
                     .attr('id')].slice(1, 3);
@@ -827,150 +843,10 @@ var drop = function () {
                             .attr('id')
                             .slice(0, 2)
                     });
-                    <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
-                    if (chessAnalysis.atStart[index]) {
-                        chessAnalysis.atStart[index] = false;
-                        var startcondition = true;
-                        for (var i = 0; i < chessAnalysis.mainvariations[index].length; i++) {
-                            if (chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][0] === _.last(chessAnalysis.chess[index].history())) {
-                                startcondition = false;
-                                var writestatus = "none";
-                                chessAnalysis.hmv[index] = chessAnalysis.mainvariations[index][i];
-                                chessAnalysis.hm[index] += 1;
-                                break;
-                            }
-                            else {}
-                        }
-                        if (startcondition === true) {
-                            var writestatus = "new";
-                            chessAnalysis.numvariations[index] += 1
-                            chessAnalysis.mainvariations[index].push(chessAnalysis.numvariations[index] - 1);
-                            $("#moves")
-                                .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
-                            chessAnalysis.hm[index] = 0;
-                            chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
-                            chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
-                            if (chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1]) {}
-                            else {
-                                chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [""];
-                            }
-                            chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [-1, -1];
-                            chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
-                            chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                            chessAnalysis.hm[index] += 1;
-                        }
-                    }
-                    else {
-                        if (chessAnalysis.hm[index] === chessAnalysis.moves[index][chessAnalysis.hmv[index]].length) {
-                            chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                            var writestatus = "newmove"
-                            chessAnalysis.hm[index] += 1;
-                            chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]] = "";
-                        }
-                        else if (newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index]) === true && _.last(chessAnalysis.chess[index].history()) !== chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]) {
-                            <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
-      
-                            chessAnalysis.numvariations[index] += 1
-                            var writestatus = "new";
-                            $("#moves")
-                                .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
-                            chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
-                            chessAnalysis.children[index][chessAnalysis.hmv[index]].push([chessAnalysis.numvariations[index] - 1, chessAnalysis.hm[index]]);
-                            chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
-                            chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [];
-                            for (var i = 0; i < chessAnalysis.hm[index]; i++) {
-                                chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1][i] = chessAnalysis.moves[index][chessAnalysis.hmv[index]][i]
-                                chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1][i] = "";
-                            }
-                            chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [chessAnalysis.hmv[index], chessAnalysis.hm[index]];
-                            chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
-                            chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                            chessAnalysis.hm[index] += 1;
-                            chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]-1] = "";
-                        }
-                        else if (newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index]) !== true) {
-                            chessAnalysis.hmv[index] = newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index])
-                            chessAnalysis.hm[index] += 1
-                            var writestatus = "none";
-                        }
-                        else {
-                            chessAnalysis.hm[index] += 1;
-                            var writestatus = "none";
-                        }
-                    }
-                    <!-- now we get ready for the next drop-->
-                    setup(chessAnalysis.chess[index].fen());
-                    addpieces();
-                    movegen();
-                    drag();
-                    for (var y = 0; y < 64; y++) {
-                        dropstring = ""
-                        for (z = 0; z < squaremoves[squares[y]].length; z++) {
-                            if (z !== squaremoves[squares[y]].length - 1) {
-                                dropstring += (squaremoves[squares[y]][z] + ",")
-                            }
-                            else {
-                                dropstring += squaremoves[squares[y]][z]
-                            }
-                        };
-                        $(squares[y])
-                            .droppable("option", "accept", dropstring);
-                    };
-                    chessAnalysis.dropcount[index] += 1;
-                    $("#comment-input")
-                        .val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
-                    chessAnalysis.currentHighlighted.css("background-color", "white");
-                    $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1))
-                        .css("background-color", "yellow");
-                    chessAnalysis.currentHighlighted = $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1));
-                    chessAnalysis.update_move_tree();
-                    if (chessAnalysis.mode === "engine_analysis_mode") {
-
-                        changeEnginePosition();
-                    }
-                    else if (chessAnalysis.mode === "your_analysis_mode") {
-                        $("#fen-container")
-                            .val(chessAnalysis.chess[index].fen())
-                        $("#annotation_moves")
-                            .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
-                        chessAnalysis.editStatus[index]=true;
-                        $(".ann_move")
-                            .click(function () {
-                                clickNavigate($(this)
-                                    .attr("id"))
-                            })
-                        $(".ann_move")
-                            .hover(function () {
-                                annIn($(this)
-                                    .attr("id"))
-                            }, function () {
-                                annOut()
-                            });
-                        $(".ann_comment").unbind("input");
-                        $(".ann_comment").on("input",function(){
-                            chessAnalysis.editStatus[index]=true;
-                            var id=$(this).attr("id")
-                            var moves_num=id.split("var")[1].split("comment")
-                            var hm=moves_num[1]
-                            var hmv=moves_num[0]
-                            $(this).width(getWidthOfInput(document.getElementById(id)))
-                            //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
-                            //{
-                                $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
-                            //}
-                            chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
-                        });
-                        $(".ann_comment").css("max-width",$("#annotation_moves").width())
-                        $(".ann_comment").each(function(){
-                            var id=$(this).attr("id")
-                            var width=getWidthOfInput(document.getElementById(id))
-                            $(this).width(width);
-                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
-                        })
-                    }
+                    afterDrop();
                 }
             }
-        });
+        });}
 };
 var highlight = function () {
     $('.piece')
@@ -1394,4 +1270,150 @@ var getWidthOfInput=function(input) {
         return theWidth;
 }
 
+var afterDrop=function(){
+    <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
+                    if (chessAnalysis.atStart[index]) {
+                        chessAnalysis.atStart[index] = false;
+                        var startcondition = true;
+                        for (var i = 0; i < chessAnalysis.mainvariations[index].length; i++) {
+                            if (chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][0] === _.last(chessAnalysis.chess[index].history())) {
+                                startcondition = false;
+                                var writestatus = "none";
+                                chessAnalysis.hmv[index] = chessAnalysis.mainvariations[index][i];
+                                chessAnalysis.hm[index] += 1;
+                                break;
+                            }
+                            else {}
+                        }
+                        if (startcondition === true) {
+                            var writestatus = "new";
+                            chessAnalysis.numvariations[index] += 1
+                            chessAnalysis.mainvariations[index].push(chessAnalysis.numvariations[index] - 1);
+                            $("#moves")
+                                .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
+                            chessAnalysis.hm[index] = 0;
+                            chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
+                            chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
+                            if (chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1]) {}
+                            else {
+                                chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [""];
+                            }
+                            chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [-1, -1];
+                            chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
+                            chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
+                            chessAnalysis.hm[index] += 1;
+                        }
+                    }
+                    else {
+                        if (chessAnalysis.hm[index] === chessAnalysis.moves[index][chessAnalysis.hmv[index]].length) {
+                            chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
+                            var writestatus = "newmove"
+                            chessAnalysis.hm[index] += 1;
+                            chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]] = "";
+                        }
+                        else if (newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index]) === true && _.last(chessAnalysis.chess[index].history()) !== chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]) {
+                            <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->
+      
+                            chessAnalysis.numvariations[index] += 1
+                            var writestatus = "new";
+                            $("#moves")
+                                .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
+                            chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
+                            chessAnalysis.children[index][chessAnalysis.hmv[index]].push([chessAnalysis.numvariations[index] - 1, chessAnalysis.hm[index]]);
+                            chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
+                            chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [];
+                            for (var i = 0; i < chessAnalysis.hm[index]; i++) {
+                                chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1][i] = chessAnalysis.moves[index][chessAnalysis.hmv[index]][i]
+                                chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1][i] = "";
+                            }
+                            chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [chessAnalysis.hmv[index], chessAnalysis.hm[index]];
+                            chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
+                            chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
+                            chessAnalysis.hm[index] += 1;
+                            chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]-1] = "";
+                        }
+                        else if (newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index]) !== true) {
+                            chessAnalysis.hmv[index] = newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index])
+                            chessAnalysis.hm[index] += 1
+                            var writestatus = "none";
+                        }
+                        else {
+                            chessAnalysis.hm[index] += 1;
+                            var writestatus = "none";
+                        }
+                    }
+                    <!-- now we get ready for the next drop-->
+                    setup(chessAnalysis.chess[index].fen());
+                    addpieces();
+                    movegen();
+                    drag();
+                    for (var y = 0; y < 64; y++) {
+                        dropstring = ""
+                        for (z = 0; z < squaremoves[squares[y]].length; z++) {
+                            if (z !== squaremoves[squares[y]].length - 1) {
+                                dropstring += (squaremoves[squares[y]][z] + ",")
+                            }
+                            else {
+                                dropstring += squaremoves[squares[y]][z]
+                            }
+                        };
+                        $(squares[y])
+                            .droppable("option", "accept", dropstring);
+                    };
 
+                    chessAnalysis.dropcount[index] += 1;
+                    $("#comment-input")
+                        .val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
+                    chessAnalysis.currentHighlighted.css("background-color", "white");
+                    $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1))
+                        .css("background-color", "yellow");
+                    chessAnalysis.currentHighlighted = $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1));
+                    chessAnalysis.update_move_tree();
+
+                    if (chessAnalysis.mode === "engine_analysis_mode") {
+
+                        changeEnginePosition();
+                    }
+                    else if (chessAnalysis.mode === "your_analysis_mode") {
+                        $("#fen-container")
+                            .val(chessAnalysis.chess[index].fen())
+                        $("#annotation_moves")
+                            .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
+                        chessAnalysis.editStatus[index]=true;
+                        $(".ann_move")
+                            .click(function () {
+                                clickNavigate($(this)
+                                    .attr("id"))
+                            })
+                        $(".ann_move")
+                            .hover(function () {
+                                annIn($(this)
+                                    .attr("id"))
+                            }, function () {
+                                annOut()
+                            });
+                        $(".ann_comment").unbind("input");
+                        $(".ann_comment").on("input",function(){
+                            chessAnalysis.editStatus[index]=true;
+                            var id=$(this).attr("id")
+                            var moves_num=id.split("var")[1].split("comment")
+                            var hm=moves_num[1]
+                            var hmv=moves_num[0]
+                            $(this).width(getWidthOfInput(document.getElementById(id)))
+                            //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+                            //{
+                                $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                            //}
+                            chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
+                        });
+                        $(".ann_comment").css("max-width",$("#annotation_moves").width())
+                        $(".ann_comment").each(function(){
+                            var id=$(this).attr("id")
+                            var width=getWidthOfInput(document.getElementById(id))
+                            $(this).width(width);
+                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                        })
+
+                    }
+}
+                    

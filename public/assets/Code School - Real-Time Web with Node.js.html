@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)http://node.codeschool.com/levels/2/challenges/1 -->
+<html data-ember-extension="1"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" async="" src="./Code School - Real-Time Web with Node.js_files/ga.js"></script><script type="text/javascript" async="" src="./Code School - Real-Time Web with Node.js_files/mixpanel-2.2.min.js"></script><script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script>
+<title>
+Code School - Real-Time Web with Node.js
+</title>
+<link href="http://node.codeschool.com/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<link href="./Code School - Real-Time Web with Node.js_files/application-ce1713fb9f607a1819c5d4f544725985.css" media="screen" rel="stylesheet" type="text/css">
+<link href="./Code School - Real-Time Web with Node.js_files/embed-2bd87b8312b0e60cf52da0d56d6031e0.css" media="screen" rel="stylesheet" type="text/css">
+<script src="./Code School - Real-Time Web with Node.js_files/application-a9ddec34b1d3f1b3432e2bf4a91f9b32.js" type="text/javascript"></script>
+
+<script src="./Code School - Real-Time Web with Node.js_files/widgets.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+mixpanel.init("33adeab13a273d8765bb6f715261313e");
+//]]>
+</script>
+
+<meta content="authenticity_token" name="csrf-param">
+<meta content="lKAZRDoMHVdjmuc6VlYVnAzGXRzaS9lWOgsiIth+uAs=" name="csrf-token">
+<script type="text/javascript">
+/* <![CDATA[ */
+var _gaq = _gaq || [];
+_gaq.push(['ua974074928._setAccount', 'UA-9740749-28']);_gaq.push(['ua974074923._setAccount', 'UA-9740749-23']);
+_gaq.push(['ua974074923._setDomainName', 'none']);_gaq.push(['ua974074923._setAllowLinker', true]);_gaq.push(['ua974074923._addIgnoredRef', 'codeschool.com']);
+_gaq.push(['ua974074923._addIgnoredRef', 'node.codeschool.com']);
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+var _gaq = _gaq || [];
+_gaq.push(['ua974074928._trackPageview', '/levels/2/challenges/1']);
+_gaq.push(['ua974074923._trackPageview', '/node.codeschool.com/levels/2/challenges/1']);/* ]]> */
+</script>
+
+</head>
+<body class="responsive lab-2" data-twttr-rendered="true" data-ember-extension="1">
+<div id="codeschool">
+<a href="http://www.codeschool.com/" id="codeschool-logo" rel="internal">Code School</a>
+<ul>
+<li><a href="http://www.codeschool.com/" rel="internal">Home</a></li>
+<li><a href="http://www.codeschool.com/code_tv" rel="internal">Code TV</a></li>
+<li><a href="http://www.codeschool.com/account" rel="internal">My Account</a></li>
+<li><a href="http://www.codeschool.com/support" rel="internal">Support</a></li>
+</ul>
+<a href="http://node.codeschool.com/users/sign_out" id="codeschool-session" rel="internal">Sign Out</a>
+<a href="http://www.codeschool.com/account" id="codeschool-user" rel="internal">kempchee</a>
+<h2 id="sidebar-points"><em>1750</em>
+<b>Total Points</b></h2>
+</div>
+
+<div id="notifications">
+
+</div>
+<div id="challenge">
+<header id="challenge-objective"><h1 class="">Chat Emitter</h1>
+
+
+  <h3 id="challenge-points" class="points-250">
+    <em>250</em>
+    <b>Points</b>
+  </h3>
+  <h4>Objective</h4>
+
+
+<p class="">We're going to create a custom chat EventEmitter. Create a new
+EventEmitter called 'chat', listen for 'message' events, and
+then log the events to the console.</p>
+</header>
+<section id="challenge-panels" style="height: 677px;">
+<nav>
+<ol id="editor-tabs" class="tabs-1"><li><a class="editor-tab active editor-active" href="http://node.codeschool.com/levels/2/challenges/1#" title="chat.js">chat.js</a></li></ol>
+<ol id="resource-tabs" class="tabs-2"><li><a href="http://node.codeschool.com/levels/2/challenges/1#" id="" class="resource-tab resource-active" title="Slides">Slides</a></li><li><a href="http://node.codeschool.com/levels/2/challenges/1#" id="hints_tab" class="resource-tab" title="Hints">Hints</a></li></ol>
+<a href="http://node.codeschool.com/levels/2/challenges/1#" id="view-mode" title="Switch to Single Panel">
+Toggle Editor Mode
+</a>
+</nav>
+<div class="panel-group editor-reference active" id="editor-group"><div class="editor panel active editor-active"><div class="content content-editor"><div class="CodeMirror cm-s-eclipse CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 74px; left: 49px;"><textarea autocorrect="off" autocapitalize="off" tabindex="0" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-hscrollbar" style="left: 29px;"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar" style="bottom: 0px;"><div style="width: 1px; height: 3px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div style="position: relative; min-height: 100%;"><div class="CodeMirror-sizer" style="min-width: 349px; min-height: 106px; margin-left: 29px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>}</span><span>)</span></pre></div><div style="position: relative; z-index: 1; display: none;"></div><div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">1</div></div><pre><span class="cm-keyword">var</span> <span class="cm-variable">events</span> = <span class="cm-variable">require</span>(<span class="cm-string">'events'</span>);</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">2</div></div><pre><span class="cm-keyword">var</span> <span class="cm-variable">EventEmitter</span> = <span class="cm-variable">events</span>.<span class="cm-property">EventEmitter</span>;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">3</div></div><pre><span class="cm-keyword">var</span> <span class="cm-variable">chat</span>=<span class="cm-keyword">new</span> <span class="cm-variable">EventEmitter</span>()</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">4</div></div><pre><span class="cm-variable">chat</span>.<span class="cm-property">on</span>(<span class="cm-string">'message'</span>,<span class="cm-keyword">function</span>(<span class="cm-def">events</span>){</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">5</div></div><pre>  <span class="cm-variable">console</span>.<span class="cm-property">log</span>(<span class="cm-variable-2">events</span>)</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">6</div></div><pre>})</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">7</div></div><pre>&nbsp;</pre></div></div><div class="CodeMirror-cursor" style="left: 20px; top: 70px; height: 14px;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="display: none;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; top: 106px;">&nbsp;</div><div class="CodeMirror-gutters" style="left: 0px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 28px;"></div></div></div></div></div></div></div><footer><a href="http://node.codeschool.com/levels/2/challenges/1#" id="manual_submit" class="button"><b><span>Submit Code</span></b></a></footer></div>
+<div class="panel-group" id="resource-group"><div class="resource-panel panel resource-active"><iframe id="resource_iframe" src="./Code School - Real-Time Web with Node.js_files/node-level-2.html" style="width: 100%; height: 100%"></iframe></div><div id="hints" class="resource-panel panel">
+  <p>
+    <a id="next_hint" class="button" href="http://node.codeschool.com/levels/2/challenges/1/next_hint.json"><b>Next Hint <span></span></b></a>
+    <span id="hints_remaining">3 Hints</span> Remaining
+  </p>
+
+
+<ol></ol></div></div>
+</section>
+</div>
+<section id="sidebar">
+<a href="http://node.codeschool.com/levels/2" id="sidebar-logo"><b>Real-Time Web with Node.js</b>
+</a><nav id="sidebar-nav"><h2>
+  <b>Level</b>2
+  <a class="change-level button" href="http://node.codeschool.com/levels/switch"><b>Change Level</b></a>
+</h2>
+<h3>
+  <b><span class="sidebar-progress" style="width: 16%;">X% Complete</span></b>
+</h3>
+<ol><li class="current"><a href="./Code School - Real-Time Web with Node.js_files/Code School - Real-Time Web with Node.js.html">Chat Emitter</a></li><li><a href="http://node.codeschool.com/levels/2/challenges/2">Emitting Events</a></li><li><a href="http://node.codeschool.com/levels/2/challenges/3">Request Event</a></li><li><a href="http://node.codeschool.com/levels/2/challenges/4">Listening Twice</a></li><li><a href="http://node.codeschool.com/levels/2/challenges/5">Listen for close</a></li></ol></nav>
+<ul id="sidebar-controls">
+<li><a href="http://node.codeschool.com/levels/2" class="sidebar-rewatch" title="Rewatch Video">Rewatch Video</a></li>
+<li><a href="http://node.codeschool.com/levels/2/challenges/1#" class="sidebar-shortcuts" title="Keyboard Shortcuts">Keyboard Shortcuts</a></li>
+<li><a href="http://courseware.codeschool.com/node_slides.pdf" class="sidebar-slides" target="blank" title="Download Slides">Download Slides</a></li>
+</ul>
+<footer>
+<a href="http://www.viddler.com/file/d/c5fa0a5f.mp4?vfid=728706524429d3def6c7e1d58d206b17" class="sidebar-video">Download Video</a>
+<a href="http://envylabs.com/" id="sidebar-envy">An Envy Labs Product</a>
+</footer>
+</section>
+<div id="shortcuts" style="display: none;">
+<ul>
+<li><span>⌘</span> + <span>enter</span> Submit code</li>
+<li><span>ctrl</span> + <span>enter</span> Submit code</li>
+<li><span>esc</span> Hide errors or modal windows</li>
+<li><span>→</span> After success, advance to the next challenge</li>
+</ul>
+<a href="http://node.codeschool.com/levels/2/challenges/1#" class="shortcuts-close">Close</a>
+</div>
+<div id="twitter-button-wrapper" style="display:none">
+<iframe id="twitter-top" scrolling="no" frameborder="0" allowtransparency="true" src="./Code School - Real-Time Web with Node.js_files/tweet_button.1397165098.html" class="twitter-share-button twitter-tweet-button twitter-count-horizontal" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 107px; height: 20px;"></iframe>
+
+</div>
+<script>
+  //<![CDATA[
+    $(document).ready(function(){
+    
+    
+      CourseApp.init({
+        lab: {"created_at":"2012-05-17T14:03:41Z","free_play":false,"id":2,"name":"Events","number":2,"updated_at":"2012-05-30T05:34:36Z","video_id":null,"video_mov_file":null,"video_mp4_file":null},
+        tabs: [{"anchor":"Slides","id":null,"panel_id":null,"render":{"slides":"http://courseware.codeschool.com/node/node-level-2.pdf"}}],
+        hints: {"hints":[],"has_more_hints":true,"url":"http://node.codeschool.com/levels/2/challenges/1/next_hint.json","hints_remaining":3,"hints_text":"Hints","hint_cost":0},editors: [{"url":"http://node.codeschool.com/levels/2/challenges/1","instructions":"<p>We're going to create a custom chat EventEmitter. Create a new\nEventEmitter called 'chat', listen for 'message' events, and\nthen log the events to the console.</p>\n","initial_value":"var events = require('events');\nvar EventEmitter = events.EventEmitter;\n","type":"text","anchor":"chat.js","id":1,"syntax":"javascr"+"ipt","change_event":null,"focused":true,"expirement_until_correct":null,"prompt":null,"result_prompt":null,"welcome_message":null,"line_numbers":true}],current_user: {"points":1750},
+        challenge: {"id":14,"title":"Chat Emitter","number":1,"completed":false,"url":"http://node.codeschool.com/levels/2/challenges/1","path":null,"expirement":false,"possible_points":250,"switch_labs_url":"http://node.codeschool.com/levels/switch?current_exercise_id=14","level_number":2,"total_challenges":5,"instructions":"<p>We're going to create a custom chat EventEmitter. Create a new\nEventEmitter called 'chat', listen for 'message' events, and\nthen log the events to the console.</p>\n","keep_score":true,"all_expirement":null,"reload":null,"splitter":"//////////////////////\n"},
+        challenges: [{"id":14,"title":"Chat Emitter","number":1,"instructions":"<p>We're going to create a custom chat EventEmitter. Create a new\nEventEmitter called 'chat', listen for 'message' events, and\nthen log the events to the console.</p>\n","completed":false,"current":true,"url":"http://node.codeschool.com/levels/2/challenges/1"},{"id":15,"title":"Emitting Events","number":2,"instructions":"<p>Read the existing code below and at the bottom trigger both a\n'join' event and a 'message' event, sending in strings to each one.</p>\n","completed":false,"current":false,"url":"http://node.codeschool.com/levels/2/challenges/2"},{"id":9,"title":"Request Event","number":3,"instructions":"<p>Just like you saw in the video, refactor the http server code to explicitly\nbind a callback to the <code>request</code> event using the <code>on</code> function.</p>\n","completed":false,"current":false,"url":"http://node.codeschool.com/levels/2/challenges/3"},{"id":10,"title":"Listening Twice","number":4,"instructions":"<p>Who said you can only listen for an event once?</p>\n\n<p>Add another listener to the <code>server</code>'s <code>request</code>\nevent after our current callback.  The second listener's\ncallback should just log <code>\"New request coming in...\"</code> to\nthe console on the 'request' event.</p>\n","completed":false,"current":false,"url":"http://node.codeschool.com/levels/2/challenges/4"},{"id":11,"title":"Listen for close","number":5,"instructions":"<p>Like our parents always used to say, listening is more\nimportant than talking!</p>\n\n<p>So let's listen for the <code>'close'</code> event on the server,\nand log the string <code>\"Closing down the server...\"</code>\ninside the callback, that way we'll know if our server has\nclosed down.</p>\n","completed":false,"current":false,"url":"http://node.codeschool.com/levels/2/challenges/5"}],
+        database: null
+      });
+    
+      $('#challenge-panels nav').delegate('#view-mode', 'click', function(e) {
+        e.preventDefault();
+        $('body').toggleClass('responsive');
+        $.each(CourseApp.editor_views, function(index,view){
+          if(typeof view.resize === "function"){
+            view.resize();
+          }
+        })
+      });
+    
+      $('#sidebar').delegate('.change-level', 'click', function(e) {
+        $.facebox({
+          ajax: $(this).attr('href'),
+          opacity: 0.3
+        }, 'change-level');
+        e.preventDefault();
+      });
+    
+      $('#sidebar').delegate('.sidebar-shortcuts', 'click', function(e) {
+        e.preventDefault();
+        $.facebox({
+          opacity: 0.3,
+          div: '#shortcuts'
+        }, 'shortcuts');
+    
+        $('.shortcuts-close').one('click', function(e) {
+          e.preventDefault();
+          $(document).trigger('close.facebox');
+        });
+      });
+    
+      $(document).bind('reveal.facebox', function() {
+        $('#facebox .content').hide().fadeIn(200);
+        $('#facebox').css('top', $(window).height() / 2 - ($('#facebox .popup').height() / 2))
+      });
+    
+      // Prevent browser back functionality when pressing backspace
+      $(document).bind('keydown', function(e) {
+        if(e.keyCode == 8) {
+          e.preventDefault();
+        }
+      });
+    
+      $(window).load(function(){
+        $('.sidebar-progress').css('width', "16.0%")
+      });
+    });
+  //]]>
+</script>
+
+
+<script type="text/javascript">if (!NREUMQ.f) { NREUMQ.f=function() {
+NREUMQ.push(["load",new Date().getTime()]);
+var e=document.createElement("script");
+e.type="text/javascript";
+e.src=(("http:"===document.location.protocol)?"http:":"https:") + "//" +
+  "js-agent.newrelic.com/nr-100.js";
+document.body.appendChild(e);
+if(NREUMQ.a)NREUMQ.a();
+};
+NREUMQ.a=window.onload;window.onload=NREUMQ.f;
+};
+NREUMQ.push(["nrfj","beacon-1.newrelic.com","65b4af9171",641102,"Ig4PFRZXWlpTFh8PARISDg8XF0VeWRM=",0,159,new Date().getTime(),"","","","",""]);</script>
+
+<script type="text/javascript" src="chrome-extension://bmdblncegkenkacieihfhpjfppoconhi/in-page-script.js"></script><script type="text/javascript" src="./Code School - Real-Time Web with Node.js_files/nr-100.js"></script><script type="text/javascript" src="./Code School - Real-Time Web with Node.js_files/65b4af9171"></script></body></html>

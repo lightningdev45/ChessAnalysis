@@ -1,3 +1,16 @@
-<div>{{view Ember.TextArea value=rawPgn class="form-control"}}</div>
+<em>Paste a single game in PGN notation below:</em>
 <br>
+<br>
+{{#if editMode}}
+	<div>{{view Ember.TextArea value=rawPgn id="pgn_input_area" class="form-control"}}</div>
+	<br>
 <div class="text-center"><span {{action "covertRawPgn"}} class="btn btn-primary">Load</span></div>
+{{else}}
+<div id="game_input_container" class="well">
+	{{#each gameMoves}}
+		{{game_input_move this _view.contentIndex}}
+	{{/each}}
+</div>
+<br>
+<div class="text-center"><span {{action "backToEdit"}} class="btn btn-primary">Edit PGN</span></div>
+{{/if}}

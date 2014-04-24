@@ -1,8 +1,24 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
-    $(".tooltip-annotation-edits").tooltip({container:"body"})
     var view=this;
+    $("#game_input").on("click",".game_input_move",function(){
+        $(".game_input_highlighted").removeClass("game_input_highlighted")
+        $(this).addClass("game_input_highlighted")
+        console.log($(this).attr("id").slice(15,16))
+        console.log(view.get("controller.controllers.game_input").get("gameFen"))
+        var fen=view.get("controller.controllers.game_input").get("gameFen")[parseInt($(this).attr("id").slice(15,$(this).attr('id').length))+1];
+        view.get("controller").transitionToRoute("position",encodeURIComponent(fen))
+        setupChess(fen)
+        setup(fen);
+        addpieces();
+        movegen();
+        drag();
+        drop();
+        $("#fen-container").val(fen)
+    })
+    $(".tooltip-annotation-edits").tooltip({container:"body"})
+    
     var list=["a","b","c","d","e","f","g","h"]
    var numlist=[8,7,6,5,4,3,2,1];
 

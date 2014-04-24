@@ -88,6 +88,9 @@ EngineEval.AnnotationEditsController = Ember.ArrayController.extend({
 	                })	
 	            setup(chessAnalysis.chess[index].fen())
 				addpieces();
+				movegen();
+				drag()
+				drop()
 				annotation.set("visible",true)
 				controller.get("store").find("annotation",controller.get("currentVisible")).then(function(annotation){
 					annotation.set("visible",false)

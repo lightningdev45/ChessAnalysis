@@ -1015,3 +1015,27 @@ color:$dark-background;
 .input-group-addon{
 	background:white;
 }
+
+#pgn_input_area{
+	height:150px;
+}
+
+#game_input_container{
+	height:150px;
+	overflow:auto;
+
+}
+.game_input_move{
+	margin:5px;
+	cursor:pointer;
+	float:left;
+	font-weight:500;
+}
+
+.game_input_move:hover{
+	color:$black-square;
+	}
+	.game_input_highlighted{
+		color:$black-square;
+		font-weight:700;
+	}

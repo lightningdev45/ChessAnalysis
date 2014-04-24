@@ -6,6 +6,8 @@ gem 'ember-rails'
 gem 'ember-source'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
+gem 'rspec-rails'
+gem 'mocha'
 
 gem 'acts_as_votable'
 # Use SCSS for stylesheets

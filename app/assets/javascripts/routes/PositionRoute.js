@@ -22,7 +22,6 @@ EngineEval.PositionRoute = Ember.Route.extend({
     return { fen_param: model.get('slug') };
   },
 		setupController:function(controller,model){
-			console.log("boo")
 			var router=this
 			var fen_param=this.modelFor('position').fen_param
 				$.getJSON("/positions?fen="+this.modelFor('position').fen_param).then(function(response){

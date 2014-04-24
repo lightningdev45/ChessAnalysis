@@ -1,7 +1,9 @@
-require 'test_helper'
+require 'spec_helper'
+describe AnnotationsController do
+	it "should save and render json" do 
+		Annotation.any_instance.stubs(:valid?).returns(true)
+		post 'create'
+		
+	end
 
-class AnnotationsControllerTest < ActionController::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
 end
