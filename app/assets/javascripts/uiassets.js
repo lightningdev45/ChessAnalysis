@@ -8,6 +8,7 @@ var setupChess=function(fen){
     chessAnalysis.chess = [new Chess(), new Chess()]
     chessAnalysis.chess[0].load(fen)
     chessAnalysis.chess[1].load(fen)
+    chessAnalysis.dropSquare=[null,null]
     chessAnalysis.moves = [
         [],
         []
@@ -770,7 +771,8 @@ var addpieces = function () {
         //});
 //};
 var drag = function () {
-
+    $("#board").unbind("mouseenter")
+    $("#board").unbind("mouseleave")
     $("#board").on('mouseenter', '.piece',  function(){
          $(this).draggable({
                 zIndex: 10,
@@ -778,9 +780,52 @@ var drag = function () {
                 revertDuration:100,
                 cursorAt:{top:25,left:25},
                 start:function(event,ui){
+                    chessAnalysis.dropSquare[index]=null;
                 },
                 stop:function(event,ui){
-                    console.log(ui)
+                    if(chessAnalysis.dropSquare[index]){
+                        var dropSquare=chessAnalysis.dropSquare[index];
+                        var from = ploc[$(this)
+                            .attr('id')].slice(1, 3);
+                        var to = dropSquare
+                            .attr('id')
+                            .slice(0, 2);
+                        //this section checks if move is a promotion and if so generates a promotion dialogue box-->
+                        if ((dropSquare
+                            .attr("id")[1] === String(8)) && ($(this)
+                            .attr("id")[0] === "P")) {
+                            $("#whitepopup")
+                                .css("display", "inline-block");
+                            $("#promotionModal")
+                                .modal({
+                                    keyboard: "false",
+                                    backdrop: "static"
+                                });
+                            promotionclick(from, to, chessAnalysis.dropcount[index]);
+                        }
+                        else if ((dropSquare
+                            .attr("id")[1] === String(1)) && ($(this)
+                            .attr("id")[0] === "p")) {
+                            $("#blackpopup")
+                                .css("display", "inline-block");
+                            $("#promotionModal")
+                                .modal({
+                                    keyboard: "false",
+                                    backdrop: "static"
+                                });
+                            promotionclick(from, to, chessAnalysis.dropcount[index]);
+                        }
+                        else {
+                            chessAnalysis.chess[index].move({
+                                from: ploc[$(this)
+                                    .attr('id')].slice(1, 3),
+                                to: dropSquare
+                                    .attr('id')
+                                    .slice(0, 2)
+                            });
+                            afterDrop();
+                        }
+                    }
                 }
             });
     }).on('mouseleave', '.piece', function() {
@@ -805,46 +850,7 @@ var drop = function () {
         .droppable({
              accept: dropstring || false,
             drop: function (event, ui) {
-                var from = ploc[(ui.draggable)
-                    .attr('id')].slice(1, 3);
-                var to = $(this)
-                    .attr('id')
-                    .slice(0, 2);
-                //this section checks if move is a promotion and if so generates a promotion dialogue box-->
-                if (($(this)
-                    .attr("id")[1] === String(8)) && ((ui.draggable)
-                    .attr("id")[0] === "P")) {
-                    $("#whitepopup")
-                        .css("display", "inline-block");
-                    $("#promotionModal")
-                        .modal({
-                            keyboard: "false",
-                            backdrop: "static"
-                        });
-                    promotionclick(from, to, chessAnalysis.dropcount[index]);
-                }
-                else if (($(this)
-                    .attr("id")[1] === String(1)) && ((ui.draggable)
-                    .attr("id")[0] === "p")) {
-                    $("#blackpopup")
-                        .css("display", "inline-block");
-                    $("#promotionModal")
-                        .modal({
-                            keyboard: "false",
-                            backdrop: "static"
-                        });
-                    promotionclick(from, to, chessAnalysis.dropcount[index]);
-                }
-                else {
-                    chessAnalysis.chess[index].move({
-                        from: ploc[(ui.draggable)
-                            .attr('id')].slice(1, 3),
-                        to: $(this)
-                            .attr('id')
-                            .slice(0, 2)
-                    });
-                    afterDrop();
-                }
+                chessAnalysis.dropSquare[index]=$(this);
             }
         });}
 };
