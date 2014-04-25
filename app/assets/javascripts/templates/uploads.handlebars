@@ -1,0 +1,26 @@
+<h1>Uploads</h1>
+
+<form action="/uploads" id="new_upload_form" enctype="multipart/form-data" method="post">
+	<input class="input_field" multiple="multiple" type="file" value="file" name="file" accept="audio/*|video/*|image/*|MIME_type"/>
+
+</form>
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>File Name</th>
+			<th>File Size</th>
+			<th>Databases Containing</th>
+			<th>View Raw Pgn</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{#each}}
+		<tr>
+			<td>{{file}}</td>
+			<td>{{file_size}}</td>
+			<td></td>
+			<td>{{#link-to "home" class="btn btn-primary"}}View{{/link-to}}</td>
+		</tr>
+	{{/each}}
+	</tbody>
