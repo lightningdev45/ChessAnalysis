@@ -15,6 +15,7 @@ EngineEval.GameInputController=Ember.ObjectController.extend({
 				var game_fens=[]
 				game_fens.push(inputGame.fen())
 				_.each(game_history,function(move,index){
+					inputGame.move(move)
 					game_fens.push(inputGame.fen())
 			
 				})

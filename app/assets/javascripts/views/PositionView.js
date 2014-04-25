@@ -5,8 +5,6 @@ EngineEval.PositionView = Ember.View.extend({
     $("#game_input").on("click",".game_input_move",function(){
         $(".game_input_highlighted").removeClass("game_input_highlighted")
         $(this).addClass("game_input_highlighted")
-        console.log($(this).attr("id").slice(15,16))
-        console.log(view.get("controller.controllers.game_input").get("gameFen"))
         var fen=view.get("controller.controllers.game_input").get("gameFen")[parseInt($(this).attr("id").slice(15,$(this).attr('id').length))+1];
         view.get("controller").transitionToRoute("position",encodeURIComponent(fen))
         setupChess(fen)
