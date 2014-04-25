@@ -1039,3 +1039,23 @@ color:$dark-background;
 		color:$black-square;
 		font-weight:700;
 	}
+
+	.upload-progress-close-btn{
+		display:inline-block;
+		float:left;
+	}
+	.progress{
+		height:30px;
+		line-height: 30px;
+	}
+	.progress-bar{
+		line-height: 30px;
+		font-size: 16px;
+	}
+.progress .close{
+	z-index:1000;
+	position: absolute;
+	line-height: 30px;
+	font-size: 24px;
+	margin-left:-20px;
+}

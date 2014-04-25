@@ -1,7 +1,6 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
-    alert("hi")
     var view=this;
     $("#game_input_container").on("click",".game_input_move",function(){
 
