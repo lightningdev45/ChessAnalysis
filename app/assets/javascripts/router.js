@@ -11,6 +11,7 @@ EngineEval.Router.map(function() {
   this.route("edit")
   this.resource("profile",{path:"profile/:profile_id/:events_id"})
   this.route("user_search",{path:"user_search/:page"})
+  this.route("uploads")
 
 
 

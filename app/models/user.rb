@@ -11,7 +11,6 @@ class User < ActiveRecord::Base
   has_many :followers,through: :reverse_relationships
   has_many :annotations
   has_many :evaluations
-  mount_uploader :avatar,UserAvatarUploader
   validates_uniqueness_of :profile_name
   validates_presence_of :profile_name,:email
   acts_as_voter
