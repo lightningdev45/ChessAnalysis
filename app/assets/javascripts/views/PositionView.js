@@ -1,6 +1,19 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
+    connectionId = Math.floor(Math.random() * 1000000000)
+    position_server = io.connect("http://localhost:4000")
+    position_server.emit('subscribe',{room:connectionId})
+    console.log(connectionId)
+    $("#connectionId")
+        .append(connectionId)
+    alert(connectionId)
+    position_server.on("receive_evaluation",function(data){
+        $("#my_engine_evaluation").html(data.evaluation)
+    })
+    position_server.on("hi",function(data){
+        alert("hi")
+    })
     var view=this;
     $("#game_input").on("click",".game_input_move",function(){
         $(".game_input_highlighted").removeClass("game_input_highlighted")
@@ -375,9 +388,6 @@ EngineEval.PositionView = Ember.View.extend({
 
         $("#fen-container")
             .val(chessAnalysis.chess[index].fen())
-        connectionId = Math.floor(Math.random() * 1000000000)
-        $("#connectionId")
-            .append(connectionId)
         //chat = io.connect("http://localhost:8080")
         //chat.emit('subscribe',{room:connectionId})
         //chat.on("receive_evaluation",function(data){

@@ -383,14 +383,11 @@ h1,h2,h3,h4,h5,h6{
 	
 }
 #next-move-select{
-display:none;
-			
-			width:240px;
-			
-			
-		border:2px solid $dark-background;
-			color:$dark-background;
-			font-weight: bold;
+display:none;		
+width:240px;	
+border:2px solid $black-square;
+color:$dark-background;
+font-weight: bold;
 }
 
 .move-row{
@@ -1038,4 +1035,10 @@ color:$dark-background;
 	.game_input_highlighted{
 		color:$black-square;
 		font-weight:700;
+	}
+
+	#scroll-container{
+		background:white;
+		border:2px solid $black-square;
+		border-radius:3px;
 	}

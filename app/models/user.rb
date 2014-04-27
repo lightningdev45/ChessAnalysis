@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
 
   def self.search(search)
     if search.present?
-      find(:all,:conditions=>['profile_name LIKE ?',"%#{search}%"])
+      where('profile_name LIKE ?',"%#{search}%")
     else
       nil
     end
