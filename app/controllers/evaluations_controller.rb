@@ -34,10 +34,11 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 		end
 		@evaluation.fen=@fen_param
 		@evaluation.position=@position
-		@evaluation.save
-	
-		respond_to do |format|
-			format.json{render :json=>{id:@evaluation.id}}
+		
+		if @evaluation.save	
+			render :json=>{id:@evaluation.id}
+		else
+			render :json=>{id:nil}
 		end
 	end
 

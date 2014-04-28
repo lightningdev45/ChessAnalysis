@@ -1042,3 +1042,12 @@ color:$dark-background;
 		border:2px solid $black-square;
 		border-radius:3px;
 	}
+
+	.engine-not-connected{
+		font-style:italic;
+		color:red;
+	}
+
+	#my_engine_connection_id .form-group{
+		margin-bottom:0px;
+	}

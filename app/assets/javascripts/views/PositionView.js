@@ -4,15 +4,32 @@ EngineEval.PositionView = Ember.View.extend({
     connectionId = Math.floor(Math.random() * 1000000000)
     position_server = io.connect("http://localhost:4000")
     position_server.emit('subscribe',{room:connectionId})
-    console.log(connectionId)
     $("#connectionId")
         .append(connectionId)
-    alert(connectionId)
     position_server.on("receive_evaluation",function(data){
+        console.log(data)
         $("#my_engine_evaluation").html(data.evaluation)
+        $("#my_engine_nodes").html(data.nodes)
+        $("#my_engine_depth").html(data.depth)
+        $("#my_engine_seldepth").html(data.seldepth)
     })
-    position_server.on("hi",function(data){
-        alert("hi")
+    position_server.on("local_engine_connect",function(data){
+        $("#my_engine").html('<div class="text-center"><div class="btn btn-success" id="local_engine_button">Local Engine</div></div>')
+        $("#my_engine").removeClass("engine-not-connected");
+        $("#local_engine_button").click(function(){
+            if(chessAnalysis.localEngineStatus){
+                chessAnalysis.localEngineStatus=false;
+                $("#local_engine_button").removeClass("btn-danger");
+                $("#local_engine_button").addClass("btn-success");
+                position_server.emit("stop_local_engine",{room:connectionId});
+            }
+            else{
+                chessAnalysis.localEngineStatus=true;
+                $("#local_engine_button").removeClass("btn-success");
+                $("#local_engine_button").addClass("btn-danger");
+                position_server.emit("start_local_engine",{room:connectionId,fen:chessAnalysis.chess[index].fen()});
+            }
+        })
     })
     var view=this;
     $("#game_input").on("click",".game_input_move",function(){

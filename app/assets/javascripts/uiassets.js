@@ -4,6 +4,7 @@ var index = 0
 var setupChess=function(fen){
     chessAnalysis.engines = [];
     chessAnalysis.engineStatus = false;
+    chessAnalysis.localEngineStatus=false;
     chessAnalysis.engineId = ""
     chessAnalysis.mode = "engine_analysis_mode"
     chessAnalysis.chess = [new Chess(), new Chess()]
@@ -1070,7 +1071,7 @@ var afterDrop=function(){
                     addpieces();
                     movegen();
                     drag();
-                    position_server.emit("new_position",{fen:chessAnalysis.chess[index].fen(),connectionId:connectionId})
+                    position_server.emit("new_position",{fen:chessAnalysis.chess[index].fen(),connectionId:connectionId,engineStatus:chessAnalysis.localEngineStatus})
                     for (var y = 0; y < 64; y++) {
                         dropstring = ""
                         for (z = 0; z < squaremoves[squares[y]].length; z++) {
