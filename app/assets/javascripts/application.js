@@ -28,7 +28,7 @@
 //= require delete_remaining
 //= require_self
 //= require engine_eval
-
+//= require_tree .
 
 EngineEval = Ember.Application.create();
 
