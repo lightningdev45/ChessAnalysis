@@ -84,6 +84,45 @@ EngineEval.AuthController = Ember.ObjectController.extend({
       
   },
   
+  recover_password:function(route){
+    $.ajax({
+      url: "/users/password",
+      type: "POST",
+      data:{
+        "user[email]": route.controller.get("email")
+      },
+      success:function(data){
+        route.controllerFor("recover_password").setProperties({email:""})
+        route.controllerFor("alert").send("showAlert","You have successfully requested to change your password!  Please check the email associated with the account.","alert alert-success alert-dismissable","devise-alert")
+      },
+      error:function(data){
+        route.controllerFor("alert").send("showAlert","An error occurred.  Please request a new link and/or contact support.","alert alert-danger alert-dismissable","devise-alert")
+      }
+  })
+  },
+
+  change_password:function(route){
+    var me=this;
+    $.ajax({
+      url: "/users/password",
+      type: "PUT",
+      data:{
+        "user[password]": route.controller.get("password"),
+        "user[password_confirmation]": route.controller.get("password_confirmation"),
+        "user[reset_password_token]": route.controller.get("token")
+      },
+      success:function(data){
+        if(data.user)
+          {me.set('currentUser', data.user)}
+        route.controllerFor("change_password").setProperties({password:"",password_confirmation:"",token:""})
+        route.controllerFor("alert").send("showAlert","You have successfully changed your password!","alert alert-success alert-dismissable","devise-alert")
+        route.transitionTo('position',"rnbqkbnr%2Fpppppppp%2F8%2F8%2F8%2F8%2FPPPPPPPP%2FRNBQKBNR%20w%20KQkq%20-%200%201")
+      },
+      error:function(data){
+        route.controllerFor("alert").send("showAlert","There was an error.  Please request a new link and/or contact support.","alert alert-danger alert-dismissable","devise-alert")
+      }
+  })
+  },
 
   logout:function(){
 

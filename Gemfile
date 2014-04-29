@@ -40,7 +40,7 @@ end
 #gem 'rails_12factor'
  #gem 'rails_12factor'
 gem 'chess'
-#gem 'puma'
+gem 'puma'
 gem 'devise'
 ruby "2.1.1"
 
@@ -48,7 +48,7 @@ ruby "2.1.1"
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
 # Use unicorn as the app server
- gem 'unicorn'
+ #gem 'unicorn'
 
 # Use Capistrano for deployment
  gem 'capistrano', group: :development

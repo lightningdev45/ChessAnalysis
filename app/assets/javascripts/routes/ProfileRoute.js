@@ -16,8 +16,7 @@ EngineEval.ProfileRoute = Ember.Route.extend({
 		},
 		setupController:function(controller,model){
 		controller.set("model",model)
-		$("#followers_link").text(model.followers_count)
-    	$("#followed_link").text(model.followed_count)
+
 		}
 	
 
