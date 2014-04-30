@@ -1,0 +1,2 @@
+module InterestEmailsHelper
+end

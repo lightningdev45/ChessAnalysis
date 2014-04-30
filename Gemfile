@@ -40,7 +40,7 @@ end
 #gem 'rails_12factor'
  #gem 'rails_12factor'
 gem 'chess'
-gem 'puma'
+#gem 'puma'
 gem 'devise'
 ruby "2.1.1"
 
@@ -51,10 +51,17 @@ ruby "2.1.1"
  #gem 'unicorn'
 
 # Use Capistrano for deployment
- gem 'capistrano', group: :development
-group :development do
-      gem 'capistrano-rails',   '~> 1.1', require: false
-      gem 'capistrano-bundler', '~> 1.1', require: false
-    end
+gem 'capistrano'
+
+# rails specific capistrano funcitons
+gem 'capistrano-rails'
+
+# integrate bundler with capistrano
+gem 'capistrano-bundler'
+gem  'rvm-capistrano'
+
+# Use the Unicorn app server
+gem 'unicorn'
+
 # Use debugger
 # gem 'debugger', group: [:development, :test]

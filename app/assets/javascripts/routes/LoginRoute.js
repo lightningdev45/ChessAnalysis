@@ -10,8 +10,6 @@ activate:function(){
   }
 },
   setupController: function(controller, model){
-  
-    controller.set("errorMsg", "")
     controller.setProperties({
       password: "",
       errorMsg: ""
@@ -21,10 +19,11 @@ activate:function(){
     
   actions:{
   	login: function(){
+      //console.log(this.get("controller"))
       this.controllerFor("auth").login(this)	
   	},  
     cancel:function(){
-      this.transitionTo('positions')
+      this.transitionTo('position')
     }   
   }   
 })
