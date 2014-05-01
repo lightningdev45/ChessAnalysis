@@ -85,6 +85,7 @@ EngineEval.AuthController = Ember.ObjectController.extend({
   },
   
   recover_password:function(route){
+    console.log(route.controller.email)
     $.ajax({
       url: "/users/password",
       type: "POST",
@@ -102,6 +103,7 @@ EngineEval.AuthController = Ember.ObjectController.extend({
   },
 
   change_password:function(route){
+    console.log(route.controller.password)
     var me=this;
     $.ajax({
       url: "/users/password",

@@ -2,7 +2,7 @@
 <html>
 <head>
 <script src='//localhost:4000/socket.io/socket.io.js'></script>
-  <title>EngineEval</title>
+  <title>Chess Prime</title>
   <%= stylesheet_link_tag    "application", media: "all"%>
   <%= javascript_include_tag "application"%>
   <%= csrf_meta_tags %>
@@ -11,6 +11,7 @@
 <%=javascript_tag do%>
   var connectionId = Math.floor(Math.random() * 1000000000)
    var position_server = io.connect("http://localhost:4000")
+
 <%end%>
     
 <%=yield%>
