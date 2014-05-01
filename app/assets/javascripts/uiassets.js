@@ -1071,7 +1071,8 @@ var afterDrop=function(){
                     addpieces();
                     movegen();
                     drag();
-                    position_server.emit("new_position",{fen:chessAnalysis.chess[index].fen(),connectionId:connectionId,engineStatus:chessAnalysis.localEngineStatus})
+                    if(position_server)
+                   { position_server.emit("new_position",{fen:chessAnalysis.chess[index].fen(),connectionId:connectionId,engineStatus:chessAnalysis.localEngineStatus})}
                     for (var y = 0; y < 64; y++) {
                         dropstring = ""
                         for (z = 0; z < squaremoves[squares[y]].length; z++) {
