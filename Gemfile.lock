@@ -35,9 +35,9 @@ GEM
       handlebars-source
     bcrypt (3.1.7)
     builder (3.1.4)
-    bullet (4.8.0)
+    bullet (4.9.0)
       activesupport
-      uniform_notifier (>= 1.4.0)
+      uniform_notifier (~> 1.6.0)
     capistrano (3.2.1)
       i18n
       rake (>= 10.0.0)
@@ -64,15 +64,15 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
-    ember-data-source (0.14)
+    ember-data-source (1.0.0.beta.7)
       ember-source
-    ember-rails (0.14.1)
+    ember-rails (0.15.0)
       active_model_serializers
       barber (>= 0.4.1)
-      ember-data-source
-      ember-source
+      ember-data-source (>= 1.0.0.beta.5)
+      ember-source (>= 1.1.0)
       execjs (>= 1.2)
-      handlebars-source
+      handlebars-source (> 1.0.0)
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
     ember-source (1.5.1.1)
@@ -99,9 +99,9 @@ GEM
     mocha (1.0.0)
       metaclass (~> 0.0.1)
     multi_json (1.9.3)
-    net-scp (1.2.0)
+    net-scp (1.2.1)
       net-ssh (>= 2.6.5)
-    net-ssh (2.8.0)
+    net-ssh (2.9.0)
     orm_adapter (0.5.0)
     pg (0.17.1)
     polyglot (0.3.4)
@@ -177,7 +177,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
-    uniform_notifier (1.5.0)
+    uniform_notifier (1.6.0)
     warden (1.2.3)
       rack (>= 1.0)
     will_paginate (3.0.5)
