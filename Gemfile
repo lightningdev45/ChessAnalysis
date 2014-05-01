@@ -62,6 +62,7 @@ gem 'capistrano-bundler'
 
 # Use the Unicorn app server
 gem 'unicorn'
+gem 'capistrano-rvm'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

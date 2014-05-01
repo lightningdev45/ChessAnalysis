@@ -2,16 +2,17 @@
 lock '3.2.1'
 
 set :application, 'ChessAnalysis'
-set :scm, :git
-set :repo_url, 'https://github.com/kempchee/ChessAnalysis.git'
-set :branch, "test_deploy"
 set :deploy_user, 'kempchee'
+set :scm, :git
+set :repo_url, 'git@github.com:kempchee/ChessAnalysis.git'
+set :branch, "test_deploy"
+
 
 # setup repo details
 
 set :ssh_options, {
   forward_agent: true,
-  keys: %w(/home/kempchee/.ssh/id_rsa),
+ keys: %w(/home/kempchee/.ssh/id_rsa)
 }
 # setup rvm
 
