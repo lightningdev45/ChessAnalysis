@@ -9,7 +9,6 @@ set :deploy_user, 'kempchee'
 
 # setup repo details
 
-set :pty, true
 set :ssh_options, {
   forward_agent: true,
   keys: %w(/home/kempchee/.ssh/id_rsa),
