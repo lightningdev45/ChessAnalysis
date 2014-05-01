@@ -5,7 +5,7 @@ set :application, 'ChessAnalysis'
 set :deploy_user, 'kempchee'
 set :scm, :git
 set :repo_url, 'git@github.com:kempchee/ChessAnalysis.git'
-set :branch, "test_deploy"
+set :branch, "master"
 
 
 # setup repo details
