@@ -1,8 +1,7 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
-    connectionId = Math.floor(Math.random() * 1000000000)
-    position_server = io.connect("http://localhost:4000")
+    if(position_server){
     position_server.emit('subscribe',{room:connectionId})
     $("#connectionId")
         .append(connectionId)
@@ -30,7 +29,7 @@ EngineEval.PositionView = Ember.View.extend({
                 position_server.emit("start_local_engine",{room:connectionId,fen:chessAnalysis.chess[index].fen()});
             }
         })
-    })
+    })}
     var view=this;
     $("#game_input").on("click",".game_input_move",function(){
         $(".game_input_highlighted").removeClass("game_input_highlighted")
