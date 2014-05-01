@@ -58,7 +58,7 @@ gem 'capistrano-rails'
 
 # integrate bundler with capistrano
 gem 'capistrano-bundler'
-gem  'rvm-capistrano'
+
 
 # Use the Unicorn app server
 gem 'unicorn'

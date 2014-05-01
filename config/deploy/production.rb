@@ -13,7 +13,7 @@
 # used to set extended properties on the server.
 
 set :stage, :production
-set :branch, "test_deploy"
+
 
 # used in case we're deploying multiple versions of the same
 # app side by side. Also provides quick sanity checks when looking
@@ -31,7 +31,7 @@ set :rails_env, :production
 
 # number of unicorn workers, this will be reflected in
 # the unicorn.rb and the monit configs
-set :unicorn_worker_count, 5
+
 
 # whether we're using ssl or not, used for building nginx
 # config file

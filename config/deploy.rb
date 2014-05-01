@@ -2,18 +2,19 @@
 lock '3.2.1'
 
 set :application, 'ChessAnalysis'
+set :scm, :git
 set :repo_url, 'https://github.com/kempchee/ChessAnalysis.git'
-
+set :branch, "test_deploy"
 set :deploy_user, 'kempchee'
 
 # setup repo details
-set :scm, :git
 
-
+set :pty, true
+set :ssh_options, {
+  forward_agent: true,
+  keys: %w(/home/kempchee/.ssh/id_rsa),
+}
 # setup rvm
-require "rvm/capistrano"
-
-set :rvm_ruby_string, :local
 
 # how many old releases do we want to keep
 set :keep_releases, 5
@@ -33,11 +34,10 @@ set :tests, []
 # for details of operations
 set(:config_files, %w(
   nginx.conf
-  database.example.yml
-  log_rotation
-  monit
   unicorn.rb
   unicorn_init.sh
+  database.example.yml
+  log_rotation
 ))
 
 # which config files should be made executable after copying
@@ -59,13 +59,13 @@ set(:symlinks, [
     link: "/etc/init.d/unicorn_#{fetch(:full_app_name)}"
   },
   {
-    source: "log_rotation",
+   source: "log_rotation",
    link: "/etc/logrotate.d/#{fetch(:full_app_name)}"
-  },
-  {
-    source: "monit",
-    link: "/etc/monit/conf.d/#{fetch(:full_app_name)}.conf"
   }
+  #{
+    #source: "monit",
+   # link: "/etc/monit/conf.d/#{fetch(:full_app_name)}.conf"
+  #}
 ])
 
 
@@ -78,7 +78,7 @@ namespace :deploy do
   # make sure we're deploying what we think we're deploying
   before :deploy, "deploy:check_revision"
   # only allow a deploy with passing tests to deployed
-  before :deploy, "deploy:run_tests"
+  #before :deploy, "deploy:run_tests"
   # compile assets locally then rsync
   after 'deploy:symlink:shared', 'deploy:compile_assets_locally'
   after :finishing, 'deploy:cleanup'
@@ -93,7 +93,7 @@ namespace :deploy do
 
   # Restart monit so it will pick up any monit configurations
   # we've added
-  after 'deploy:setup_config', 'monit:restart'
+ # after 'deploy:setup_config', 'monit:restart'
 
   # As of Capistrano 3.1, the `deploy:restart` task is not called
   # automatically.

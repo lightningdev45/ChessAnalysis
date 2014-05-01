@@ -1,7 +1,13 @@
-server{
-	listen 80 default;
-	root /home/kempchee/Projects/ChessAnalysis/public;
-	location ^~ /assets/ {
+upstream unicorn {
+  server unix:/tmp/unicorn.<%= fetch(:full_app_name) %>.sock fail_timeout=0;
+}
+
+server {
+  server_name <%= fetch(:server_name) %>;
+  listen 80;
+  root <%= fetch(:deploy_to) %>/current/public;
+
+  location ^~ /assets/ {
     gzip_static on;
     expires max;
     add_header Cache-Control public;
