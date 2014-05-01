@@ -92,7 +92,7 @@ EngineEval.AuthController = Ember.ObjectController.extend({
         "user[email]": route.controller.get("email")
       },
       success:function(data){
-        route.controllerFor("recover_password").setProperties({email:""})
+        route.controllerFor("recover_password").set(email,"")
         route.controllerFor("alert").send("showAlert","You have successfully requested to change your password!  Please check the email associated with the account.","alert alert-success alert-dismissable","devise-alert")
       },
       error:function(data){
