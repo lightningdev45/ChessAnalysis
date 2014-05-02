@@ -346,13 +346,7 @@ EngineEval.PositionView = Ember.View.extend({
                                     stored_evaluation.set("seldepth",parseInt(seldepth))
                                     stored_evaluation.set("depth",parseInt(depth))
                                     stored_evaluation.set("legit",0)
-                                    if (chessAnalysis.chess[index].turn() === 'b') {
-                                        stored_evaluation.set("evaluation",evaluation*-1)
-                                    }
-                                    else {
-                                         stored_evaluation.set("evaluation",evaluation)
-                                    }
-                                   
+                                    stored_evaluation.set("evaluation",evaluation)
                                     stored_evaluation.set("engine",'stockfish_browser')
                                 })
                                 
@@ -381,12 +375,7 @@ EngineEval.PositionView = Ember.View.extend({
                                     stored_evaluation.set("seldepth",parseInt(seldepth))
                                     stored_evaluation.set("depth",parseInt(depth))
                                     stored_evaluation.set("legit",0)
-                                    if (chessAnalysis.chess[index].turn() === 'b') {
-                                        stored_evaluation.set("evaluation",evaluation*-1)
-                                    }
-                                    else {
-                                         stored_evaluation.set("evaluation",evaluation)
-                                    }
+                                    stored_evaluation.set("evaluation",evaluation)
                                     stored_evaluation.set("engine",'stockfish_browser')   
                                 })
                                 

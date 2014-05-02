@@ -23,6 +23,17 @@ Ember.Handlebars.helper('eventpagination', function(paginate) {
 	return new Handlebars.SafeString(element);
 });
 
+Ember.Handlebars.helper('evaluation_display', function(database_evaluation) {
+	if(chessAnalysis.chess[index].turn()==="b"){
+		console.log(database_evaluation)
+		return database_evaluation*-1
+	}
+	else{
+		return database_evaluation
+	}
+
+})
+
 Ember.Handlebars.helper('user_search_pagination', function(paginate) {
 	if(paginate[2]===1)
 		{var element="<ul class='pagination'><li class='disabled'><a href='#'>&laquo;</a></li>"}
