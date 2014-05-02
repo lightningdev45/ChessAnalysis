@@ -424,6 +424,7 @@ EngineEval.PositionView = Ember.View.extend({
                                     error:function(data){
                                     },
                                     success: function (data) {
+                                        alert("hi")
                                         if (data.fen !== "false"&&data.moves) {
                                             index = 1;
                                             $("#annotation_moves")
@@ -575,7 +576,12 @@ EngineEval.PositionView = Ember.View.extend({
                                             chessAnalysis.movescomment[index] = data.comments
                                             chessAnalysis.numvariations[index] = data.numvariations
                                             chessAnalysis.dropcount[index] = data.dropcount
-                                            chessAnalysis.atStart[index] = chessAnalysis.atStart[index-1]
+                                            if(chessAnalysis.moves[index].length>0){
+                                                chessAnalysis.atStart[index]=false
+                                            }
+                                            else{
+                                                chessAnalysis.atStart[index]=true
+                                            }
                                             chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
                                             chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
                                             chessAnalysis.editStatus[index]=false;
@@ -635,7 +641,12 @@ EngineEval.PositionView = Ember.View.extend({
                                             chessAnalysis.movescomment[index] = [[""]]
                                             chessAnalysis.numvariations[index] = 0
                                             chessAnalysis.dropcount[index] = 0
-                                            chessAnalysis.atStart[index] = true
+                                            if(chessAnalysis.moves[index].length>0){
+                                                chessAnalysis.atStart[index]=false
+                                            }
+                                            else{
+                                                chessAnalysis.atStart[index]=true
+                                            }
                                             chessAnalysis.editStatus[index]=false;
                                             chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
                                             chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
