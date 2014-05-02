@@ -35,6 +35,7 @@ class AnnotationsController < ApplicationController
 
 	def get_annotation_data
 		require 'date'
+
 		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
 		if @annotation=Annotation.exists?(fen:@fen_param)
 			@annotation_versions=Annotation.annotation_versions(@fen_param)
@@ -72,8 +73,8 @@ class AnnotationsController < ApplicationController
 			else
 				@annotation.liked_by @user,vote_weight:params[:vote].to_i
 			end
-			@votes_count=@annotation.votes.size
-			@quality_score=(BigDecimal.new(@annotation.likes.sum(:vote_weight))/BigDecimal.new(@votes_count)).round(3)
+			@votes_count=@annotation.get_likes.size
+			@quality_score=(BigDecimal.new(@annotation.get_likes.sum(:vote_weight))/BigDecimal.new(@votes_count)).round(3)
 			@annotation.quality_score=@quality_score
 			@annotation.save
 			render json:{quality_score:@quality_score,votes_count:@votes_count}

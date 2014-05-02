@@ -16,7 +16,7 @@
 //= require chessgenerator
 //= require uiassets
 //= require customMenu
-//= require jquery-ui-1.10.3.custom
+//= require jquery-ui-1.10.4
 //= require bootstrap
 //= require jquery
 //= require handlebars
