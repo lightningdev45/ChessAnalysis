@@ -4,7 +4,7 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 
 	def new
 	end
-
+=begin
 	def evaluations_index
 		if params[:fen]
 			@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
@@ -16,7 +16,7 @@ skip_before_filter :verify_authenticity_token, only: [:create,:update]
 			format.json{render :json=>@evaluations}
 		end
 	end
-
+=end
 	def show
 		@evaluation=Evaluation.find(params[:id])
 		render json:@evaluation

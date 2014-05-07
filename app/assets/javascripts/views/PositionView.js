@@ -665,8 +665,6 @@ EngineEval.PositionView = Ember.View.extend({
                                          view.get("controller.controllers.annotation_edits").set("currentPage",1)
                                          view.get("controller.controllers.annotation_edits").set("currentHead",data.current_head)
                                          view.get("controller.controllers.annotation_edits").set("currentVisible",data.current_head)
-                                         
-
                                     }
                                 })
                                 $(".engine-row").hide();

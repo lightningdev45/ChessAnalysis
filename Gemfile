@@ -6,7 +6,9 @@ gem 'ember-rails'
 gem 'ember-source'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
-gem 'rspec-rails'
+group :test,:development do 
+	gem 'rspec-rails'
+end
 gem 'mocha'
 
 gem 'acts_as_votable'
@@ -31,7 +33,6 @@ end
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
-gem 'carrierwave'
 gem 'will_paginate'
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
