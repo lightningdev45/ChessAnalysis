@@ -7,7 +7,9 @@ gem 'ember-source'
 gem 'better_errors'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
-gem 'rspec-rails'
+group :test,:development do 
+	gem 'rspec-rails'
+end
 gem 'mocha'
 gem 'acts_as_votable'
 # Use SCSS for stylesheets
@@ -32,7 +34,6 @@ gem 'jquery-fileupload-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
-
 gem 'will_paginate'
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -49,13 +50,21 @@ ruby "2.1.1"
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
 # Use unicorn as the app server
- gem 'unicorn'
+ #gem 'unicorn'
 
 # Use Capistrano for deployment
- gem 'capistrano', group: :development
-group :development do
-      gem 'capistrano-rails',   '~> 1.1', require: false
-      gem 'capistrano-bundler', '~> 1.1', require: false
-    end
+gem 'capistrano'
+
+# rails specific capistrano funcitons
+gem 'capistrano-rails'
+
+# integrate bundler with capistrano
+gem 'capistrano-bundler'
+
+
+# Use the Unicorn app server
+gem 'unicorn'
+gem 'capistrano-rvm'
+
 # Use debugger
 # gem 'debugger', group: [:development, :test]

@@ -70,6 +70,7 @@
 
 
   </div>
+
 <ul class="nav nav-tabs col-md-7 col-lg-7 mode-tabs">
   <li class="active change-mode" id="engine_analysis_mode"><a href="#evaluations_table" data-toggle="tab">Engine Analysis</a></li>
   <li class="change-mode" id="your_analysis_mode"><a href="#your_analysis" data-toggle="tab">Your Analysis</a></li>
@@ -195,6 +196,7 @@
          
           <tr >
             <th class="text-center">Engine</th>
+            <th class="text-center">ConnectionId</th>
             <th class="text-center">Nodes</th>
             <th class="text-center">Depth</th>
             <th class="text-center">Seldepth</th>
@@ -203,14 +205,20 @@
         </thead>
         <tbody>
           <tr class="text-center">
-            <td id="browser_engine">Browser Stockfish</td>
+            <td id="browser_engine"> <div class="text-center"><div class="btn btn-success" id="browser_engine_button">Browser Stockfish</div></div></td>
+             <td id="browser_engine">Local</td>
              <td id="browser_engine_nodes"></td>
               <td id="browser_engine_depth"></td>
                <td id="browser_engine_seldepth"></td>
                 <td id="browser_engine_evaluation"></td>
           </tr>
           <tr class="text-center">
-            <td id="my_engine"></td>
+            <td id="my_engine" class="engine-not-connected">Not Connected</td>
+            <td id="my_engine_connection_id">
+              <div class="form-group">
+                <div id="connectionId" class="form-control"></div>
+              </div>
+            </td>
              <td id="my_engine_nodes"></td>
               <td id="my_engine_depth"></td>
                <td id="my_engine_seldepth"></td>
@@ -219,7 +227,7 @@
          
         </tbody>
       </table>
-      <div class="text-center"><div class="btn btn-success" id="browser_engine_button">Start Stockfish</div></div>
+     
       <br>
     </div>
   </div>

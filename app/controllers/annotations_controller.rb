@@ -2,32 +2,37 @@ class AnnotationsController < ApplicationController
 
 	def create
 		if user_signed_in?
-			@user=current_user
-			@fen=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
-			@annotation=Annotation.new
-			@position=Position.find_by(fen:@fen)
-			@annotation.fen=@fen
-			@annotation.position_id=@position.id
-			@annotation.moves=params[:moves]
-			@annotation.parents=params[:parents]
-			@annotation.children=params[:children]
-			@annotation.dropcount=params[:dropcount]
-			@annotation.numvariations=params[:numvariations]
-			@annotation.comments=params[:comments]
-			@annotation.mainvariations=params[:mainvariations]
-			@annotation.user_id=@user.id
-			if Annotation.where(fen:@fen).count>0
-					@user.reputation+=1
+				@fen=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
+				@position=Position.find_by(fen:@fen)
+				@user=current_user
+				required_reputation=@position.required_reputation
+				if @user.reputation>=required_reputation
+					@annotation=Annotation.new					
+					@annotation.fen=@fen
+					@annotation.position_id=@position.id
+					@annotation.moves=params[:moves]
+					@annotation.parents=params[:parents]
+					@annotation.children=params[:children]
+					@annotation.dropcount=params[:dropcount]
+					@annotation.numvariations=params[:numvariations]
+					@annotation.comments=params[:comments]
+					@annotation.mainvariations=params[:mainvariations]
+					@annotation.user_id=@user.id
+					if @position.annotations.count>0
+							@user.reputation+=1
+						else
+							@user.reputation+=2
+					end
+					if @annotation.save
+						@user.save
+						@annotation_versions=Annotation.annotation_versions(@fen)
+						render json:{current_head:@annotation_versions[0]["id"],user:@user,annotation_versions:@annotation_versions}
+					else
+						render json:{error:"There was an error, please try again."},status:503
+					end
 				else
-					@user.reputation+=2
-			end
-			if @annotation.save
-				@user.save
-				@annotation_versions=Annotation.annotation_versions(@fen)
-				render json:{current_head:@annotation_versions[0]["id"],user:@user,annotation_versions:@annotation_versions}
-			else
-				render json:{error:"There was an error, please try again."},status:503
-			end
+					render json:{error:"You need #{required_reputation} reputation to edit this annotation"},status:503
+				end
 		else
 			render json:{error:"You must sign in to add an or edit an annotation"},status:403
 		end
@@ -35,8 +40,9 @@ class AnnotationsController < ApplicationController
 
 	def get_annotation_data
 		require 'date'
+
 		@fen_param=params[:fen].split(" ")[0..3].join(" ")+" 0 1"
-		if @annotation=Annotation.exists?(fen:@fen_param)
+		if Annotation.exists?(fen:@fen_param)
 			@annotation_versions=Annotation.annotation_versions(@fen_param)
 			@moves=JSON.parse(@annotation_versions[0]["moves"])
 			@comments=JSON.parse(@annotation_versions[0]["comments"])
@@ -72,8 +78,8 @@ class AnnotationsController < ApplicationController
 			else
 				@annotation.liked_by @user,vote_weight:params[:vote].to_i
 			end
-			@votes_count=@annotation.votes.size
-			@quality_score=(BigDecimal.new(@annotation.likes.sum(:vote_weight))/BigDecimal.new(@votes_count)).round(3)
+			@votes_count=@annotation.get_likes.size
+			@quality_score=(BigDecimal.new(@annotation.get_likes.sum(:vote_weight))/BigDecimal.new(@votes_count)).round(3)
 			@annotation.quality_score=@quality_score
 			@annotation.save
 			render json:{quality_score:@quality_score,votes_count:@votes_count}

@@ -1,13 +1,42 @@
 EngineEval.PositionView = Ember.View.extend({
   templateName: 'position',
   didInsertElement: function() {
+    if(position_server){
+        position_server.emit('subscribe',{room:connectionId})
+        $("#connectionId")
+            .append(connectionId)
+        position_server.on("receive_evaluation",function(data){
+            console.log(data)
+            $("#my_engine_evaluation").html(data.evaluation)
+            $("#my_engine_nodes").html(data.nodes)
+            $("#my_engine_depth").html(data.depth)
+            $("#my_engine_seldepth").html(data.seldepth)
+        })
+        position_server.on("local_engine_connect",function(data){
+            $("#my_engine").html('<div class="text-center"><div class="btn btn-success" id="local_engine_button">Local Engine</div></div>')
+            $("#my_engine").removeClass("engine-not-connected");
+            $("#local_engine_button").click(function(){
+                if(chessAnalysis.localEngineStatus){
+                    chessAnalysis.localEngineStatus=false;
+                    $("#local_engine_button").removeClass("btn-danger");
+                    $("#local_engine_button").addClass("btn-success");
+                    position_server.emit("stop_local_engine",{room:connectionId});
+                }
+                else{
+                    chessAnalysis.localEngineStatus=true;
+                    $("#local_engine_button").removeClass("btn-success");
+                    $("#local_engine_button").addClass("btn-danger");
+                    position_server.emit("start_local_engine",{room:connectionId,fen:chessAnalysis.chess[index].fen()});
+                }
+            })
+        }) 
+    }
+
     var view=this;
     $("#game_input_container").on("click",".game_input_move",function(){
 
         $(".game_input_highlighted").removeClass("game_input_highlighted")
         $(this).addClass("game_input_highlighted")
-        console.log($(this).attr("id").slice(15,16))
-        console.log(view.get("controller.controllers.game_input").get("gameFen"))
         var fen=view.get("controller.controllers.game_input").get("gameFen")[parseInt($(this).attr("id").slice(15,$(this).attr('id').length))+1];
         view.get("controller").transitionToRoute("position",encodeURIComponent(fen))
         setupChess(fen)
@@ -318,13 +347,7 @@ EngineEval.PositionView = Ember.View.extend({
                                     stored_evaluation.set("seldepth",parseInt(seldepth))
                                     stored_evaluation.set("depth",parseInt(depth))
                                     stored_evaluation.set("legit",0)
-                                    if (chessAnalysis.chess[index].turn() === 'b') {
-                                        stored_evaluation.set("evaluation",evaluation*-1)
-                                    }
-                                    else {
-                                         stored_evaluation.set("evaluation",evaluation)
-                                    }
-                                   
+                                    stored_evaluation.set("evaluation",evaluation)
                                     stored_evaluation.set("engine",'stockfish_browser')
                                 })
                                 
@@ -353,12 +376,7 @@ EngineEval.PositionView = Ember.View.extend({
                                     stored_evaluation.set("seldepth",parseInt(seldepth))
                                     stored_evaluation.set("depth",parseInt(depth))
                                     stored_evaluation.set("legit",0)
-                                    if (chessAnalysis.chess[index].turn() === 'b') {
-                                        stored_evaluation.set("evaluation",evaluation*-1)
-                                    }
-                                    else {
-                                         stored_evaluation.set("evaluation",evaluation)
-                                    }
+                                    stored_evaluation.set("evaluation",evaluation)
                                     stored_evaluation.set("engine",'stockfish_browser')   
                                 })
                                 
@@ -378,9 +396,6 @@ EngineEval.PositionView = Ember.View.extend({
 
         $("#fen-container")
             .val(chessAnalysis.chess[index].fen())
-        connectionId = Math.floor(Math.random() * 1000000000)
-        $("#connectionId")
-            .append(connectionId)
         //chat = io.connect("http://localhost:8080")
         //chat.emit('subscribe',{room:connectionId})
         //chat.on("receive_evaluation",function(data){
@@ -410,41 +425,7 @@ EngineEval.PositionView = Ember.View.extend({
                                     error:function(data){
                                     },
                                     success: function (data) {
-                                    }
-                                })
-                                $(".engine-row").hide();
-                                $("#annotation-version-row").show()
-                            }
-                            else if (chessAnalysis.mode === "engine_analysis_mode") {
-                                index = 0
-                                setup(chessAnalysis.chess[index].fen());
-                                addpieces();
-                                movegen();
-                                drag();
-                                drop();
-                            }
-                        }
-                    }
-                    else{
-                        if (chessAnalysis.mode === "your_analysis_mode") {
-                               
-                                $("#annotation-version-row").hide()
-                                $(".engine-row").show()
-
-                            }
-                            chessAnalysis.mode = $(this)
-                                .attr("id")
-                            if (chessAnalysis.mode === "your_analysis_mode") {
-                                jQuery.ajax({
-                                    url: "/get_annotation_data",
-                                    type: "GET",
-                                    data: {
-                                        fen: chessAnalysis.chess[index].fen(),version:1
-                                    },
-                                    error:function(data){
-                                    alert("error")
-                                    },
-                                    success: function (data) {
+                                        alert("hi")
                                         if (data.fen !== "false"&&data.moves) {
                                             index = 1;
                                             $("#annotation_moves")
@@ -458,7 +439,12 @@ EngineEval.PositionView = Ember.View.extend({
                                             chessAnalysis.movescomment[index] = data.comments
                                             chessAnalysis.numvariations[index] = data.numvariations
                                             chessAnalysis.dropcount[index] = data.dropcount
-                                            chessAnalysis.atStart[index] = false
+                                            if(chessAnalysis.moves[index].length>0){
+                                                chessAnalysis.atStart[index]=false
+                                            }
+                                            else{
+                                                chessAnalysis.atStart[index]=true
+                                            }
                                             chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
                                             chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
                                             chessAnalysis.editStatus[index]=false;
@@ -518,7 +504,12 @@ EngineEval.PositionView = Ember.View.extend({
                                             chessAnalysis.movescomment[index] = [[""]]
                                             chessAnalysis.numvariations[index] = 0
                                             chessAnalysis.dropcount[index] = 0
-                                            chessAnalysis.atStart[index] = true
+                                            if(chessAnalysis.moves[index].length>0){
+                                                chessAnalysis.atStart[index]=false
+                                            }
+                                            else{
+                                                chessAnalysis.atStart[index]=true
+                                            }
                                             chessAnalysis.editStatus[index]=false;
                                             chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
                                             chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
@@ -538,7 +529,143 @@ EngineEval.PositionView = Ember.View.extend({
                                          view.get("controller.controllers.annotation_edits").set("currentHead",data.current_head)
                                          view.get("controller.controllers.annotation_edits").set("currentVisible",data.current_head)
                                          
+                                    }
+                                })
+                                $(".engine-row").hide();
+                                $("#annotation-version-row").show()
+                            }
+                            else if (chessAnalysis.mode === "engine_analysis_mode") {
+                                index = 0
+                                setup(chessAnalysis.chess[index].fen());
+                                addpieces();
+                                movegen();
+                                drag();
+                                drop();
+                            }
+                        }
+                    }
+                    else{
+                        if (chessAnalysis.mode === "your_analysis_mode") {
+                               
+                                $("#annotation-version-row").hide()
+                                $(".engine-row").show()
 
+                            }
+                            chessAnalysis.mode = $(this)
+                                .attr("id")
+                            if (chessAnalysis.mode === "your_analysis_mode") {
+                                jQuery.ajax({
+                                    url: "/get_annotation_data",
+                                    type: "GET",
+                                    data: {
+                                        fen: chessAnalysis.chess[index].fen(),version:1
+                                    },
+                                    error:function(data){
+                                    alert("error")
+                                    },
+                                    success: function (data) {
+                                        if (data.fen !== "false"&&data.moves) {
+                                            index = 1;
+                                            $("#annotation_moves")
+                                                .empty();
+                                            chessAnalysis.hm[index] = 0;
+                                            chessAnalysis.hmv[index] = 0;
+                                            chessAnalysis.children[index] =data.children
+                                            chessAnalysis.parents[index] = data.parents
+                                            chessAnalysis.moves[index] = data.moves
+                                            chessAnalysis.mainvariations[index] = data.mainvariations
+                                            chessAnalysis.movescomment[index] = data.comments
+                                            chessAnalysis.numvariations[index] = data.numvariations
+                                            chessAnalysis.dropcount[index] = data.dropcount
+                                            if(chessAnalysis.moves[index].length>0){
+                                                chessAnalysis.atStart[index]=false
+                                            }
+                                            else{
+                                                chessAnalysis.atStart[index]=true
+                                            }
+                                            chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                            chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                            chessAnalysis.editStatus[index]=false;
+                                            $("#fen-container")
+                                                .val(chessAnalysis.chess[index].fen())
+                                            $("#annotation_moves")
+                                                .html(writeAnnotation(0, 0, 0))
+                                            $(".ann_move")
+                                                .click(function () {
+                                                    clickNavigate($(this)
+                                                        .attr("id"))
+                                                })
+                                            $(".ann_move")
+                                                .hover(function () {
+                                                    annIn($(this)
+                                                        .attr("id"),false)
+                                                }, function () {
+                                                    annOut()
+                                                });
+                                            $(".ann_comment").unbind("input");
+                                            $(".ann_comment").on("input",function(){
+                                                chessAnalysis.editStatus[index]=true;
+                                                var id=$(this).attr("id")
+                                                var moves_num=id.split("var")[1].split("comment")
+                                                var hm=moves_num[1]
+                                                var hmv=moves_num[0]
+                                                $(this).width(getWidthOfInput(document.getElementById(id)))
+                                                //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
+                                                //{
+                                                    $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                                                //}
+                                                chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
+                                            });
+                                            $(".ann_comment")
+                                                .css("max-width", $("#annotation_moves")
+                                                    .width())
+                                            $(".ann_comment")
+                                                .each(function () {
+                                                    var id = $(this)
+                                                        .attr("id")
+                                                    var width = getWidthOfInput(document.getElementById(id))
+                                                    $(this)
+                                                        .width(width);
+                                                    $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
+                                                })  
+                                        }
+                                        else {
+                                            index = 1;
+                                            $("#annotation_moves")
+                                                .empty();
+                                            chessAnalysis.hm[index] = 0;
+                                            chessAnalysis.hmv[index] = 0;
+                                            chessAnalysis.children[index] = {};
+                                            chessAnalysis.parents[index] = [];
+                                            chessAnalysis.moves[index] = [];
+                                            chessAnalysis.mainvariations[index] = []
+                                            chessAnalysis.movescomment[index] = [[""]]
+                                            chessAnalysis.numvariations[index] = 0
+                                            chessAnalysis.dropcount[index] = 0
+                                            if(chessAnalysis.moves[index].length>0){
+                                                chessAnalysis.atStart[index]=false
+                                            }
+                                            else{
+                                                chessAnalysis.atStart[index]=true
+                                            }
+                                            chessAnalysis.editStatus[index]=false;
+                                            chessAnalysis.chess[index].load(chessAnalysis.chess[index - 1].fen())
+                                            chessAnalysis.startpositionfen[index] = chessAnalysis.chess[index - 1].fen();
+                                            $("#your_analysis")
+                                                .hover(function () {
+                                                    annIn("var0move0",true)
+                                                }, function () {
+                                                    annOut()
+                                                });
+                                        }
+                                        view.get("controller").get("store").unloadAll(EngineEval.Annotation)
+                                         view.get("controller.controllers.annotation_edits").set("model", _.map(data.annotation_versions,function(annotation){
+                                            annotation=view.get("controller").get("store").createRecord("annotation",annotation)
+                                            return annotation
+                                        }))
+                                         view.get("controller.controllers.annotation_edits").set("currentPage",1)
+                                         view.get("controller.controllers.annotation_edits").set("currentHead",data.current_head)
+                                         view.get("controller.controllers.annotation_edits").set("currentVisible",data.current_head)
                                     }
                                 })
                                 $(".engine-row").hide();

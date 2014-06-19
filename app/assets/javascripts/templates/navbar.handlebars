@@ -10,13 +10,19 @@
     </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">  
-          {{#if isAuthenticated}}
-            <li>{{#link-to "profile" currentUser.id 1}}{{#view EngineEval.NavbarClickView}}My Profile{{/view}}{{/link-to}}</li>
-          {{/if}}
             <li><a {{action "viewFen"}}>{{#view EngineEval.NavbarClickView}}Analysis{{/view}}</a></li>
             <li>{{#link-to "uploads"}}Uploads{{/link-to}}</li>
-            <li>{{#link-to 'howto'}}{{#view EngineEval.NavbarClickView}}Tutorial{{/view}}{{/link-to}}</li>
-            <li>{{#link-to 'support'}}{{#view EngineEval.NavbarClickView}}Support{{/view}}{{/link-to}}</li>
+            {{#if isAuthenticated}}
+              <li>{{#link-to "profile" currentUser.id 1}}{{#view EngineEval.NavbarClickView}}My Profile{{/view}}{{/link-to}}</li>
+            {{/if}}
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                  <li> {{#link-to "features"}}Features{{/link-to}} </li> 
+                  <li>{{#link-to "api"}}API Docs{{/link-to}}</a></li>
+                  <li>{{#link-to "support"}}Support{{/link-to}}</li>
+             </ul>
+             </li>
         </ul>
         <ul class="nav pull-right navbar-nav">
 

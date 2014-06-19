@@ -26,7 +26,7 @@
 				<td>{{visible.depth}}</td>
 				<td>{{visible.seldepth}}</td>	
 				<td>{{visible.nodes}}</td>
-				<td>{{visible.evaluation}}</td>
+				<td>{{evaluation_display visible.evaluation}}</td>
 				<td>
 				{{#if isAuthenticated}}<i class="glyphicon glyphicon-thumbs-up" {{action "upvote_evaluation" visible.id}}></i> {{/if}}
 				{{visible.legit}} 

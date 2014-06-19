@@ -383,14 +383,11 @@ h1,h2,h3,h4,h5,h6{
 	
 }
 #next-move-select{
-display:none;
-			
-			width:240px;
-			
-			
-		border:2px solid $dark-background;
-			color:$dark-background;
-			font-weight: bold;
+display:none;		
+width:240px;	
+border:2px solid $black-square;
+color:$dark-background;
+font-weight: bold;
 }
 
 .move-row{
@@ -1059,3 +1056,19 @@ color:$dark-background;
 	font-size: 24px;
 	margin-left:-20px;
 }
+
+	#scroll-container{
+		background:white;
+		border:2px solid $black-square;
+		border-radius:3px;
+	}
+
+	.engine-not-connected{
+		font-style:italic;
+		color:red;
+	}
+
+	#my_engine_connection_id .form-group{
+		margin-bottom:0px;
+	}
+

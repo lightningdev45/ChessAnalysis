@@ -30,8 +30,6 @@ EngineEval.PositionRoute = Ember.Route.extend({
 					router.controllerFor("evaluations").set('model',_.map(response.evaluations,function(object,key){
 						var eval=object
 						eval.index=key+1
-						if(decodeURI(fen_param).split(" ")[1]==="b")
-							{eval.evaluation=eval.evaluation*-1}
 						var evaluation=router.store.createRecord("evaluation",eval)
 						return evaluation
 					}))

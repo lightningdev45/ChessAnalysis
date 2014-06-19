@@ -1,8 +1,10 @@
+var position_server="";
 var chessAnalysis = {};
 var index = 0
 var setupChess=function(fen){
     chessAnalysis.engines = [];
     chessAnalysis.engineStatus = false;
+    chessAnalysis.localEngineStatus=false;
     chessAnalysis.engineId = ""
     chessAnalysis.mode = "engine_analysis_mode"
     chessAnalysis.chess = [new Chess(), new Chess()]
@@ -266,149 +268,7 @@ var promotionclick = function (from, to, count) {
                     to: to,
                     promotion: whitepromotion
                 });
-                if (chessAnalysis.atStart[index]) {
-                    chessAnalysis.atStart[index] = false;
-                    var startcondition = true;
-                    for (var i = 0; i < chessAnalysis.mainvariations[index].length; i++) {
-                        if (chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][0] === _.last(chessAnalysis.chess[index].history())) {
-                            startcondition = false;
-                            var writestatus = "none";
-                            chessAnalysis.hmv[index] = chessAnalysis.mainvariations[index][i];
-                            chessAnalysis.hm[index] += 1;
-                            break;
-                        }
-                        else {}
-                    }
-                    if (startcondition === true) {
-                        var writestatus = "new";
-                        chessAnalysis.numvariations[index] += 1
-                        chessAnalysis.mainvariations[index].push(chessAnalysis.numvariations[index] - 1);
-                        $("#moves")
-                            .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
-                        chessAnalysis.hm[index] = 0;
-                        chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
-                        chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
-                        if (chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1]) {}
-                        else {
-                            chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [""];
-                        }
-                        chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [-1, -1];
-                        chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
-                        chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                        chessAnalysis.hm[index] += 1;
-                    }
-                }
-                else {
-                    if (chessAnalysis.hm[index] === chessAnalysis.moves[index][chessAnalysis.hmv[index]].length) {
-                        chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                        var writestatus = "newmove"
-                        chessAnalysis.hm[index] += 1;
-                        chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]] = "";
-                    }
-                    else if (newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index]) && _.last(chessAnalysis.chess[index].history()) !== chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]) {
-                        <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->)
-                        chessAnalysis.numvariations[index] += 1
-                        var writestatus = "new";
-                        $("#moves")
-                            .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
-                        chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
-                        chessAnalysis.children[index][chessAnalysis.hmv[index]].push([chessAnalysis.numvariations[index] - 1, chessAnalysis.hm[index]]);
-                        chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
-                        chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [];
-                        for (var i = 0; i < chessAnalysis.hm[index]; i++) {
-                            chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1][i] = chessAnalysis.moves[index][chessAnalysis.hmv[index]][i]
-                            chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1][i] = "";
-                        }
-                        chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [chessAnalysis.hmv[index], chessAnalysis.hm[index]];
-                        chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
-                        chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                        chessAnalysis.hm[index] += 1;
-                        chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]] = "";
-                        var writestatus = "none";
-                    }
-                    else {
-                        chessAnalysis.hm[index] += 1
-                        var writestatus = "none";
-                    }
-                }
-                <!-- now we get ready for the next drop-->
-                setup(chessAnalysis.chess[index].fen());
-                addpieces();
-                movegen();
-                drag();
-                for (var y = 0; y < 64; y++) {
-                    dropstring = ""
-                    for (z = 0; z < squaremoves[squares[y]].length; z++) {
-                        if (z !== squaremoves[squares[y]].length - 1) {
-                            dropstring += (squaremoves[squares[y]][z] + ",")
-                        }
-                        else {
-                            dropstring += squaremoves[squares[y]][z]
-                        }
-                    };
-                    $(squares[y])
-                        .droppable("option", "accept", dropstring);
-                };
-                chessAnalysis.dropcount[index] += 1;
-                $("#comment-input")
-                    .val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
-                chessAnalysis.currentHighlighted.css("background-color", "white");
-                $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1))
-                    .css("background-color", "yellow");
-                chessAnalysis.currentHighlighted = $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1));
-                $("#table-container-moves")
-                    .scrollLeft((chessAnalysis.hm[index] - 1) * 78);
-                $("#table-container-top-labels")
-                    .scrollLeft((chessAnalysis.hm[index] - 1) * 78);
-                $("#table-container-moves")
-                    .scrollTop((chessAnalysis.hmv[index]) * 53);
-                $("#table-container-left-labels")
-                    .scrollTop((chessAnalysis.hmv[index]) * 53);
-                chessAnalysis.update_move_tree();
-                 if (chessAnalysis.mode === "engine_analysis_mode") {
-
-                        changeEnginePosition();
-                    }
-                    else if (chessAnalysis.mode === "your_analysis_mode") {
-                        $("#fen-container")
-                            .val(chessAnalysis.chess[index].fen())
-                        $("#annotation_moves")
-                            .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
-                        chessAnalysis.editStatus[index]=true;
-                        $(".ann_move")
-                            .click(function () {
-                                clickNavigate($(this)
-                                    .attr("id"))
-                            })
-                        $(".ann_move")
-                            .hover(function () {
-                                annIn($(this)
-                                    .attr("id"))
-                            }, function () {
-                                annOut()
-                            });
-                        $(".ann_comment").unbind("input");
-                        $(".ann_comment").on("input",function(){
-                            chessAnalysis.editStatus[index]=true;
-                            var id=$(this).attr("id")
-                            var moves_num=id.split("var")[1].split("comment")
-                            var hm=moves_num[1]
-                            var hmv=moves_num[0]
-                            $(this).width(getWidthOfInput(document.getElementById(id)))
-                            //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
-                            //{
-                                $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
-                            //}
-                            chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
-                        });
-                        $(".ann_comment").css("max-width",$("#annotation_moves").width())
-                        $(".ann_comment").each(function(){
-                            var id=$(this).attr("id")
-                            var width=getWidthOfInput(document.getElementById(id))
-                            $(this).width(width);
-                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
-                        })
-                    }
+                afterDrop()
             }
         });
     $("#blackpopup img")
@@ -426,234 +286,92 @@ var promotionclick = function (from, to, count) {
                     promotion: blackpromotion
                 });
                 <!-- this sections determines if the moves is to be added to current hmv or is to create a new variation-->
-                if (chessAnalysis.atStart[index]) {
-                    chessAnalysis.atStart[index] = false;
-                    var startcondition = true;
-                    for (var i = 0; i < chessAnalysis.mainvariations[index].length; i++) {
-                        if (chessAnalysis.moves[index][chessAnalysis.mainvariations[index][i]][0] === _.last(chessAnalysis.chess[index].history())) {
-                            startcondition = false;
-                            var writestatus = "none";
-                            chessAnalysis.hmv[index] = chessAnalysis.mainvariations[index][i];
-                            chessAnalysis.hm[index] += 1;
-                            break;
-                        }
-                        else {}
-                    }
-                    if (startcondition === true) {
-                        var writestatus = "new";
-                        chessAnalysis.numvariations[index] += 1
-                        chessAnalysis.mainvariations[index].push(chessAnalysis.numvariations[index] - 1);
-                        $("#moves")
-                            .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
-                        chessAnalysis.hm[index] = 0;
-                        chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
-                        chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
-                        if (chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1]) {}
-                        else {
-                            chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [""];
-                        }
-                        chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [-1, -1];
-                        chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
-                        chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                        chessAnalysis.hm[index] += 1;
-                    }
+                afterDrop()
                 }
-                else {
-                    if (chessAnalysis.hm[index] === chessAnalysis.moves[index][chessAnalysis.hmv[index]].length) {
-                        chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                        var writestatus = "newmove"
-                        chessAnalysis.hm[index] += 1;
-                        chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]] = "";
-                    }
-                    else if (newVariationSearch(_.last(chessAnalysis.chess[index].history()), chessAnalysis.hm[index], chessAnalysis.hmv[index]) && _.last(chessAnalysis.chess[index].history()) !== chessAnalysis.moves[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]) {
-                        <!-- this sections is for a new variation; first an empty moves array and movesfen aray is created added to the moves array.  The moves from the previous hmv(the variation we are branching off from) are then added to each; finally, we change the hmv variable to the new variation and add the last move from the "chess" variable(this variable was updated when user clicked to the current position)-->)
-                        chessAnalysis.numvariations[index] += 1
-                        var writestatus = "new";
-                        $("#moves")
-                            .append("<div class=var" + String(chessAnalysis.numvariations[index] - 1) + "></div>")
-                        chessAnalysis.children[index][chessAnalysis.numvariations[index] - 1] = [];
-                        chessAnalysis.children[index][chessAnalysis.hmv[index]].push([chessAnalysis.numvariations[index] - 1, chessAnalysis.hm[index]]);
-                        chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1] = [];
-                        chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1] = [];
-                        for (var i = 0; i < chessAnalysis.hm[index]; i++) {
-                            chessAnalysis.moves[index][chessAnalysis.numvariations[index] - 1][i] = chessAnalysis.moves[index][chessAnalysis.hmv[index]][i]
-                            chessAnalysis.movescomment[index][chessAnalysis.numvariations[index] - 1][i] = "";
-                        }
-                        chessAnalysis.parents[index][chessAnalysis.numvariations[index] - 1] = [chessAnalysis.hmv[index], chessAnalysis.hm[index]];
-                        chessAnalysis.hmv[index] = chessAnalysis.numvariations[index] - 1
-                        chessAnalysis.moves[index][chessAnalysis.hmv[index]].push(_.last(chessAnalysis.chess[index].history()));
-                        chessAnalysis.hm[index] += 1;
-                        chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]] = "";
-                        var writestatus = "none";
-                    }
-                    else {
-                        chessAnalysis.hm[index] += 1
-                        var writestatus = "none";
-                    }
-                }
-                <!-- now we get ready for the next drop-->
-                setup(chessAnalysis.chess[index].fen());
-                addpieces();
-                movegen();
-                drag();
-                for (var y = 0; y < 64; y++) {
-                    dropstring = ""
-                    for (z = 0; z < squaremoves[squares[y]].length; z++) {
-                        if (z !== squaremoves[squares[y]].length - 1) {
-                            dropstring += (squaremoves[squares[y]][z] + ",")
-                        }
-                        else {
-                            dropstring += squaremoves[squares[y]][z]
-                        }
-                    };
-                    $(squares[y])
-                        .droppable("option", "accept", dropstring);
-                };
-                chessAnalysis.dropcount[index] = chessAnalysis.dropcount[index] + 1;
-                $("#comment-input")
-                    .val(chessAnalysis.movescomment[index][chessAnalysis.hmv[index]][chessAnalysis.hm[index]]);
-                chessAnalysis.currentHighlighted.css("background-color", "white");
-                $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1))
-                    .css("background-color", "yellow");
-                chessAnalysis.currentHighlighted = $("#row" + String(_.indexOf(chessAnalysis.sortlist[index], chessAnalysis.hmv[index])) + "col" + (chessAnalysis.hm[index] - 1));
-                $("#table-container-moves")
-                    .scrollLeft((chessAnalysis.hm[index] - 1) * 78);
-                $("#table-container-top-labels")
-                    .scrollLeft((chessAnalysis.hm[index] - 1) * 78);
-                $("#table-container-moves")
-                    .scrollTop((chessAnalysis.hmv[index]) * 53);
-                $("#table-container-left-labels")
-                    .scrollTop((chessAnalysis.hmv[index]) * 53);
-                chessAnalysis.update_move_tree();
-                 if (chessAnalysis.mode === "engine_analysis_mode") {
-
-                        changeEnginePosition();
-                    }
-                    else if (chessAnalysis.mode === "your_analysis_mode") {
-                        $("#fen-container")
-                            .val(chessAnalysis.chess[index].fen())
-                        $("#annotation_moves")
-                            .html(writeAnnotation(0, chessAnalysis.hm[index - 1], 0))
-                        chessAnalysis.editStatus[index]=true;
-                        $(".ann_move")
-                            .click(function () {
-                                clickNavigate($(this)
-                                    .attr("id"))
-                            })
-                        $(".ann_move")
-                            .hover(function () {
-                                annIn($(this)
-                                    .attr("id"))
-                            }, function () {
-                                annOut()
-                            });
-                        $(".ann_comment").unbind("input");
-                        $(".ann_comment").on("input",function(){
-                            chessAnalysis.editStatus[index]=true;
-                            var id=$(this).attr("id")
-                            var moves_num=id.split("var")[1].split("comment")
-                            var hm=moves_num[1]
-                            var hmv=moves_num[0]
-                            $(this).width(getWidthOfInput(document.getElementById(id)))
-                            //if((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)>parseInt($(this).css("max-width").slice(0,$(this).css("max-width").length-2)))
-                            //{
-                                $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
-                            //}
-                            chessAnalysis.movescomment[index][hmv][hm]=$(this).val()
-                        });
-                        $(".ann_comment").css("max-width",$("#annotation_moves").width())
-                        $(".ann_comment").each(function(){
-                            var id=$(this).attr("id")
-                            var width=getWidthOfInput(document.getElementById(id))
-                            $(this).width(width);
-                            $(this).attr('rows',Math.floor((document.getElementById(id).style.width.slice(0,document.getElementById(id).style.width.length-2)-8)/$(this).css("max-width").slice(0,$(this).css("max-width").length-2))+1)
-                        })
-                    }
-            }
         });
 };
-var $blackking = $('<img src="/assets/blackking.png" class="piece" id="k">');
-var $blackrook1 = $('<img src="/assets/blackrook.png" class="piece" id="r1" >');
-var $blackrook2 = $('<img src="/assets/blackrook.png" class="piece" id="r2" >');
-var $blackrook3 = $('<img src="/assets/blackrook.png" class="piece" id="r3" >');
-var $blackrook4 = $('<img src="/assets/blackrook.png" class="piece" id="r4" >');
-var $blackrook5 = $('<img src="/assets/blackrook.png" class="piece" id="r5" >');
-var $blackrook6 = $('<img src="/assets/blackrook.png" class="piece" id="r6" >');
-var $blackrook7 = $('<img src="/assets/blackrook.png" class="piece" id="r7" >');
-var $blackrook8 = $('<img src="/assets/blackrook.png" class="piece" id="r8" >');
-var $blackbishop1 = $('<img src="/assets/blackbishop.png" class="piece" id="b1" >');
-var $blackbishop2 = $('<img src="/assets/blackbishop.png" class="piece" id="b2" >');
-var $blackbishop3 = $('<img src="/assets/blackbishop.png" class="piece" id="b3" >');
-var $blackbishop4 = $('<img src="/assets/blackbishop.png" class="piece" id="b4" >');
-var $blackbishop5 = $('<img src="/assets/blackbishop.png" class="piece" id="b5" >');
-var $blackbishop6 = $('<img src="/assets/blackbishop.png" class="piece" id="b6" >');
-var $blackbishop7 = $('<img src="/assets/blackbishop.png" class="piece" id="b7" >');
-var $blackbishop8 = $('<img src="/assets/blackbishop.png" class="piece" id="b8" >');
-var $blackknight1 = $('<img src="/assets/blackknight.png" class="piece"  id="n1" >');
-var $blackknight2 = $('<img src="/assets/blackknight.png" class="piece"  id="n2" >');
-var $blackknight3 = $('<img src="/assets/blackknight.png" class="piece"  id="n3" >');
-var $blackknight4 = $('<img src="/assets/blackknight.png" class="piece"  id="n4" >');
-var $blackknight5 = $('<img src="/assets/blackknight.png" class="piece"  id="n5" >');
-var $blackknight6 = $('<img src="/assets/blackknight.png" class="piece"  id="n6" >');
-var $blackknight7 = $('<img src="/assets/blackknight.png" class="piece"  id="n7" >');
-var $blackknight8 = $('<img src="/assets/blackknight.png" class="piece"  id="n8" >');
-var $blackpawn1 = $('<img src="/assets/blackpawn.png" class="piece" id="p1" >');
-var $blackpawn2 = $('<img src="/assets/blackpawn.png" class="piece"  id="p2" >');
-var $blackpawn3 = $('<img src="/assets/blackpawn.png" class="piece"  id="p3" >');
-var $blackpawn4 = $('<img src="/assets/blackpawn.png" class="piece"  id="p4" >');
-var $blackpawn5 = $('<img src="/assets/blackpawn.png" class="piece"  id="p5" >');
-var $blackpawn6 = $('<img src="/assets/blackpawn.png" class="piece" id="p6" >');
-var $blackpawn7 = $('<img src="/assets/blackpawn.png" class="piece"  id="p7" >');
-var $blackpawn8 = $('<img src="/assets/blackpawn.png" class="piece" id="p8" >');
-var $blackqueen = $('<img src="/assets/blackqueen.png" class="piece"  id="q" >');
-var $blackqueen2 = $('<img src="/assets/blackqueen.png" class="piece"  id="q2" >');
-var $blackqueen3 = $('<img src="/assets/blackqueen.png" class="piece"  id="q3" >');
-var $blackqueen4 = $('<img src="/assets/blackqueen.png" class="piece"  id="q4" >');
-var $blackqueen5 = $('<img src="/assets/blackqueen.png" class="piece"  id="q5" >');
-var $blackqueen6 = $('<img src="/assets/blackqueen.png" class="piece"  id="q6" >');
-var $blackqueen7 = $('<img src="/assets/blackqueen.png" class="piece"  id="q7" >');
-var $blackqueen8 = $('<img src="/assets/blackqueen.png" class="piece"  id="q8" >');
-var $whiteking = $('<img src="/assets/whiteking.png" class="piece"  id="K" >');
-var $whitequeen = $('<img src="/assets/whitequeen.png" class="piece" id="Q" >');
-var $whitequeen2 = $('<img src="/assets/whitequeen.png" class="piece" id="Q2" >');
-var $whitequeen3 = $('<img src="/assets/whitequeen.png" class="piece" id="Q3" >');
-var $whitequeen4 = $('<img src="/assets/whitequeen.png" class="piece" id="Q4" >');
-var $whitequeen5 = $('<img src="/assets/whitequeen.png" class="piece" id="Q5" >');
-var $whitequeen6 = $('<img src="/assets/whitequeen.png" class="piece" id="Q6" >');
-var $whitequeen7 = $('<img src="/assets/whitequeen.png" class="piece" id="Q7" >');
-var $whitequeen8 = $('<img src="/assets/whitequeen.png" class="piece" id="Q8" >');
-var $whiterook1 = $('<img src="/assets/whiterook.png"  class="piece"  id="R1" >');
-var $whiterook2 = $('<img src="/assets/whiterook.png"  class="piece"  id="R2" >');
-var $whiterook3 = $('<img src="/assets/whiterook.png"  class="piece"  id="R3" >');
-var $whiterook4 = $('<img src="/assets/whiterook.png"  class="piece"  id="R4" >');
-var $whiterook5 = $('<img src="/assets/whiterook.png"  class="piece"  id="R5" >');
-var $whiterook6 = $('<img src="/assets/whiterook.png"  class="piece"  id="R6" >');
-var $whiterook7 = $('<img src="/assets/whiterook.png"  class="piece"  id="R7" >');
-var $whiterook8 = $('<img src="/assets/whiterook.png"  class="piece"  id="R8" >');
-var $whitebishop1 = $('<img src="/assets/whitebishop.png" class="piece"  id="B1" >');
-var $whitebishop2 = $('<img src="/assets/whitebishop.png" class="piece"  id="B2" >');
-var $whitebishop3 = $('<img src="/assets/whitebishop.png" class="piece"  id="B3" >');
-var $whitebishop4 = $('<img src="/assets/whitebishop.png" class="piece"  id="B4" >');
-var $whitebishop5 = $('<img src="/assets/whitebishop.png" class="piece"  id="B5" >');
-var $whitebishop6 = $('<img src="/assets/whitebishop.png" class="piece"  id="B6" >');
-var $whitebishop7 = $('<img src="/assets/whitebishop.png" class="piece"  id="B7" >');
-var $whitebishop8 = $('<img src="/assets/whitebishop.png" class="piece"  id="B8" >');
-var $whiteknight1 = $('<img src="/assets/whiteknight.png" class="piece"  id="N1" >');
-var $whiteknight2 = $('<img src="/assets/whiteknight.png" class="piece" id="N2" >');
-var $whiteknight3 = $('<img src="/assets/whiteknight.png" class="piece" id="N3" >');
-var $whiteknight4 = $('<img src="/assets/whiteknight.png" class="piece"  id="N4" >');
-var $whiteknight5 = $('<img src="/assets/whiteknight.png" class="piece" id="N5" >');
-var $whiteknight6 = $('<img src="/assets/whiteknight.png" class="piece" id="N6" >');
-var $whiteknight7 = $('<img src="/assets/whiteknight.png" class="piece"  id="N7" >');
-var $whiteknight8 = $('<img src="/assets/whiteknight.png" class="piece" id="N8" >');
-var $whitepawn1 = $('<img src="/assets/whitepawn.png" class="piece" id="P1" >');
-var $whitepawn2 = $('<img src="/assets/whitepawn.png" class="piece" id="P2" >');
-var $whitepawn3 = $('<img src="/assets/whitepawn.png" class="piece" id="P3" >');
-var $whitepawn4 = $('<img src="/assets/whitepawn.png" class="piece" id="P4" >');
-var $whitepawn5 = $('<img src="/assets/whitepawn.png" class="piece" id="P5" >');
-var $whitepawn6 = $('<img src="/assets/whitepawn.png" class="piece" id="P6" >');
-var $whitepawn7 = $('<img src="/assets/whitepawn.png" class="piece" id="P7" >');
-var $whitepawn8 = $('<img src="/assets/whitepawn.png" class="piece" id="P8" >');
+var $blackking = $('<img src="blackking.png" class="piece" id="k">');
+var $blackrook1 = $('<img src="blackrook.png" class="piece" id="r1" >');
+var $blackrook2 = $('<img src="blackrook.png" class="piece" id="r2" >');
+var $blackrook3 = $('<img src="blackrook.png" class="piece" id="r3" >');
+var $blackrook4 = $('<img src="blackrook.png" class="piece" id="r4" >');
+var $blackrook5 = $('<img src="blackrook.png" class="piece" id="r5" >');
+var $blackrook6 = $('<img src="blackrook.png" class="piece" id="r6" >');
+var $blackrook7 = $('<img src="blackrook.png" class="piece" id="r7" >');
+var $blackrook8 = $('<img src="blackrook.png" class="piece" id="r8" >');
+var $blackbishop1 = $('<img src="blackbishop.png" class="piece" id="b1" >');
+var $blackbishop2 = $('<img src="blackbishop.png" class="piece" id="b2" >');
+var $blackbishop3 = $('<img src="blackbishop.png" class="piece" id="b3" >');
+var $blackbishop4 = $('<img src="blackbishop.png" class="piece" id="b4" >');
+var $blackbishop5 = $('<img src="blackbishop.png" class="piece" id="b5" >');
+var $blackbishop6 = $('<img src="blackbishop.png" class="piece" id="b6" >');
+var $blackbishop7 = $('<img src="blackbishop.png" class="piece" id="b7" >');
+var $blackbishop8 = $('<img src="blackbishop.png" class="piece" id="b8" >');
+var $blackknight1 = $('<img src="blackknight.png" class="piece"  id="n1" >');
+var $blackknight2 = $('<img src="blackknight.png" class="piece"  id="n2" >');
+var $blackknight3 = $('<img src="blackknight.png" class="piece"  id="n3" >');
+var $blackknight4 = $('<img src="blackknight.png" class="piece"  id="n4" >');
+var $blackknight5 = $('<img src="blackknight.png" class="piece"  id="n5" >');
+var $blackknight6 = $('<img src="blackknight.png" class="piece"  id="n6" >');
+var $blackknight7 = $('<img src="blackknight.png" class="piece"  id="n7" >');
+var $blackknight8 = $('<img src="blackknight.png" class="piece"  id="n8" >');
+var $blackpawn1 = $('<img src="blackpawn.png" class="piece" id="p1" >');
+var $blackpawn2 = $('<img src="blackpawn.png" class="piece"  id="p2" >');
+var $blackpawn3 = $('<img src="blackpawn.png" class="piece"  id="p3" >');
+var $blackpawn4 = $('<img src="blackpawn.png" class="piece"  id="p4" >');
+var $blackpawn5 = $('<img src="blackpawn.png" class="piece"  id="p5" >');
+var $blackpawn6 = $('<img src="blackpawn.png" class="piece" id="p6" >');
+var $blackpawn7 = $('<img src="blackpawn.png" class="piece"  id="p7" >');
+var $blackpawn8 = $('<img src="blackpawn.png" class="piece" id="p8" >');
+var $blackqueen = $('<img src="blackqueen.png" class="piece"  id="q" >');
+var $blackqueen2 = $('<img src="blackqueen.png" class="piece"  id="q2" >');
+var $blackqueen3 = $('<img src="blackqueen.png" class="piece"  id="q3" >');
+var $blackqueen4 = $('<img src="blackqueen.png" class="piece"  id="q4" >');
+var $blackqueen5 = $('<img src="blackqueen.png" class="piece"  id="q5" >');
+var $blackqueen6 = $('<img src="blackqueen.png" class="piece"  id="q6" >');
+var $blackqueen7 = $('<img src="blackqueen.png" class="piece"  id="q7" >');
+var $blackqueen8 = $('<img src="blackqueen.png" class="piece"  id="q8" >');
+var $whiteking = $('<img src="whiteking.png" class="piece"  id="K" >');
+var $whitequeen = $('<img src="whitequeen.png" class="piece" id="Q" >');
+var $whitequeen2 = $('<img src="whitequeen.png" class="piece" id="Q2" >');
+var $whitequeen3 = $('<img src="whitequeen.png" class="piece" id="Q3" >');
+var $whitequeen4 = $('<img src="whitequeen.png" class="piece" id="Q4" >');
+var $whitequeen5 = $('<img src="whitequeen.png" class="piece" id="Q5" >');
+var $whitequeen6 = $('<img src="whitequeen.png" class="piece" id="Q6" >');
+var $whitequeen7 = $('<img src="whitequeen.png" class="piece" id="Q7" >');
+var $whitequeen8 = $('<img src="whitequeen.png" class="piece" id="Q8" >');
+var $whiterook1 = $('<img src="whiterook.png"  class="piece"  id="R1" >');
+var $whiterook2 = $('<img src="whiterook.png"  class="piece"  id="R2" >');
+var $whiterook3 = $('<img src="whiterook.png"  class="piece"  id="R3" >');
+var $whiterook4 = $('<img src="whiterook.png"  class="piece"  id="R4" >');
+var $whiterook5 = $('<img src="whiterook.png"  class="piece"  id="R5" >');
+var $whiterook6 = $('<img src="whiterook.png"  class="piece"  id="R6" >');
+var $whiterook7 = $('<img src="whiterook.png"  class="piece"  id="R7" >');
+var $whiterook8 = $('<img src="whiterook.png"  class="piece"  id="R8" >');
+var $whitebishop1 = $('<img src="whitebishop.png" class="piece"  id="B1" >');
+var $whitebishop2 = $('<img src="whitebishop.png" class="piece"  id="B2" >');
+var $whitebishop3 = $('<img src="whitebishop.png" class="piece"  id="B3" >');
+var $whitebishop4 = $('<img src="whitebishop.png" class="piece"  id="B4" >');
+var $whitebishop5 = $('<img src="whitebishop.png" class="piece"  id="B5" >');
+var $whitebishop6 = $('<img src="whitebishop.png" class="piece"  id="B6" >');
+var $whitebishop7 = $('<img src="whitebishop.png" class="piece"  id="B7" >');
+var $whitebishop8 = $('<img src="whitebishop.png" class="piece"  id="B8" >');
+var $whiteknight1 = $('<img src="whiteknight.png" class="piece"  id="N1" >');
+var $whiteknight2 = $('<img src="whiteknight.png" class="piece" id="N2" >');
+var $whiteknight3 = $('<img src="whiteknight.png" class="piece" id="N3" >');
+var $whiteknight4 = $('<img src="whiteknight.png" class="piece"  id="N4" >');
+var $whiteknight5 = $('<img src="whiteknight.png" class="piece" id="N5" >');
+var $whiteknight6 = $('<img src="whiteknight.png" class="piece" id="N6" >');
+var $whiteknight7 = $('<img src="whiteknight.png" class="piece"  id="N7" >');
+var $whiteknight8 = $('<img src="whiteknight.png" class="piece" id="N8" >');
+var $whitepawn1 = $('<img src="whitepawn.png" class="piece" id="P1" >');
+var $whitepawn2 = $('<img src="whitepawn.png" class="piece" id="P2" >');
+var $whitepawn3 = $('<img src="whitepawn.png" class="piece" id="P3" >');
+var $whitepawn4 = $('<img src="whitepawn.png" class="piece" id="P4" >');
+var $whitepawn5 = $('<img src="whitepawn.png" class="piece" id="P5" >');
+var $whitepawn6 = $('<img src="whitepawn.png" class="piece" id="P6" >');
+var $whitepawn7 = $('<img src="whitepawn.png" class="piece" id="P7" >');
+var $whitepawn8 = $('<img src="whitepawn.png" class="piece" id="P8" >');
 var piecesfunction = function () {
     var assetpieces = [$blackking, $blackqueen, $blackqueen2, $blackqueen3, $blackqueen4, $blackqueen5, $blackqueen6, $blackqueen7, $blackqueen8, $whiteking, $whitequeen, $whitequeen2, $whitequeen3, $whitequeen4, $whitequeen5, $whitequeen6, $whitequeen7, $whitequeen8, $blackrook1, $blackrook2, $blackrook3, $blackrook4, $blackrook5, $blackrook6, $blackrook7, $blackrook8, $whiterook1, $whiterook2, $whiterook3, $whiterook4, $whiterook5, $whiterook6, $whiterook7, $whiterook8, $blackbishop1, $blackbishop2, $blackbishop3, $blackbishop4, $blackbishop5, $blackbishop6, $blackbishop7, $blackbishop8, $whitebishop1, $whitebishop2, $whitebishop3, $whitebishop4, $whitebishop5, $whitebishop6, $whitebishop7, $whitebishop8, $blackknight1, $blackknight2, $blackknight3, $blackknight4, $blackknight5, $blackknight6, $blackknight7, $blackknight8, $whiteknight1, $whiteknight2, $whiteknight3, $whiteknight4, $whiteknight5, $whiteknight6, $whiteknight7, $whiteknight8, $whitepawn8, $whitepawn1, $whitepawn2, $whitepawn3, $whitepawn4, $whitepawn5, $whitepawn6, $whitepawn7, $blackpawn1, $blackpawn2, $blackpawn3, $blackpawn4, $blackpawn5, $blackpawn6, $blackpawn7, $blackpawn8];
     return assetpieces;
@@ -1353,6 +1071,8 @@ var afterDrop=function(){
                     addpieces();
                     movegen();
                     drag();
+                    if(position_server)
+                   { position_server.emit("new_position",{fen:chessAnalysis.chess[index].fen(),connectionId:connectionId,engineStatus:chessAnalysis.localEngineStatus})}
                     for (var y = 0; y < 64; y++) {
                         dropstring = ""
                         for (z = 0; z < squaremoves[squares[y]].length; z++) {
