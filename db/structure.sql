@@ -257,6 +257,37 @@ ALTER SEQUENCE games_id_seq OWNED BY games.id;
 
 
 --
+-- Name: interest_emails; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE interest_emails (
+    id integer NOT NULL,
+    email character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: interest_emails_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE interest_emails_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: interest_emails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE interest_emails_id_seq OWNED BY interest_emails.id;
+
+
+--
 -- Name: positions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -582,6 +613,13 @@ ALTER TABLE ONLY games ALTER COLUMN id SET DEFAULT nextval('games_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY interest_emails ALTER COLUMN id SET DEFAULT nextval('interest_emails_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY positions ALTER COLUMN id SET DEFAULT nextval('positions_id_seq'::regclass);
 
 
@@ -673,6 +711,14 @@ ALTER TABLE ONLY game_positions
 
 ALTER TABLE ONLY games
     ADD CONSTRAINT games_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: interest_emails_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY interest_emails
+    ADD CONSTRAINT interest_emails_pkey PRIMARY KEY (id);
 
 
 --
@@ -860,4 +906,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140422231342');
 INSERT INTO schema_migrations (version) VALUES ('20140425153132');
 
 INSERT INTO schema_migrations (version) VALUES ('20140425181937');
+
+INSERT INTO schema_migrations (version) VALUES ('20140429134936');
 
