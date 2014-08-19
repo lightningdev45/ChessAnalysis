@@ -26,6 +26,7 @@
 //= require addComment
 //= require delete_variation
 //= require delete_remaining
+//= require jquery-fileupload/basic
 //= require_self
 //= require engine_eval
 //= require_tree .

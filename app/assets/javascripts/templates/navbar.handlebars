@@ -11,6 +11,7 @@
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">  
             <li><a {{action "viewFen"}}>{{#view EngineEval.NavbarClickView}}Analysis{{/view}}</a></li>
+            <li>{{#link-to "uploads"}}Uploads{{/link-to}}</li>
             {{#if isAuthenticated}}
               <li>{{#link-to "profile" currentUser.id 1}}{{#view EngineEval.NavbarClickView}}My Profile{{/view}}{{/link-to}}</li>
             {{/if}}

@@ -1,14 +1,18 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+
 gem 'rails'
+
 gem 'ember-rails'
 gem 'ember-source'
+gem 'better_errors'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
-gem 'rspec-rails'
+group :test,:development do 
+	gem 'rspec-rails'
+end
 gem 'mocha'
-
 gem 'acts_as_votable'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -28,10 +32,10 @@ group :development do
 	gem 'bullet'
 end
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem 'jquery-fileupload-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
-gem 'carrierwave'
 gem 'will_paginate'
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -40,7 +44,7 @@ end
 #gem 'rails_12factor'
  #gem 'rails_12factor'
 gem 'chess'
-#gem 'puma'
+gem 'puma'
 gem 'devise'
 ruby "2.1.2"
 

@@ -8,7 +8,7 @@ end
   resources :positions do
     collection {get :update_evaluation}
   end
-
+resources  :uploads
 resources :annotations
 resources :annotation_edits
 get "/position/:position_fen"=>"home#index"

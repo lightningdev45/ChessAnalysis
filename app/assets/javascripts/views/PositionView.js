@@ -33,7 +33,8 @@ EngineEval.PositionView = Ember.View.extend({
     }
 
     var view=this;
-    $("#game_input").on("click",".game_input_move",function(){
+    $("#game_input_container").on("click",".game_input_move",function(){
+
         $(".game_input_highlighted").removeClass("game_input_highlighted")
         $(this).addClass("game_input_highlighted")
         var fen=view.get("controller.controllers.game_input").get("gameFen")[parseInt($(this).attr("id").slice(15,$(this).attr('id').length))+1];
@@ -665,8 +666,6 @@ EngineEval.PositionView = Ember.View.extend({
                                          view.get("controller.controllers.annotation_edits").set("currentPage",1)
                                          view.get("controller.controllers.annotation_edits").set("currentHead",data.current_head)
                                          view.get("controller.controllers.annotation_edits").set("currentVisible",data.current_head)
-                                         
-
                                     }
                                 })
                                 $(".engine-row").hide();
