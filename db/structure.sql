@@ -81,7 +81,8 @@ CREATE TABLE annotations (
     updated_at timestamp without time zone,
     user_id integer,
     quality integer DEFAULT 0,
-    quality_score numeric
+    quality_score numeric,
+    rank integer
 );
 
 
@@ -433,40 +434,6 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 
 
 --
--- Name: uploads; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE uploads (
-    id integer NOT NULL,
-    user_id integer,
-    file character varying(255),
-    type character varying(255),
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    file_size integer DEFAULT 0
-);
-
-
---
--- Name: uploads_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE uploads_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: uploads_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE uploads_id_seq OWNED BY uploads.id;
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -648,13 +615,6 @@ ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclas
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY uploads ALTER COLUMN id SET DEFAULT nextval('uploads_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
@@ -754,14 +714,6 @@ ALTER TABLE ONLY tags
 
 
 --
--- Name: uploads_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY uploads
-    ADD CONSTRAINT uploads_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -775,6 +727,34 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_annotations_on_fen; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_annotations_on_fen ON annotations USING btree (fen);
+
+
+--
+-- Name: index_annotations_on_rank; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_annotations_on_rank ON annotations USING btree (rank);
+
+
+--
+-- Name: index_evaluations_on_fen; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_evaluations_on_fen ON evaluations USING btree (fen);
+
+
+--
+-- Name: index_positions_on_fen; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_positions_on_fen ON positions USING btree (fen);
 
 
 --
@@ -903,8 +883,9 @@ INSERT INTO schema_migrations (version) VALUES ('20140422214435');
 
 INSERT INTO schema_migrations (version) VALUES ('20140422231342');
 
-INSERT INTO schema_migrations (version) VALUES ('20140425153132');
-
-INSERT INTO schema_migrations (version) VALUES ('20140425181937');
-
 INSERT INTO schema_migrations (version) VALUES ('20140429134936');
+
+INSERT INTO schema_migrations (version) VALUES ('20140527030416');
+
+INSERT INTO schema_migrations (version) VALUES ('20140527034722');
+

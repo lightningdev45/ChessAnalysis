@@ -4,3 +4,4 @@
 /public/uploads
 /tmp/cache/assets/*
 /config/database.yml
+/tmp
